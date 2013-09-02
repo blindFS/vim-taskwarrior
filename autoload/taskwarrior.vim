@@ -1,7 +1,9 @@
 function! taskwarrior#list()
-    execute 'edit Taskwarrior'
-    let g:task_view = bufnr('%')
-    setlocal noswapfile
+    setlocal modifiable
+    %delete
+    " for var in split((system("task all")),'\n')[:-4]
+    "     echom var
+    " endfor
     call append(0, split((system("task all")),'\n')[:-3])
     silent! %global/\n^\s\{2,}/join
     if len(getline(1)) == 0
@@ -23,7 +25,7 @@ function! taskwarrior#list()
 
     nnoremap <buffer> q :call taskwarrior#quit()<CR>
     nnoremap <buffer> c :call taskwarrior#system_call(' ', 'add', taskwarrior#get_args())<CR>
-    nnoremap <buffer> d :call taskwarrior#system_call(taskwarrior#get_filter_by_id(), 'done', '')<CR>
+    " nnoremap <buffer> d :call taskwarrior#system_call(taskwarrior#get_filter_by_id(), 'done', '')<CR>
     nnoremap <buffer> x :call taskwarrior#delete()<CR>
     nnoremap <buffer> m :call taskwarrior#system_call(taskwarrior#get_filter_by_id(), 'modify', taskwarrior#get_args())<CR>
 
@@ -34,7 +36,11 @@ function! taskwarrior#init()
        echoerr "This plugin depends on taskwarrior(http://taskwarrior.org)."
     endif
     if exists('g:task_view')
-        call taskwarrior#quit()
+        execute g:task_view.'buffer'
+    else
+        execute 'edit Taskwarrior'
+        let g:task_view = bufnr('%')
+        setlocal noswapfile
     endif
     call taskwarrior#list()
 
@@ -46,11 +52,9 @@ function! taskwarrior#quit()
 endfunction
 
 function! taskwarrior#delete()
-    if taskwarrior#get_filter_by_id()
-        call taskwarrior#system_call(taskwarrior#get_filter_by_id(), 'delete', '')
-    else
-        call taskwarrior#system_call(taskwarrior#get_filter_by_desc(), 'delete', '')
-    endif
+    echom "!task ".taskwarrior#get_uuid()." delete"
+    execute "!task ".taskwarrior#get_uuid()." delete"
+    call taskwarrior#list()
 endfunction
 
 function! taskwarrior#get_args()
@@ -58,31 +62,32 @@ function! taskwarrior#get_args()
     let project = input("project:")
     let priority = input("priority - 'L','M','H':")
     let description = input("description:")
-    return " due:".due." project:".project." priority:".priority." description:'".description."'"
+    return " due:".due." project:".project." priority:".priority." ".description
 endfunction
 
-function! taskwarrior#get_filter_by_id()
+function! taskwarrior#get_id()
     if matchstr(getline('.'), '^\s*\zs\d\+') != ""
-        return " id:".matchstr(getline('.'), '^\s*\zs\d\+')." "
+        return " ".matchstr(getline('.'), '^\s*\zs\d\+')." "
     endif
-    return 0
-endfunction
-
-function! taskwarrior#get_filter_by_desc()
-    if getline('.')[b:task_columns[-1]:-1] != ""
-        return " description:'".getline('.')[b:task_columns[-1]:-1]."' "
-    endif
-    return ''
+    return 1
 endfunction
 
 function! taskwarrior#system_call(filter, command, args)
-    " echom "task".a:filter.a:command.a:args
-    if a:command == 'delete'
-        execute "!task".a:filter.a:command.a:args
-    else
-        call system("task".a:filter.a:command.a:args)
-    endif
-    sleep 100m
+    call system("task".a:filter.a:command.a:args)
     " TODO refresh bug
-    call taskwarrior#init()
+    call taskwarrior#list()
+endfunction
+
+function! taskwarrior#get_uuid()
+    if !taskwarrior#get_id()
+        return substitute(system('task'.taskwarrior#get_id().'uuids'), '\n', '', 'g')
+    endif
+    if line('.') > 2 && line('.') < line('$')
+        let uuids = []
+        for line in split(system('task completed'), '\n')[1:-2]
+            let uuids += [matchstr(line, '[-0-9a-f]\{36}')]
+        endfor
+        return uuids[line('.')-2]
+    endif
+    return ' '
 endfunction
