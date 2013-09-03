@@ -3,7 +3,6 @@ function! taskwarrior#list()
     setlocal nowrap
     %delete
     call append(0, split((system("task all")), '\n')[:-3])
-    silent! %global/\n^\s\{2,}/join
     if len(getline(1)) == 0
         call append(line('$')-1,
                     \['ID Status Project Pri Due Complete Description UUID',
@@ -20,11 +19,14 @@ function! taskwarrior#list()
     setlocal buftype=nofile
     setlocal nomodifiable
 
-    nnoremap <buffer> q :call taskwarrior#quit()<CR>
     nnoremap <buffer> c :call taskwarrior#system_call('', 'add', taskwarrior#get_args())<CR>
     nnoremap <buffer> d :call taskwarrior#set_done()<CR>
-    nnoremap <buffer> x :call taskwarrior#delete()<CR>
+    nnoremap <buffer> i :call taskwarrior#info()<CR>
     nnoremap <buffer> m :call taskwarrior#system_call(taskwarrior#get_id(), 'modify', taskwarrior#get_args())<CR>
+    nnoremap <buffer> q :call taskwarrior#quit()<CR>
+    nnoremap <buffer> r :call taskwarrior#clear_completed()<CR>
+    nnoremap <buffer> u :call taskwarrior#undo()<CR>
+    nnoremap <buffer> x :call taskwarrior#delete()<CR>
 
 endfunction
 
@@ -84,4 +86,20 @@ endfunction
 
 function! s:get_uuid()
     return matchstr(getline('.'), '[0-9a-f]\{8}\(-[0-9a-f]\{4}\)\{3}-[0-9a-f]\{12}')
+endfunction
+
+function! taskwarrior#undo()
+    !task undo
+    call taskwarrior#list()
+endfunction
+
+function! taskwarrior#info()
+    for line in split(system("task ".s:get_uuid()." info"), '\n')
+        echo line
+    endfor
+endfunction
+
+function! taskwarrior#clear_completed()
+    !task status:completed delete
+    call taskwarrior#list()
 endfunction
