@@ -1,4 +1,4 @@
-function! taskwarrior#list()
+function! taskwarrior#list() abort
     setlocal modifiable
     setlocal nowrap
     %delete
@@ -59,14 +59,14 @@ function! taskwarrior#set_done()
     if getline('.')[b:task_columns[1]:b:task_columns[2]-2] =~ 'Completed'
         return
     endif
-    call taskwarrior#system_call(s:get_uuid(), ' done', '')
+    silent call taskwarrior#system_call(s:get_uuid(), ' done', '')
     call taskwarrior#list()
 endfunction
 
 function! taskwarrior#get_args()
-    let due = input("due - '1h','2d','3w'...:")
+    let due = input("due:")
     let project = input("project:")
-    let priority = input("priority - 'L','M','H':")
+    let priority = input("priority:")
     let description = input("description:")
     return " due:".due." project:".project." priority:".priority." ".description
 endfunction
@@ -79,9 +79,10 @@ function! taskwarrior#get_id()
 endfunction
 
 function! taskwarrior#system_call(filter, command, args)
-    call system("task ".a:filter.a:command.a:args)
-    " TODO refresh bug
+    let pos = getpos('.')
+    echo system("task ".a:filter.a:command.a:args)
     call taskwarrior#list()
+    call setpos('.', pos)
 endfunction
 
 function! s:get_uuid()
@@ -103,3 +104,5 @@ function! taskwarrior#clear_completed()
     !task status:completed delete
     call taskwarrior#list()
 endfunction
+
+" vim:ts=4:sw=4:tw=78:ft=vim:fdm=indent
