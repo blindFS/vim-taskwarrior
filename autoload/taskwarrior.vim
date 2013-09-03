@@ -19,14 +19,15 @@ function! taskwarrior#list() abort
     setlocal buftype=nofile
     setlocal nomodifiable
 
-    nnoremap <buffer> c :call taskwarrior#system_call('', 'add', taskwarrior#get_args())<CR>
+    nnoremap <buffer> c :call taskwarrior#system_call('', 'add', taskwarrior#get_args(), 'interactive')<CR>
     nnoremap <buffer> d :call taskwarrior#set_done()<CR>
-    nnoremap <buffer> i :call taskwarrior#info()<CR>
-    nnoremap <buffer> m :call taskwarrior#system_call(taskwarrior#get_id(), 'modify', taskwarrior#get_args())<CR>
+    nnoremap <buffer> i :call taskwarrior#info(taskwarrior#get_uuid()." info")<CR>
+    nnoremap <buffer> m :call taskwarrior#system_call(taskwarrior#get_id(), 'modify', taskwarrior#get_args(), 'interactive')<CR>
     nnoremap <buffer> q :call taskwarrior#quit()<CR>
     nnoremap <buffer> r :call taskwarrior#clear_completed()<CR>
     nnoremap <buffer> u :call taskwarrior#undo()<CR>
     nnoremap <buffer> x :call taskwarrior#delete()<CR>
+    nnoremap <buffer> s :call taskwarrior#info("summary")<CR>
 
 endfunction
 
@@ -51,7 +52,7 @@ function! taskwarrior#quit()
 endfunction
 
 function! taskwarrior#delete()
-    execute "!task ".s:get_uuid()." delete"
+    execute "!task ".taskwarrior#get_uuid()." delete"
     call taskwarrior#list()
 endfunction
 
@@ -59,8 +60,7 @@ function! taskwarrior#set_done()
     if getline('.')[b:task_columns[1]:b:task_columns[2]-2] =~ 'Completed'
         return
     endif
-    silent call taskwarrior#system_call(s:get_uuid(), ' done', '')
-    call taskwarrior#list()
+    call taskwarrior#system_call(taskwarrior#get_uuid(), ' done', '', 'silent')
 endfunction
 
 function! taskwarrior#get_args()
@@ -78,24 +78,32 @@ function! taskwarrior#get_id()
     return 0
 endfunction
 
-function! taskwarrior#system_call(filter, command, args)
+function! taskwarrior#system_call(filter, command, args, mode)
     let pos = getpos('.')
-    echo system("task ".a:filter.a:command.a:args)
+    if a:mode == 'silent'
+        call system("task ".a:filter.a:command.a:args)
+    else
+        echo system("task ".a:filter.a:command.a:args)
+    endif
     call taskwarrior#list()
     call setpos('.', pos)
 endfunction
 
-function! s:get_uuid()
+function! taskwarrior#get_uuid()
     return matchstr(getline('.'), '[0-9a-f]\{8}\(-[0-9a-f]\{4}\)\{3}-[0-9a-f]\{12}')
 endfunction
 
 function! taskwarrior#undo()
-    !task undo
+    if has("gui_running")
+        silent !xterm -e "task undo"
+    else
+        !task undo
+    endif
     call taskwarrior#list()
 endfunction
 
-function! taskwarrior#info()
-    for line in split(system("task ".s:get_uuid()." info"), '\n')
+function! taskwarrior#info(command)
+    for line in split(system("task ".a:command), '\n')
         echo line
     endfor
 endfunction
