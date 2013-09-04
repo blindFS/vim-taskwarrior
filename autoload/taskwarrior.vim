@@ -2,14 +2,14 @@ function! taskwarrior#list() abort
     setlocal modifiable
     setlocal nowrap
     %delete
-    call append(0, split((system("task all")), '\n')[:-3])
-    if len(getline(1)) == 0
-        call append(line('$')-1,
-                    \['ID Status Project Pri Due Complete Description UUID',
-                    \'-- ------ ------- --- --- -------- ----------- ----'])
-    endif
     let b:task_report_columns = split(substitute(substitute(system("task show|grep report.all.columns"), 'report\.all\.columns\s*\|\n', '', 'g'), '\.', '_', 'g'), ',')
     let b:task_report_labels = split(substitute(system("task show|grep report.all.labels"), 'report\.all\.labels\s*\|\n', '', 'g'), ',')
+    let line1 = join(b:task_report_labels, ' ')
+    let line2 = substitute(line1, '\S', '-', 'g')
+    call append(0, split((system("task all")), '\n')[:-3])
+    if len(getline(1)) == 0
+        call append(line('$')-1, [line1, line2])
+    endif
     let b:task_columns = [0]
     for col in range(len(getline(1))-1)
         if getline(1)[col] == " " && getline(1)[col+1] != " "
