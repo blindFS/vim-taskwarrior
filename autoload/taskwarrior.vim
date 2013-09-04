@@ -8,6 +8,8 @@ function! taskwarrior#list() abort
                     \['ID Status Project Pri Due Complete Description UUID',
                     \'-- ------ ------- --- --- -------- ----------- ----'])
     endif
+    let b:task_report_columns = split(substitute(substitute(system("task show|grep report.all.columns"), 'report\.all\.columns\s*\|\n', '', 'g'), '\.', '_', 'g'), ',')
+    let b:task_report_labels = split(substitute(system("task show|grep report.all.labels"), 'report\.all\.labels\s*\|\n', '', 'g'), ',')
     let b:task_columns = [0]
     for col in range(len(getline(1))-1)
         if getline(1)[col] == " " && getline(1)[col+1] != " "
@@ -17,7 +19,6 @@ function! taskwarrior#list() abort
     setlocal filetype=taskwarrior
     setlocal buftype=nofile
     setlocal nomodifiable
-
     nnoremap <buffer> c :call taskwarrior#system_call('', 'add', taskwarrior#get_args(), 'interactive')<CR>
     nnoremap <buffer> d :call taskwarrior#set_done()<CR>
     nnoremap <buffer> i :call taskwarrior#info(taskwarrior#get_uuid().' info')<CR>
@@ -71,10 +72,7 @@ function! taskwarrior#get_args()
 endfunction
 
 function! taskwarrior#get_id()
-    if matchstr(getline('.'), '^\s*\zs\d\+') != ""
-        return matchstr(getline('.'), '^\s*\zs\d\+')." "
-    endif
-    return 0
+    return matchstr(getline('.'), '^\s*\zs\d\+')." "
 endfunction
 
 function! taskwarrior#system_call(filter, command, args, mode)
@@ -89,6 +87,9 @@ function! taskwarrior#system_call(filter, command, args, mode)
 endfunction
 
 function! taskwarrior#get_uuid()
+    if index(b:task_report_columns, 'uuid') == -1
+        return taskwarrior#get_id()
+    endif
     return matchstr(getline('.'), '[0-9a-f]\{8}\(-[0-9a-f]\{4}\)\{3}-[0-9a-f]\{12}')
 endfunction
 

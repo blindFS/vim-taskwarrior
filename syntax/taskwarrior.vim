@@ -1,21 +1,23 @@
-syntax keyword taskwarrior_Tablehead ID Project Pri Due A Age Urgency Description Complete Active Status UUID
-let exp = 'syntax match taskwarrior_%s /^.\{%d}/ contains=taskwarrior_%s'
-if exists("b:task_columns")
-    execute printf(exp, 'ID'         , b:task_columns[1], '')
-    execute printf(exp, 'Project'    , b:task_columns[2], 'ID')
-    execute printf(exp, 'Status'     , b:task_columns[3], 'Project')
-    execute printf(exp, 'Pri'        , b:task_columns[4], 'Status')
-    execute printf(exp, 'Due'        , b:task_columns[5], 'Pri')
-    execute printf(exp, 'Complete'   , b:task_columns[6], 'Due')
-    execute printf(exp, 'Description', b:task_columns[7], 'Complete')
-    execute printf(exp, 'UUID'       , len(getline(2))  , 'Description')
+if exists('b:task_report_labels')
+    for word in b:task_report_labels
+        execute "syntax keyword taskwarrior_Tablehead ".word
+    endfor
 endif
-highlight default link taskwarrior_Tablehead Type
-highlight default link taskwarrior_ID VarId
-highlight default link taskwarrior_Project String
+let exp = 'syntax match taskwarrior_%s /^.\{%d}/ contains=taskwarrior_%s'
+if exists('b:task_columns') && exists('b:task_report_columns')
+    execute printf(exp, b:task_report_columns[0], b:task_columns[1], '')
+    for i in range(1, len(b:task_report_columns)-2)
+        execute printf(exp, b:task_report_columns[i] , b:task_columns[i+1], b:task_report_columns[i-1])
+    endfor
+    execute printf(exp, b:task_report_columns[-1], len(getline(2)), b:task_report_columns[-2])
+endif
+highlight default link taskwarrior_tablehead Type
+highlight default link taskwarrior_id VarId
+highlight default link taskwarrior_project String
 highlight default link taskwarrior_Status Include
-highlight default link taskwarrior_Pri Class
-highlight default link taskwarrior_Due Todo
-highlight default link taskwarrior_Complete Keyword
-highlight default link taskwarrior_Description Normal
-highlight default link taskwarrior_UUID VarId
+highlight default link taskwarrior_priority Class
+highlight default link taskwarrior_due Todo
+highlight default link taskwarrior_end Keyword
+highlight default link taskwarrior_description Normal
+highlight default link taskwarrior_entry_age Special
+highlight default link taskwarrior_uuid VarId

@@ -33,16 +33,11 @@ CUSTOMIZATION                                                         *taskrc*
 |:Man| taskrc for more info.
 
 WARNING:
-These lines is recommanded.
-
-    report.all.labels=ID,Project,Status,Pri,Due,Complete,Description,UUID
-    report.all.columns=id,project,status,priority,due,end,description,uuid
+This line is needed.
 
     defaultwidth=999
 
-UUID filed is required to get proper filter.
-You'd better not change the order of columns or you may want to change the
-syntax/taskwarrior.vim accordingly.
+Defaultwidth option should be big enough,otherwise lines will not be wrapped
+correctly.
 
-And defaultwidth option should be big enough,otherwise lines will not be
-wrapped correctly.
+And the uuid field is recommanded in report.all.columns for exact filter.
