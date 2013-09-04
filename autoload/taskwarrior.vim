@@ -14,20 +14,19 @@ function! taskwarrior#list() abort
             let b:task_columns += [col+1]
         endif
     endfor
-    setlocal ft=taskwarrior
-    setlocal syntax=taskwarrior
+    setlocal filetype=taskwarrior
     setlocal buftype=nofile
     setlocal nomodifiable
 
     nnoremap <buffer> c :call taskwarrior#system_call('', 'add', taskwarrior#get_args(), 'interactive')<CR>
     nnoremap <buffer> d :call taskwarrior#set_done()<CR>
-    nnoremap <buffer> i :call taskwarrior#info(taskwarrior#get_uuid()." info")<CR>
+    nnoremap <buffer> i :call taskwarrior#info(taskwarrior#get_uuid().' info')<CR>
     nnoremap <buffer> m :call taskwarrior#system_call(taskwarrior#get_id(), 'modify', taskwarrior#get_args(), 'interactive')<CR>
     nnoremap <buffer> q :call taskwarrior#quit()<CR>
     nnoremap <buffer> r :call taskwarrior#clear_completed()<CR>
     nnoremap <buffer> u :call taskwarrior#undo()<CR>
     nnoremap <buffer> x :call taskwarrior#delete()<CR>
-    nnoremap <buffer> s :call taskwarrior#info("summary")<CR>
+    nnoremap <buffer> s :call taskwarrior#info('summary')<CR>
 
 endfunction
 

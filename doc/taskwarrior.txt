@@ -1,0 +1,48 @@
+*taskwarrior.txt*   Vim interface for taskwarrior (http://taskwarrior.org)
+
+==============================================================================
+INTRODUCTION                                                     *taskwarrior*
+
+Taskwarrior is a command-line todo list manager.
+It maintains a task list, allowing you to add/remove, and otherwise manipulate
+your tasks. Task has a rich set of subcommands that allow you to do
+sophisticated things. You'll find it has customizable reports, charts, GTD
+features, device synching, documentation, extensions, themes, holiday files...
+
+==============================================================================
+COMMAND                                                            *:TaskList*
+
+Show the list of tasks(pending/completed).
+
+==============================================================================
+MAPPING                                                      *taskwarrior-map*
+
+c                      create new task.
+d                      set the task in current line done.
+i                      show task info.
+m                      modify current task.
+q                      quit buffer.
+r                      clear all completed task.
+u                      undo last change.
+x                      delete the task in current line.
+s                      show summary info.
+
+==============================================================================
+CUSTOMIZATION                                                         *taskrc*
+
+|:Man| taskrc for more info.
+
+WARNING:
+These lines is recommanded.
+
+    report.all.labels=ID,Project,Status,Pri,Due,Complete,Description,UUID
+    report.all.columns=id,project,status,priority,due,end,description,uuid
+
+    defaultwidth=999
+
+UUID filed is required to get proper filter.
+You'd better not change the order of columns or you may want to change the
+syntax/taskwarrior.vim accordingly.
+
+And defaultwidth option should be big enough,otherwise lines will not be
+wrapped correctly.
