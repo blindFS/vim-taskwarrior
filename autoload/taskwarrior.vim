@@ -64,11 +64,13 @@ function! taskwarrior#set_done()
 endfunction
 
 function! taskwarrior#get_args()
-    let due = input("due:")
-    let project = input("project:")
-    let priority = input("priority:")
+    let due         = input("due:")
+    let project     = input("project:")
+    let priority    = input("priority:")
     let description = input("description:")
-    return " due:".due." project:".project." priority:".priority." ".description
+    let tag         = substitute(input("tags:"), ' ', ',', 'g')
+    let depends     = substitute(input("depends:"), ' ', ',', 'g')
+    return " due:".due." project:".project." priority:".priority." depends:".depends." tag:".tag." ".description
 endfunction
 
 function! taskwarrior#get_id()
