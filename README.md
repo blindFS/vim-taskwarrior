@@ -14,6 +14,8 @@ And **uuid** field is recommanded in **report.all.columns** to get the exact fil
 default map
 
 ```vim
+nnoremap <buffer> a ... " add annotation
+nnoremap <buffer> n ... " delete annotation
 nnoremap <buffer> c ... " create new task.
 nnoremap <buffer> d ... " set the task in current line done.
 nnoremap <buffer> i ... " show task info.

@@ -19,6 +19,8 @@ function! taskwarrior#list() abort
     setlocal filetype=taskwarrior
     setlocal buftype=nofile
     setlocal nomodifiable
+    nnoremap <buffer> a :call taskwarrior#annotate('add')<CR>
+    nnoremap <buffer> n :call taskwarrior#annotate('del')<CR>
     nnoremap <buffer> c :call taskwarrior#system_call('', 'add', taskwarrior#get_args(), 'interactive')<CR>
     nnoremap <buffer> d :call taskwarrior#set_done()<CR>
     nnoremap <buffer> i :call taskwarrior#info(taskwarrior#get_uuid().' info')<CR>
@@ -54,6 +56,15 @@ endfunction
 function! taskwarrior#delete()
     execute "!task ".taskwarrior#get_uuid()." delete"
     call taskwarrior#list()
+endfunction
+
+function! taskwarrior#annotate(op)
+    let annotation = input("annotation:")
+    if a:op == 'add'
+        call taskwarrior#system_call(taskwarrior#get_uuid(), ' annotate ', annotation, 'silent')
+    else
+        call taskwarrior#system_call(taskwarrior#get_uuid(), ' denotate ', annotation, 'silent')
+    endif
 endfunction
 
 function! taskwarrior#set_done()
@@ -97,7 +108,9 @@ endfunction
 
 function! taskwarrior#undo()
     if has("gui_running")
-        silent !xterm -e "task undo"
+        if executable('xterm')
+            silent !xterm -e "task undo"
+        endif
     else
         !task undo
     endif
