@@ -13,6 +13,10 @@ features, device synching, documentation, extensions, themes, holiday files...
 COMMAND                                                            *:TaskList*
 
 Show the list of tasks(pending/completed).
+                                              *:TaskPush* *:TaskMerge* *:TaskPull*
+|:Man| task-sync for more info.
+                                                             *:TaskEditConfig*
+Edit taskrc file.|:Man| taskrc for more info.
 
 ==============================================================================
 MAPPING                                                      *taskwarrior-map*
@@ -31,8 +35,6 @@ s                      show summary info.
 
 ==============================================================================
 CUSTOMIZATION                                                         *taskrc*
-
-|:Man| taskrc for more info.
 
 WARNING:
 This line is needed.
