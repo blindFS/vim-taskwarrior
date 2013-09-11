@@ -130,18 +130,9 @@ endfunction
 
 function! taskwarrior#remote(action)
     let uri = input("remote uri:")
-    if a:action == 'pull'
-        execute '!task pull '.uri
-        if exists(g:task_view)
-            call taskwarrior#list()
-        endif
-    elseif a:action == 'merge'
-        execute '!task merge '.uri
-        if exists(g:task_view)
-            call taskwarrior#list()
-        endif
-    else
-        execute '!task push '.uri
+    execute '!task '.a:action.' '.uri
+    if exists('g:task_view')
+        call taskwarrior#list()
     endif
 endfunction
 
