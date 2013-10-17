@@ -17,6 +17,10 @@ Show the list of tasks(pending/completed).
 |:Man| task-sync for more info.
                                                              *:TaskEditConfig*
 Edit taskrc file.|:Man| taskrc for more info.
+                                                                   *:TaskPush*
+                                                                   *:TaskPull*
+                                                                  *:TaskMerge*
+Synchronising with remote server.
 
 ==============================================================================
 MAPPING                                                      *taskwarrior-map*
