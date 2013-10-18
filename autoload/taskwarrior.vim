@@ -1,4 +1,5 @@
 function! taskwarrior#list() abort
+    let pos = getpos('.')
     setlocal modifiable
     setlocal nowrap
     %delete
@@ -19,9 +20,9 @@ function! taskwarrior#list() abort
     setlocal filetype=taskwarrior
     setlocal buftype=nofile
     setlocal nomodifiable
-    nnoremap <buffer> a :call taskwarrior#annotate('add')<CR>
-    nnoremap <buffer> n :call taskwarrior#annotate('del')<CR>
-    nnoremap <buffer> c :call taskwarrior#system_call('', 'add', taskwarrior#get_args(), 'interactive')<CR>
+    nnoremap <buffer> A :call taskwarrior#annotate('add')<CR>
+    nnoremap <buffer> D :call taskwarrior#annotate('del')<CR>
+    nnoremap <buffer> a :call taskwarrior#system_call('', 'add', taskwarrior#get_args(), 'interactive')<CR>
     nnoremap <buffer> d :call taskwarrior#set_done()<CR>
     nnoremap <buffer> i :call taskwarrior#info(taskwarrior#get_uuid().' info')<CR>
     nnoremap <buffer> m :call taskwarrior#system_call(taskwarrior#get_id(), 'modify', taskwarrior#get_args(), 'interactive')<CR>
@@ -30,6 +31,8 @@ function! taskwarrior#list() abort
     nnoremap <buffer> u :call taskwarrior#undo()<CR>
     nnoremap <buffer> x :call taskwarrior#delete()<CR>
     nnoremap <buffer> s :call taskwarrior#info('summary')<CR>
+
+    call setpos('.', pos)
 
 endfunction
 
@@ -89,14 +92,12 @@ function! taskwarrior#get_id()
 endfunction
 
 function! taskwarrior#system_call(filter, command, args, mode)
-    let pos = getpos('.')
     if a:mode == 'silent'
         call system("task ".a:filter.a:command.a:args)
     else
         echo system("task ".a:filter.a:command.a:args)
     endif
     call taskwarrior#list()
-    call setpos('.', pos)
 endfunction
 
 function! taskwarrior#get_uuid()

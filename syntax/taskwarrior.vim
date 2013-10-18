@@ -7,7 +7,9 @@ let exp = 'syntax match taskwarrior_%s /^.\{%d}/ contains=taskwarrior_%s'
 if exists('b:task_columns') && exists('b:task_report_columns')
     execute printf(exp, b:task_report_columns[0], b:task_columns[1], '')
     for i in range(1, len(b:task_report_columns)-2)
-        execute printf(exp, b:task_report_columns[i] , b:task_columns[i+1], b:task_report_columns[i-1])
+        if exists('b:task_columns['.(i+1).']')
+            execute printf(exp, b:task_report_columns[i] , b:task_columns[i+1], b:task_report_columns[i-1])
+        endif
     endfor
     execute printf(exp, b:task_report_columns[-1], len(getline(2)), b:task_report_columns[-2])
 endif

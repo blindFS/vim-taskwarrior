@@ -25,9 +25,9 @@ Synchronising with remote server.
 ==============================================================================
 MAPPING                                                      *taskwarrior-map*
 
-a                      add annotation
-n                      delete annotation
-c                      create new task.
+A                      add annotation
+D                      delete annotation
+a                      create new task.
 d                      set the task in current line done.
 i                      show task info.
 m                      modify current task.
