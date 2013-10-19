@@ -14,6 +14,7 @@ command! TWConfigEdit :execute "e ".$HOME."/.taskrc"
 "command! TWDelete
 "command! TWDeleteAnnotation
 "command! TWEdit
+"command! TWExport
 "command! TWHelp
 "command! TWModify
 "command! TWSync
