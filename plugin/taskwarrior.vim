@@ -28,6 +28,7 @@ command! TWEditVimrc :execute "e ".$HOME."/.vimrc"
 "command! TWModify
 "command! TWNote
 "command! TWOpen
+"command! TWOpenInline
 command! TWSync call taskwarrior#remote('sync')
 "command! TWSyncFiles 
 "command! TWSyncStatus
