@@ -50,6 +50,8 @@ command! TWSync call taskwarrior#remote('sync')
 "command! TWThemeShow
 "command! TWUndo
 "command! TWWiki
+"command! TWWikiDiary
+"command! TWWikiDiaryAdd
 "command! TWWikiGenIndex
 "command! TWWikiGenProject
 "command! TWWikiGenTag
