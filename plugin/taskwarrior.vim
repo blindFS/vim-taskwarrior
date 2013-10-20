@@ -39,6 +39,7 @@ command! TWSync call taskwarrior#remote('sync')
 "command! TWSyncStatus
 "command! TWTheme
 "command! TWThemeEdit
+"command! TWThemeShow
 "command! TWUndo
 "command! TWWiki
 "command! TWWikiGenIndex
