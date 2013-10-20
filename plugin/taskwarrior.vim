@@ -23,6 +23,7 @@ command! TWEditTaskrc :execute "e ".$HOME."/.taskrc"
 command! TWEditVimrc :execute "e ".$HOME."/.vimrc"
 "command! TWExport
 "command! TWHelp
+"command! TWHistory
 "command! TWModify
 "command! TWNote
 "command! TWOpen
@@ -30,6 +31,10 @@ command! TWSync call taskwarrior#remote('sync')
 "command! TWSyncFiles 
 "command! TWSyncStatus
 "command! TWTheme
+"command! TWThemeEdit
 "command! TWUndo
 "command! TWWiki
+"command! TWWikiGenIndex
+"command! TWWikiGenProject
+"command! TWWikiGenTag
 "command! TWWikiIndex
