@@ -18,7 +18,7 @@ command! TW call taskwarrior#init()
 "command! TWEdit
 "command! TWEditAnnotation
 command! TWEditTaskrc :execute "e ".$HOME."/.taskrc"
-command! TWEditVimrc :execute "e ".$HOME."/.vimrc
+command! TWEditVimrc :execute "e ".$HOME."/.vimrc"
 "command! TWExport
 "command! TWHelp
 "command! TWModify
