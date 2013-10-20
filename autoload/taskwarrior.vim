@@ -21,7 +21,8 @@ function! taskwarrior#list() abort
     setlocal buftype=nofile
     setlocal nomodifiable
     nnoremap <buffer> A :call taskwarrior#annotate('add')<CR>
-    nnoremap <buffer> D :call taskwarrior#annotate('del')<CR>
+"    nnoremap <buffer> D :call taskwarrior#annotate('del')<CR>
+    nnoremap <buffer> D :call taskwarrior#delete()<CR>
     nnoremap <buffer> a :call taskwarrior#system_call('', 'add', taskwarrior#get_args(), 'interactive')<CR>
     nnoremap <buffer> d :call taskwarrior#set_done()<CR>
     nnoremap <buffer> i :call taskwarrior#info(taskwarrior#get_uuid().' info')<CR>
@@ -29,7 +30,8 @@ function! taskwarrior#list() abort
     nnoremap <buffer> q :call taskwarrior#quit()<CR>
     nnoremap <buffer> r :call taskwarrior#clear_completed()<CR>
     nnoremap <buffer> u :call taskwarrior#undo()<CR>
-    nnoremap <buffer> x :call taskwarrior#delete()<CR>
+"    nnoremap <buffer> x :call taskwarrior#delete()<CR>
+    nnoremap <buffer> x :call taskwarrior#annotate('del')<CR>
     nnoremap <buffer> s :call taskwarrior#info('summary')<CR>
 
     call setpos('.', pos)
