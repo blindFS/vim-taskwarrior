@@ -2,6 +2,7 @@ vim-taskwarrior
 ===============
 
 vim interface for [taskwarrior](http://taskwarrior.org)
+note: this also includes vim ftdetect and syntax files for task edit, taskrc and data files
 
 Should add this line to .taskrc
 
