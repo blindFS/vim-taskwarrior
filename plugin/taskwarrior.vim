@@ -17,6 +17,7 @@ command! TW call taskwarrior#init()
 "command! TWDelete
 "command! TWDeleteAnnotation
 "command! TWDeleteCompleted
+"command! TWDeleteNote
 "command! TWEdit
 "command! TWEditAnnotation
 "command! TWEditDescription
