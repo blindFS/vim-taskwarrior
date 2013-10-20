@@ -32,6 +32,8 @@ command! TWEditVimrc :execute "e ".$HOME."/.vimrc"
 "command! TWHistory
 "command! TWInsert
 "command! TWModify
+"command! TWModifyIncrement
+"command! TWModifyReplace
 "command! TWNote
 "command! TWOpen
 "command! TWOpenInline
