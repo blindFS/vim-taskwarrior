@@ -10,6 +10,7 @@ command! TW call taskwarrior#init()
 "command! TWAdd
 "command! TWAnnotate
 "command! TWComplete
+"command! TWConfigDiagnostic
 "command! TWConfigGet
 "command! TWConfigSet
 "command! TWConfigShow
