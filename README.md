@@ -24,7 +24,7 @@ nnoremap <buffer> q ... " quit buffer.
 nnoremap <buffer> r ... " clear all completed task.
 nnoremap <buffer> u ... " undo last change.
 nnoremap <buffer> x ... " delete annotation.
-nnoremap <buffer> s ... " task sync.
+nnoremap <buffer> s ... " task summary.
 ```
 
 Commands:
