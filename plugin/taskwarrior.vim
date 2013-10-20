@@ -9,6 +9,10 @@
 command! TW call taskwarrior#init()
 "command! TWAdd
 "command! TWAnnotate
+"command! TWArchive
+"command! TWArchiveCompleted
+"command! TWArchiveDeleted
+"command! TWArchiveNotes
 "command! TWComplete
 "command! TWConfigDiagnostic
 "command! TWConfigGet
