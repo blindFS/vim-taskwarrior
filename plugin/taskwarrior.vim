@@ -1,26 +1,30 @@
-command! TW call taskwarrior#init()
-command! TWConfigEdit :execute "e ".$HOME."/.taskrc"
 "
 "commented out pending taskd collision avoidance
 "command! TaskPush call taskwarrior#remote('push')
 "command! TaskPull call taskwarrior#remote('pull')
 "command! TaskMerge call taskwarrior#remote('merge')
 "
-"command ideas;
+"commands;
 "
+command! TW call taskwarrior#init()
 "command! TWAdd
 "command! TWAnnotate
 "command! TWComplete
+"command! TWConfigGet
+"command! TWConfigSet
+"command! TWConfigShow
 "command! TWDelete
 "command! TWDeleteAnnotation
 "command! TWEdit
+"command! TWEditAnnotation
+command! TWEditTaskrc :execute "e ".$HOME."/.taskrc"
+command! TWEditVimrc :execute "e ".$HOME."/.vimrc
 "command! TWExport
 "command! TWHelp
 "command! TWModify
-"command! TWSync
+command! TWSync call taskwarrior#remote('sync')
 "command! TWSyncStatus
 "command! TWTheme
 "command! TWUndo
-"command! TWConfigShow
 "command! TWWiki
 "command! TWWikiIndex
