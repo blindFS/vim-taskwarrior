@@ -30,6 +30,7 @@ command! TWEditVimrc :execute "e ".$HOME."/.vimrc"
 "command! TWExport
 "command! TWHelp
 "command! TWHistory
+"command! TWInsert
 "command! TWModify
 "command! TWNote
 "command! TWOpen
