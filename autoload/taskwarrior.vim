@@ -3,9 +3,7 @@ function! taskwarrior#list() abort
     setlocal modifiable
     setlocal nowrap
     %delete
-"    let b:task_report_columns = split(substitute(substitute(system("task show|grep report.list.columns"), 'report\.list\.columns\s*\|\n', '', 'g'), '\.', '_', 'g'), ',')
     let b:task_report_columns = split(substitute(substitute(system("task _get -- rc.report.list.columns"), '*\|\n', '', 'g'), '\.', '_', 'g'), ',')
-"    let b:task_report_labels = split(substitute(system("task show|grep report.list.labels"), 'report\.list\.labels\s*\|\n', '', 'g'), ',')
     let b:task_report_labels = split(substitute(system("task _get -- rc.report.list.labels"), '*\|\n', '', 'g'), ',')
     let line1 = join(b:task_report_labels, ' ')
     let line2 = substitute(line1, '\S', '-', 'g')
@@ -23,18 +21,16 @@ function! taskwarrior#list() abort
     setlocal buftype=nofile
     setlocal nomodifiable
     nnoremap <buffer> A :call taskwarrior#annotate('add')<CR>
-"    nnoremap <buffer> D :call taskwarrior#annotate('del')<CR>
     nnoremap <buffer> D :call taskwarrior#delete()<CR>
     nnoremap <buffer> a :call taskwarrior#system_call('', 'add', taskwarrior#get_args(), 'interactive')<CR>
     nnoremap <buffer> d :call taskwarrior#set_done()<CR>
-    nnoremap <buffer> i :call taskwarrior#info(taskwarrior#get_uuid().' info')<CR>
+    nnoremap <buffer> <CR> :call taskwarrior#info(taskwarrior#get_uuid().' info')<CR>
     nnoremap <buffer> m :call taskwarrior#system_call(taskwarrior#get_id(), 'modify', taskwarrior#get_args(), 'interactive')<CR>
     nnoremap <buffer> q :call taskwarrior#quit()<CR>
     nnoremap <buffer> r :call taskwarrior#clear_completed()<CR>
     nnoremap <buffer> u :call taskwarrior#undo()<CR>
-"    nnoremap <buffer> x :call taskwarrior#delete()<CR>
     nnoremap <buffer> x :call taskwarrior#annotate('del')<CR>
-    nnoremap <buffer> s :call taskwarrior#info('summary')<CR>
+    nnoremap <buffer> s :call taskwarrior#sync('sync')<CR>
 
     call setpos('.', pos)
 
