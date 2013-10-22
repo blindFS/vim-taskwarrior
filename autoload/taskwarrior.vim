@@ -3,8 +3,10 @@ function! taskwarrior#list() abort
     setlocal modifiable
     setlocal nowrap
     %delete
-    let b:task_report_columns = split(substitute(substitute(system("task show|grep report.list.columns"), 'report\.list\.columns\s*\|\n', '', 'g'), '\.', '_', 'g'), ',')
-    let b:task_report_labels = split(substitute(system("task show|grep report.list.labels"), 'report\.list\.labels\s*\|\n', '', 'g'), ',')
+"    let b:task_report_columns = split(substitute(substitute(system("task show|grep report.list.columns"), 'report\.list\.columns\s*\|\n', '', 'g'), '\.', '_', 'g'), ',')
+    let b:task_report_columns = split(substitute(substitute(system("task _get -- rc.report.list.columns"), '*\|\n', '', 'g'), '\.', '_', 'g'), ',')
+"    let b:task_report_labels = split(substitute(system("task show|grep report.list.labels"), 'report\.list\.labels\s*\|\n', '', 'g'), ',')
+    let b:task_report_labels = split(substitute(system("task _get -- rc.report.list.labels"), '*\|\n', '', 'g'), ',')
     let line1 = join(b:task_report_labels, ' ')
     let line2 = substitute(line1, '\S', '-', 'g')
     call append(0, split((system("task list")), '\n')[:-3])
@@ -45,7 +47,7 @@ function! taskwarrior#init()
     if exists('g:task_view')
         execute g:task_view.'buffer'
     else
-        execute 'edit Taskwarrior'
+        execute 'edit task_list'
         let g:task_view = bufnr('%')
         setlocal noswapfile
     endif
@@ -131,6 +133,7 @@ function! taskwarrior#clear_completed()
     call taskwarrior#list()
 endfunction
 
+"deprecated functions push, pull, merge
 function! taskwarrior#remote(action)
     let uri = input("remote uri:")
     execute '!task '.a:action.' '.uri
@@ -139,4 +142,10 @@ function! taskwarrior#remote(action)
     endif
 endfunction
 
+function! taskwarrior#sync(action)
+    execute '!task '.a:action.' '
+    if exists('g:task_view')
+        call taskwarrior#list()
+    endif
+endfunction
 " vim:ts=4:sw=4:tw=78:ft=vim:fdm=indent
