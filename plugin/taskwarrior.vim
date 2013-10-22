@@ -42,7 +42,7 @@ command! TWEditVimrc :execute "e ".$HOME."/.vimrc"
 "command! TWPackageList
 "command! TWPackageRemove
 "command! TWPackageUpdate
-command! TWSync call taskwarrior#remote('sync')
+command! TWSync call taskwarrior#sync('sync')
 "command! TWSyncFiles 
 "command! TWSyncStatus
 "command! TWTheme
