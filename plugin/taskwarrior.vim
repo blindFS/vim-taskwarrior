@@ -1,8 +1,8 @@
 "
 "commented out pending taskd collision avoidance
-"command! TaskPush call taskwarrior#remote('push')
-"command! TaskPull call taskwarrior#remote('pull')
-"command! TaskMerge call taskwarrior#remote('merge')
+"command! TaskPush call tw#remote('push')
+"command! TaskPull call tw#remote('pull')
+"command! TaskMerge call tw#remote('merge')
 "
 "commands;
 "
@@ -27,6 +27,7 @@ command! TW call taskwarrior#init()
 "command! TWEditDescription
 command! TWEditTaskrc :execute "e ".$HOME."/.taskrc"
 command! TWEditVimrc :execute "e ".$HOME."/.vimrc"
+command! TWEditVitrc :execute "e ".$HOME."/.vitrc"
 "command! TWExport
 "command! TWHelp
 "command! TWHistory

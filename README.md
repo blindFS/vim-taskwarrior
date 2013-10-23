@@ -20,7 +20,7 @@ nnoremap <buffer> A ... " add annotation
 nnoremap <buffer> D ... " delete task
 nnoremap <buffer> a ... " create new task.
 nnoremap <buffer> d ... " set the task in current line done.
-nnoremap <buffer> i ... " show task info.
+nnoremap <buffer> <CR>. " show task info.
 nnoremap <buffer> m ... " modify current task.
 nnoremap <buffer> q ... " quit buffer.
 nnoremap <buffer> r ... " clear all completed task.
@@ -34,6 +34,7 @@ Commands:
 :TW            " task list
 :TWEditTaskrc  " edit ~/.taskrc
 :TWEditVimrc   " edit ~/.vimrc
+:TWEditVitrc   " edit ~/.vitrc
 :TWSync        " Synchronise with taskd server
 
 ```
