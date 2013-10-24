@@ -14,6 +14,7 @@ command! TW call taskwarrior#init()
 "command! TWArchiveDeleted
 "command! TWArchiveNotes
 "command! TWComplete
+"command! TWConfigColor
 "command! TWConfigDiagnostic
 "command! TWConfigGet
 "command! TWConfigSet
@@ -43,6 +44,12 @@ command! TWEditVitrc :execute "e ".$HOME."/.vitrc"
 "command! TWPackageList
 "command! TWPackageRemove
 "command! TWPackageUpdate
+"command! TWReport
+"command! TWReportBreak
+"command! TWReportInfo
+"command! TWReportProjects
+"command! TWReportSort
+"command! TWReportTags
 command! TWSync call taskwarrior#sync('sync')
 "command! TWSyncFiles 
 "command! TWSyncStatus
