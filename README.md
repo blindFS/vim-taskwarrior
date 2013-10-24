@@ -3,6 +3,8 @@ vim-taskwarrior
 
 vim interface for [taskwarrior](http://taskwarrior.org)
 
+*note:* this fork also includes vim ftdetect and syntax files for task edit, taskrc and data files
+
 Should add this line to .taskrc
 
     defaultwidth=999
@@ -15,23 +17,24 @@ Default map:
 
 ```vim
 nnoremap <buffer> A ... " add annotation
-nnoremap <buffer> D ... " delete annotation
+nnoremap <buffer> D ... " delete task
 nnoremap <buffer> a ... " create new task.
 nnoremap <buffer> d ... " set the task in current line done.
-nnoremap <buffer> i ... " show task info.
+nnoremap <buffer> <CR>. " show task info.
 nnoremap <buffer> m ... " modify current task.
 nnoremap <buffer> q ... " quit buffer.
 nnoremap <buffer> r ... " clear all completed task.
 nnoremap <buffer> u ... " undo last change.
-nnoremap <buffer> x ... " delete the task in current line.
-nnoremap <buffer> s ... " show summary info.
+nnoremap <buffer> x ... " delete annotation.
+nnoremap <buffer> s ... " task summary.
 ```
 
 Commands:
 ```vim
-:TaskList       " Show all tasks
-:TaskPush       " Synchronising with remote server
-:TaskPull
-:TaskMerge
-:TaskEditConfig " Edit your .taskrc
+:TW            " task list
+:TWEditTaskrc  " edit ~/.taskrc
+:TWEditVimrc   " edit ~/.vimrc
+:TWEditVitrc   " edit ~/.vitrc
+:TWSync        " Synchronise with taskd server
+
 ```
