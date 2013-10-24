@@ -1,5 +1,5 @@
+:TW	taskwarrior.txt	/*:TW*
 :TaskEditConfig	taskwarrior.txt	/*:TaskEditConfig*
-:TaskList	taskwarrior.txt	/*:TaskList*
 :TaskMerge	taskwarrior.txt	/*:TaskMerge*
 :TaskMerge	taskwarrior.txt	/*:TaskMerge*
 :TaskPull	taskwarrior.txt	/*:TaskPull*
