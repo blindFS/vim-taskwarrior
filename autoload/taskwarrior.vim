@@ -3,42 +3,51 @@ function! taskwarrior#list(...) abort
     setlocal modifiable
     setlocal nowrap
     %delete
-    if !exists('b:filter')
-        let b:filter = ''
+    if a:0 > 0
+        let b:command = join(a:000, ' ')
     endif
-    if !exists('b:report')
-        let b:report = 'list'
-    endif
-    if a:0 == 1
-        if index(['active', 'all', 'block', 'completed', 'list', 'long', 'ls', 'minimal', 'newest', 'next', 'oldest', 'overdue', 'ready', 'recurring', 'unblocked', 'waiting'], a:1) != -1
-            let b:filter = ''
-            let b:report = a:1
-        else
-            let b:filter = a:1
-            let b:report = 'list'
-        endif
-    elseif a:0 == 2
-        let b:filter = a:1
-        let b:report = a:2
+    if !exists('b:command') || b:command == ''
+        let b:command = 'next'
     endif
 
-    let b:task_report_columns = split(substitute(substitute(system("task _get -- rc.report.".b:report.".columns"), '*\|\n', '', 'g'), '\.', '_', 'g'), ',')
-    let b:task_report_labels = split(substitute(system("task _get -- rc.report.".b:report.".labels"), '*\|\n', '', 'g'), ',')
-    let line1 = join(b:task_report_labels, ' ')
-    let line2 = substitute(line1, '\S', '-', 'g')
-    call append(0, split((system("task ".b:filter." ".b:report)), '\n')[:-3])
-    if len(getline(1)) == 0
-        call append(line('$')-1, [line1, line2])
-    endif
-    let b:task_columns = [0]
-    for col in range(len(getline(1))-1)
-        if getline(1)[col] == " " && getline(1)[col+1] != " "
-            let b:task_columns += [col+1]
+    let report = split(b:command, ' ')[-1]
+    if index(['project', 'projects', 'id', 'ids', 'uuid', 'uuids', 'show'], report) != -1 || (len(split(b:command, ' ')) > 1 && split(b:command, ' ')[-2] == 'show')
+        call append(0, split((system("task ".b:command)), '\n'))
+    else
+        if index(['active', 'all', 'block', 'completed', 'list', 'long', 'ls', 'minimal', 'newest', 'next', 'oldest', 'overdue', 'ready', 'recurring', 'unblocked', 'waiting'], report) == -1
+            let report = 'next'
+            let b:command = b:command.' '.report
         endif
-    endfor
+
+        call append(0, split((system("task ".b:command)), '\n')[:-3])
+        let b:task_report_columns = split(substitute(substitute(system("task _get -- rc.report.".report.".columns"), '*\|\n', '', 'g'), '\.', '_', 'g'), ',')
+        let b:task_report_labels = split(substitute(system("task _get -- rc.report.".report.".labels"), '*\|\n', '', 'g'), ',')
+        let line1 = join(b:task_report_labels, ' ')
+        let line2 = substitute(line1, '\S', '-', 'g')
+
+        if len(getline(1)) == 0
+            call append(line('$')-1, [line1, line2])
+        endif
+
+        for label in b:task_report_labels
+            if index(split(getline(1), ' '), label) == -1
+                call remove(b:task_report_columns, index(b:task_report_labels, label))
+                call remove(b:task_report_labels, index(b:task_report_labels, label))
+            endif
+        endfor
+
+        let b:task_columns = [0]
+        for col in range(len(getline(1))-1)
+            if getline(1)[col] == " " && getline(1)[col+1] != " "
+                let b:task_columns += [col+1]
+            endif
+        endfor
+    endif
+
     setlocal filetype=taskwarrior
     setlocal buftype=nofile
     setlocal nomodifiable
+
     nnoremap <buffer> A :call taskwarrior#annotate('add')<CR>
     nnoremap <buffer> D :call taskwarrior#delete()<CR>
     nnoremap <buffer> a :call taskwarrior#system_call('', 'add', taskwarrior#get_args(), 'interactive')<CR>
@@ -66,13 +75,7 @@ function! taskwarrior#init(...)
         let g:task_view = bufnr('%')
         setlocal noswapfile
     endif
-    if a:000[0] == ''
-        call taskwarrior#list()
-    elseif len(split(a:1, ' ')) == 1
-        call taskwarrior#list(a:1)
-    else
-        call taskwarrior#list(join(split(a:1, ' ')[0:-2],' '), split(a:1, ' ')[-1])
-    endif
+    call taskwarrior#list(join(a:000, ' '))
 
 endfunction
 
@@ -96,7 +99,7 @@ function! taskwarrior#annotate(op)
 endfunction
 
 function! taskwarrior#set_done()
-    if getline('.')[b:task_columns[1]:b:task_columns[2]-2] =~ 'Completed'
+    if !exists('b:task_columns') || getline('.')[b:task_columns[1]:b:task_columns[2]-2] =~ 'Completed'
         return
     endif
     call taskwarrior#system_call(taskwarrior#get_uuid(), ' done', '', 'silent')
@@ -126,7 +129,7 @@ function! taskwarrior#system_call(filter, command, args, mode)
 endfunction
 
 function! taskwarrior#get_uuid()
-    if index(b:task_report_columns, 'uuid') == -1
+    if !exists('b:task_report_columns') || index(b:task_report_columns, 'uuid') == -1
         return taskwarrior#get_id()
     endif
     return matchstr(getline('.'), '[0-9a-f]\{8}\(-[0-9a-f]\{4}\)\{3}-[0-9a-f]\{12}')
@@ -152,15 +155,6 @@ endfunction
 function! taskwarrior#clear_completed()
     !task status:completed delete
     call taskwarrior#list()
-endfunction
-
-"deprecated functions push, pull, merge
-function! taskwarrior#remote(action)
-    let uri = input("remote uri:")
-    execute '!task '.a:action.' '.uri
-    if exists('g:task_view')
-        call taskwarrior#list()
-    endif
 endfunction
 
 function! taskwarrior#sync(action)
