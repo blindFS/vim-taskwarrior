@@ -1,3 +1,7 @@
+let g:task_report_command = ['active', 'all', 'blocked', 'completed', 'list', 'long', 'ls', 'minimal', 'newest', 'next', 'oldest', 'overdue', 'ready', 'recurring', 'unblocked', 'waiting']
+let g:task_all_commands = split(system('task _command'), '\n')
+let g:task_filter = ['id:', 'description:', 'due:', 'proj:', 'pri:', 'status:', 'tag:']
+let g:task_report_name = index(g:task_report_command, get(g:, 'task_report_name')) != -1 ? get(g:, 'task_report_name') : 'next'
 "
 "commented out pending taskd collision avoidance
 "command! TaskPush call tw#remote('push')
@@ -6,7 +10,6 @@
 "
 "commands;
 "
-command! TW call taskwarrior#init()
 command! -nargs=? -complete=customlist,s:cmdcomplete TW :call taskwarrior#init(<q-args>)
 "command! TWAdd
 "command! TWAnnotate
@@ -22,7 +25,7 @@ command! -nargs=? -complete=customlist,s:cmdcomplete TW :call taskwarrior#init(<
 "command! TWConfigShow
 "command! TWDelete
 "command! TWDeleteAnnotation
-"command! TWDeleteCompleted
+command! TWDeleteCompleted :call taskwarrior#clear_completed()
 "command! TWDeleteNote
 "command! TWEdit
 "command! TWEditAnnotation
@@ -75,7 +78,10 @@ command! TWSync call taskwarrior#sync('sync')
 
 " TODO get proper value to complete
 function! s:cmdcomplete(A,L,P)
+    let candidates = g:task_all_commands
     let lead = a:A == '' ? '.*' : a:A
-    return filter(['active', 'all', 'blocked', 'completed', 'list', 'long', 'ls', 'minimal', 'newest', 'next', 'oldest', 'overdue', 'ready', 'recurring', 'unblocked', 'waiting', 'projects', 'ids', 'show',
-                \  'id:', 'description:', 'due:', 'proj:', 'pri:', 'status:'], 'matchstr(v:val,"'.lead.'") != ""')
+    if index(candidates, matchstr(a:L, '\S\+\ze\s\+\S*$')) != -1
+        let candidates = g:task_filter
+    endif
+    return filter(candidates, 'matchstr(v:val,"'.lead.'") != ""')
 endfunction

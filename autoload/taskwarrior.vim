@@ -6,22 +6,18 @@ function! taskwarrior#list(...) abort
     if a:0 > 0
         let b:command = join(a:000, ' ')
     endif
-    if !exists('b:command') || b:command == ''
-        let b:command = 'next'
+    if !exists('b:command')
+        let b:command = ''
     endif
 
-    let report = split(b:command, ' ')[-1]
-    if index(['project', 'projects', 'id', 'ids', 'uuid', 'uuids', 'show'], report) != -1 || (len(split(b:command, ' ')) > 1 && split(b:command, ' ')[-2] == 'show')
+    let [re_cmd, type] = taskwarrior#command_type(b:command)
+
+    if type == 'special'
         call append(0, split((system("task ".b:command)), '\n'))
     else
-        if index(['active', 'all', 'block', 'completed', 'list', 'long', 'ls', 'minimal', 'newest', 'next', 'oldest', 'overdue', 'ready', 'recurring', 'unblocked', 'waiting'], report) == -1
-            let report = 'next'
-            let b:command = b:command.' '.report
-        endif
-
         call append(0, split((system("task ".b:command)), '\n')[:-3])
-        let b:task_report_columns = split(substitute(substitute(system("task _get -- rc.report.".report.".columns"), '*\|\n', '', 'g'), '\.', '_', 'g'), ',')
-        let b:task_report_labels = split(substitute(system("task _get -- rc.report.".report.".labels"), '*\|\n', '', 'g'), ',')
+        let b:task_report_columns = split(substitute(substitute(system("task _get -- rc.report.".re_cmd.".columns"), '*\|\n', '', 'g'), '\.', '_', 'g'), ',')
+        let b:task_report_labels = split(substitute(system("task _get -- rc.report.".re_cmd.".labels"), '*\|\n', '', 'g'), ',')
         let line1 = join(b:task_report_labels, ' ')
         let line2 = substitute(line1, '\S', '-', 'g')
 
@@ -154,7 +150,7 @@ endfunction
 
 function! taskwarrior#clear_completed()
     !task status:completed delete
-    call taskwarrior#list()
+    call taskwarrior#init()
 endfunction
 
 function! taskwarrior#sync(action)
@@ -162,5 +158,18 @@ function! taskwarrior#sync(action)
     if exists('g:task_view')
         call taskwarrior#list()
     endif
+endfunction
+
+function! taskwarrior#command_type(cstring)
+    for sub in split(a:cstring, ' ')
+        if index(g:task_report_command, sub) != -1
+            return [ sub, 'report' ]
+        elseif index(g:task_all_commands, sub) != -1
+            return [ sub, 'special' ]
+        endif
+    endfor
+
+    let b:command = b:command.g:task_report_name
+    return [ g:task_report_name, 'report' ]
 endfunction
 " vim:ts=4:sw=4:tw=78:ft=vim:fdm=indent
