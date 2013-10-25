@@ -1,7 +1,7 @@
 vim-taskwarrior
 ===============
 
-= vim interface for [taskwarrior](http://taskwarrior.org) =
+vim interface for [taskwarrior](http://taskwarrior.org)
 
 ----
 
@@ -29,7 +29,7 @@ nnoremap <buffer> s ... " sync with taskd server.
 
 Commands:
 ```vim
-:TW            " task list
+:TW [args]     " task [filter report arguments]
 :TWEditTaskrc  " edit ~/.taskrc
 :TWEditVitrc   " edit ~/.vitrc
 :TWSync        " Synchronise with taskd server
