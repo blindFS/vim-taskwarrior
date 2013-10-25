@@ -5,7 +5,7 @@ A vim interface for [taskwarrior](http://taskwarrior.org)
 
 ----
 
-Add this line to .taskrc, or wrapping may be mangled :)
+(add this line to .taskrc, or wrapping may be mangled :)
 
     defaultwidth=999
 
