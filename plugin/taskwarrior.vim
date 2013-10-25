@@ -7,6 +7,7 @@
 "commands;
 "
 command! TW call taskwarrior#init()
+command! -nargs=? -complete=customlist,s:cmdcomplete TW :call taskwarrior#init(<q-args>)
 "command! TWAdd
 "command! TWAnnotate
 "command! TWArchive
@@ -72,3 +73,7 @@ command! TWSync call taskwarrior#sync('sync')
 "command! TWWikiGenProject
 "command! TWWikiGenTag
 "command! TWWikiIndex
+
+function! s:cmdcomplete(A,L,P)
+    return ["all", "list", "id:"]
+endfunction
