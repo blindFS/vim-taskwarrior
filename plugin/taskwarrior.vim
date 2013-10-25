@@ -14,6 +14,7 @@ command! TW call taskwarrior#init()
 "command! TWArchiveDeleted
 "command! TWArchiveNotes
 "command! TWComplete
+"command! TWConfigColor
 "command! TWConfigDiagnostic
 "command! TWConfigGet
 "command! TWConfigSet
@@ -30,8 +31,11 @@ command! TWEditVimrc :execute "e ".$HOME."/.vimrc"
 command! TWEditVitrc :execute "e ".$HOME."/.vitrc"
 "command! TWExport
 "command! TWHelp
+"command! TWHelpCommands
+"command! TWHelpQuick
 "command! TWHistory
 "command! TWInsert
+"command! TWImport
 "command! TWModify
 "command! TWModifyIncrement
 "command! TWModifyReplace
@@ -43,6 +47,17 @@ command! TWEditVitrc :execute "e ".$HOME."/.vitrc"
 "command! TWPackageList
 "command! TWPackageRemove
 "command! TWPackageUpdate
+"command! TWReport
+"command! TWReportAgenda
+"command! TWReportBreak
+"command! TWReportCalendar
+"command! TWReportDesc
+"command! TWReportEdit
+"command! TWReportGantt
+"command! TWReportInfo
+"command! TWReportProjects
+"command! TWReportSort
+"command! TWReportTags
 command! TWSync call taskwarrior#sync('sync')
 "command! TWSyncFiles 
 "command! TWSyncStatus

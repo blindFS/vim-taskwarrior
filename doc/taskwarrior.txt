@@ -10,7 +10,7 @@ sophisticated things. You'll find it has customizable reports, charts, GTD
 features, device synching, documentation, extensions, themes, holiday files...
 
 ==============================================================================
-COMMAND                                                            *:TaskList*
+COMMAND                                                            *:TW*
 
 Show the list of tasks(pending/completed).
                                               *:TaskPush* *:TaskMerge* *:TaskPull*
@@ -26,16 +26,16 @@ Synchronising with remote server.
 MAPPING                                                      *taskwarrior-map*
 
 A                      add annotation
-D                      delete annotation
+D                      delete task
 a                      create new task.
 d                      set the task in current line done.
-i                      show task info.
+<CR>                   show task info.
 m                      modify current task.
 q                      quit buffer.
 r                      clear all completed task.
 u                      undo last change.
-x                      delete the task in current line.
-s                      show summary info.
+x                      delete annotation.
+s                      sync with taskd server.
 
 ==============================================================================
 CUSTOMIZATION                                                         *taskrc*
