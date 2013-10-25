@@ -3,26 +3,30 @@ function! taskwarrior#list(...) abort
     setlocal modifiable
     setlocal nowrap
     %delete
-    let filter = ''
-    let report = 'list'
+    if !exists('b:filter')
+        let b:filter = ''
+    endif
+    if !exists('b:report')
+        let b:report = 'list'
+    endif
     if a:0 == 1
-        if index(['active', 'all', 'block', 'complete', 'list', 'long', 'ls', 'minimal', 'newest', 'next', 'oldest', 'overdue', 'ready', 'recurring', 'unblocked', 'waiting'], a:1) != -1
-            let filter = ''
-            let report = a:1
+        if index(['active', 'all', 'block', 'completed', 'list', 'long', 'ls', 'minimal', 'newest', 'next', 'oldest', 'overdue', 'ready', 'recurring', 'unblocked', 'waiting'], a:1) != -1
+            let b:filter = ''
+            let b:report = a:1
         else
-            let filter = a:1
-            let report = 'list'
+            let b:filter = a:1
+            let b:report = 'list'
         endif
     elseif a:0 == 2
-        let filter = a:1
-        let report = a:2
+        let b:filter = a:1
+        let b:report = a:2
     endif
 
-    let b:task_report_columns = split(substitute(substitute(system("task _get -- rc.report.".report.".columns"), '*\|\n', '', 'g'), '\.', '_', 'g'), ',')
-    let b:task_report_labels = split(substitute(system("task _get -- rc.report.".report.".labels"), '*\|\n', '', 'g'), ',')
+    let b:task_report_columns = split(substitute(substitute(system("task _get -- rc.report.".b:report.".columns"), '*\|\n', '', 'g'), '\.', '_', 'g'), ',')
+    let b:task_report_labels = split(substitute(system("task _get -- rc.report.".b:report.".labels"), '*\|\n', '', 'g'), ',')
     let line1 = join(b:task_report_labels, ' ')
     let line2 = substitute(line1, '\S', '-', 'g')
-    call append(0, split((system("task ".filter." ".report)), '\n')[:-3])
+    call append(0, split((system("task ".b:filter." ".b:report)), '\n')[:-3])
     if len(getline(1)) == 0
         call append(line('$')-1, [line1, line2])
     endif
@@ -64,7 +68,7 @@ function! taskwarrior#init(...)
     endif
     if a:0 == 0
         call taskwarrior#list()
-    elseif len(split(a:1, ' ')) == 1 
+    elseif len(split(a:1, ' ')) == 1
         call taskwarrior#list(a:1)
     else
         call taskwarrior#list(join(split(a:1, ' ')[0:-2],' '), split(a:1, ' ')[-1])

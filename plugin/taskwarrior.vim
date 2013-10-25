@@ -60,7 +60,7 @@ command! TWEditVitrc :execute "e ".$HOME."/.vitrc"
 "command! TWReportSort
 "command! TWReportTags
 command! TWSync call taskwarrior#sync('sync')
-"command! TWSyncFiles 
+"command! TWSyncFiles
 "command! TWSyncStatus
 "command! TWTheme
 "command! TWThemeEdit
@@ -75,5 +75,6 @@ command! TWSync call taskwarrior#sync('sync')
 "command! TWWikiIndex
 
 function! s:cmdcomplete(A,L,P)
-    return ["all", "list", "id:"]
+    return ['active', 'all', 'blocked', 'completed', 'list', 'long', 'ls', 'minimal', 'newest', 'next', 'oldest', 'overdue', 'ready', 'recurring', 'unblocked', 'waiting',
+                \  'id:', 'description:', 'due:', 'proj:', 'pri:', 'status']
 endfunction
