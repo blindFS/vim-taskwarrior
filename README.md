@@ -33,7 +33,6 @@ Commands:
 ```vim
 :TW            " task list
 :TWEditTaskrc  " edit ~/.taskrc
-:TWEditVimrc   " edit ~/.vimrc
 :TWEditVitrc   " edit ~/.vitrc
 :TWSync        " Synchronise with taskd server
 

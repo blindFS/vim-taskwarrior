@@ -28,7 +28,6 @@ command! -nargs=? -complete=customlist,s:cmdcomplete TW :call taskwarrior#init(<
 "command! TWEditAnnotation
 "command! TWEditDescription
 command! TWEditTaskrc :execute "e ".$HOME."/.taskrc"
-command! TWEditVimrc :execute "e ".$HOME."/.vimrc"
 command! TWEditVitrc :execute "e ".$HOME."/.vitrc"
 "command! TWExport
 "command! TWHelp
@@ -74,7 +73,8 @@ command! TWSync call taskwarrior#sync('sync')
 "command! TWWikiGenTag
 "command! TWWikiIndex
 
+" TODO get proper value to complete
 function! s:cmdcomplete(A,L,P)
-    return ['active', 'all', 'blocked', 'completed', 'list', 'long', 'ls', 'minimal', 'newest', 'next', 'oldest', 'overdue', 'ready', 'recurring', 'unblocked', 'waiting',
-                \  'id:', 'description:', 'due:', 'proj:', 'pri:', 'status']
+    return filter(['active', 'all', 'blocked', 'completed', 'list', 'long', 'ls', 'minimal', 'newest', 'next', 'oldest', 'overdue', 'ready', 'recurring', 'unblocked', 'waiting',
+                \  'id:', 'description:', 'due:', 'proj:', 'pri:', 'status'], 'matchstr(v:val,"'.a:A.'") != ""')
 endfunction
