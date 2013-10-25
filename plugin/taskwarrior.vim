@@ -75,6 +75,7 @@ command! TWSync call taskwarrior#sync('sync')
 
 " TODO get proper value to complete
 function! s:cmdcomplete(A,L,P)
+    let lead = a:A == '' ? '.*' : a:A
     return filter(['active', 'all', 'blocked', 'completed', 'list', 'long', 'ls', 'minimal', 'newest', 'next', 'oldest', 'overdue', 'ready', 'recurring', 'unblocked', 'waiting',
-                \  'id:', 'description:', 'due:', 'proj:', 'pri:', 'status'], 'matchstr(v:val,"'.a:A.'") != ""')
+                \  'id:', 'description:', 'due:', 'proj:', 'pri:', 'status:'], 'matchstr(v:val,"'.lead.'") != ""')
 endfunction

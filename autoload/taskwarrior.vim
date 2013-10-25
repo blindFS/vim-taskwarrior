@@ -66,7 +66,7 @@ function! taskwarrior#init(...)
         let g:task_view = bufnr('%')
         setlocal noswapfile
     endif
-    if a:0 == 0
+    if a:000[0] == ''
         call taskwarrior#list()
     elseif len(split(a:1, ' ')) == 1
         call taskwarrior#list(a:1)
