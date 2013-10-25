@@ -3,7 +3,7 @@ vim-taskwarrior
 
 vim interface for [taskwarrior](http://taskwarrior.org)
 
-*note:* this fork also includes vim ftdetect and syntax files for task edit, taskrc and data files
+----
 
 Should add this line to .taskrc
 
@@ -12,6 +12,8 @@ Should add this line to .taskrc
 Or lines may be awfully wrapped.
 
 And **uuid** field is recommanded in **report.all.columns** to get the exact filter for current task.
+
+----
 
 Default map:
 
