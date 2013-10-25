@@ -1,17 +1,13 @@
 vim-taskwarrior
 ===============
 
-vim interface for [taskwarrior](http://taskwarrior.org)
+= vim interface for [taskwarrior](http://taskwarrior.org) =
 
 ----
 
-Should add this line to .taskrc
+Add this line to .taskrc, or wrapping may be mangled :)
 
     defaultwidth=999
-
-Or lines may be awfully wrapped.
-
-And **uuid** field is recommanded in **report.all.columns** to get the exact filter for current task.
 
 ----
 
