@@ -1,7 +1,7 @@
 vim-taskwarrior
 ===============
 
-vim interface for [taskwarrior](http://taskwarrior.org)
+A vim interface for [taskwarrior](http://taskwarrior.org)
 
 ----
 
