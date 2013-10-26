@@ -29,9 +29,18 @@ nnoremap <buffer> s ... " sync with taskd server.
 
 Commands:
 ```vim
-:TW [args]     " task [filter report arguments]
-:TWEditTaskrc  " edit ~/.taskrc
-:TWEditVitrc   " edit ~/.vitrc
-:TWSync        " Synchronise with taskd server
+:TW [args]            " task [filter report arguments]
+:TWAdd                " add new tasks interactively
+:TWAnnotation         " add an annotation
+:TWComplete           " mark task done
+:TWDelete             " deleta a task
+:TWDeleteAnnotation   " delete an annotation
+:TWDeleteCompleted    " clear all completed tasks 
+:TWEditTaskrc         " edit ~/.taskrc
+:TWEditVitrc          " edit ~/.vitrc
+:TWModifyInteractive  " make changes to a task interactively (use with caution!)
+:TWReportInfo         " run the info report
+:TWSync               " synchronise with taskd server
+:TWUndo               " undo the previous modification
 
 ```
