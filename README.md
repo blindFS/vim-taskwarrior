@@ -1,17 +1,15 @@
 vim-taskwarrior
 ===============
 
-vim interface for [taskwarrior](http://taskwarrior.org)
+A vim interface for [taskwarrior](http://taskwarrior.org)
 
-*note:* this fork also includes vim ftdetect and syntax files for task edit, taskrc and data files
+----
 
-Should add this line to .taskrc
+(add this line to .taskrc, or wrapping may be mangled :)
 
     defaultwidth=999
 
-Or lines may be awfully wrapped.
-
-And **uuid** field is recommanded in **report.all.columns** to get the exact filter for current task.
+----
 
 Default map:
 
@@ -31,9 +29,18 @@ nnoremap <buffer> s ... " sync with taskd server.
 
 Commands:
 ```vim
-:TW            " task list
-:TWEditTaskrc  " edit ~/.taskrc
-:TWEditVitrc   " edit ~/.vitrc
-:TWSync        " Synchronise with taskd server
+:TW [args]            " task [filter report arguments]
+:TWAdd                " add new tasks interactively
+:TWAnnotate           " add an annotation
+:TWComplete           " mark task done
+:TWDelete             " deleta a task
+:TWDeleteAnnotation   " delete an annotation
+:TWDeleteCompleted    " clear all completed tasks 
+:TWEditTaskrc         " edit ~/.taskrc
+:TWEditVitrc          " edit ~/.vitrc
+:TWModifyInteractive  " make changes to a task interactively (use with caution!)
+:TWReportInfo         " run the info report
+:TWSync               " synchronise with taskd server
+:TWUndo               " undo the previous modification
 
 ```
