@@ -23,13 +23,8 @@ command! TWComplete :call taskwarrior#set_done()
 "command! TWConfigGet
 "command! TWConfigSet
 "command! TWConfigShow
-<<<<<<< HEAD
-"command! TWDelete
-"command! TWDeleteAnnotation
-=======
 command! TWDelete :call taskwarrior#delete()
 command! TWDeleteAnnotation :call taskwarrior#annotate('del')
->>>>>>> 4dc1ad96bcf7813c2a4b68036b243b0266e4fbff
 command! TWDeleteCompleted :call taskwarrior#clear_completed()
 "command! TWDeleteNote
 "command! TWEdit
