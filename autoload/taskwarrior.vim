@@ -47,7 +47,7 @@ function! taskwarrior#list(...) abort
 
     nnoremap <buffer> A :call taskwarrior#annotate('add')<CR>
     nnoremap <buffer> D :call taskwarrior#delete()<CR>
-    nnoremap <buffer> a :call taskwarrior#system_call('', 'add', taskwarrior#get_args(), 'interactive')<CR>
+    nnoremap <buffer> a :call taskwarrior#system_call('', 'add', taskwarrior#get_args(), 'echo')<CR>
     nnoremap <buffer> d :call taskwarrior#set_done()<CR>
     nnoremap <buffer> m :call taskwarrior#modify()<CR>
     nnoremap <buffer> q :call taskwarrior#quit()<CR>
@@ -70,12 +70,12 @@ function! taskwarrior#init(...)
        echoerr "This plugin depends on taskwarrior(http://taskwarrior.org)."
     endif
     if exists('g:task_view')
-        execute g:task_view.'buffer'
-    else
-        execute 'edit task\ '.escape(join(a:000, ' '), ' ')
-        let g:task_view = bufnr('%')
-        setlocal noswapfile
+        call taskwarrior#quit()
     endif
+
+    execute 'edit task\ '.escape(join(a:000, ' '), ' ')
+    let g:task_view = bufnr('%')
+    setlocal noswapfile
     call taskwarrior#list(join(a:000, ' '))
 
 endfunction
@@ -93,9 +93,9 @@ function! taskwarrior#modify()
     if field == 'uuid'
         return
     elseif field == 'description'
-        call taskwarrior#system_call(taskwarrior#get_id(), 'modify', taskwarrior#get_args(field), 'execute')
-    else
         call taskwarrior#system_call(taskwarrior#get_id(), 'modify', taskwarrior#get_args(field), 'interactive')
+    else
+        call taskwarrior#system_call(taskwarrior#get_id(), 'modify', taskwarrior#get_args(field), 'echo')
     endif
 endfunction
 
@@ -141,7 +141,8 @@ endfunction
 function! taskwarrior#system_call(filter, command, args, mode)
     if a:mode == 'silent'
         call system("task ".a:filter.a:command.a:args)
-    elseif a:mode == 'interactive'
+    elseif a:mode == 'echo'
+        echo "\n----------------\n"
         echo system("task ".a:filter.a:command.a:args)
     else
         execute '!task '.a:filter.a:command.a:args
