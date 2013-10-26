@@ -49,13 +49,17 @@ function! taskwarrior#list(...) abort
     nnoremap <buffer> D :call taskwarrior#delete()<CR>
     nnoremap <buffer> a :call taskwarrior#system_call('', 'add', taskwarrior#get_args(), 'interactive')<CR>
     nnoremap <buffer> d :call taskwarrior#set_done()<CR>
-    nnoremap <buffer> <CR> :call taskwarrior#info(taskwarrior#get_uuid().' info')<CR>
-    nnoremap <buffer> m :call taskwarrior#system_call(taskwarrior#get_id(), 'modify', taskwarrior#get_args(), 'interactive')<CR>
+    nnoremap <buffer> m :call taskwarrior#modify()<CR>
     nnoremap <buffer> q :call taskwarrior#quit()<CR>
     nnoremap <buffer> r :call taskwarrior#clear_completed()<CR>
     nnoremap <buffer> u :call taskwarrior#undo()<CR>
     nnoremap <buffer> x :call taskwarrior#annotate('del')<CR>
     nnoremap <buffer> s :call taskwarrior#sync('sync')<CR>
+    nnoremap <buffer> <CR> :call taskwarrior#info(taskwarrior#get_uuid().' info')<CR>
+    nnoremap <buffer> <left> :call taskwarrior#move_cursor('left')<CR>
+    nnoremap <buffer> <S-tab> :call taskwarrior#move_cursor('left')<CR>
+    nnoremap <buffer> <tab> :call taskwarrior#move_cursor('right')<CR>
+    nnoremap <buffer> <right> :call taskwarrior#move_cursor('right')<CR>
 
     call setpos('.', pos)
 
@@ -68,7 +72,7 @@ function! taskwarrior#init(...)
     if exists('g:task_view')
         execute g:task_view.'buffer'
     else
-        execute 'edit task_list'
+        execute 'edit task\ '.escape(join(a:000, ' '), ' ')
         let g:task_view = bufnr('%')
         setlocal noswapfile
     endif
@@ -79,6 +83,20 @@ endfunction
 function! taskwarrior#quit()
     silent! execute g:task_view.'bd!'
     unlet g:task_view
+endfunction
+
+function! taskwarrior#modify()
+    if !exists('b:task_columns') || !exists('b:task_report_columns') || taskwarrior#get_id() =~ '^\s*$'
+        return
+    endif
+    let field = b:task_report_columns[taskwarrior#current_column()]
+    if field == 'uuid'
+        return
+    elseif field == 'description'
+        call taskwarrior#system_call(taskwarrior#get_id(), 'modify', taskwarrior#get_args(field), 'execute')
+    else
+        call taskwarrior#system_call(taskwarrior#get_id(), 'modify', taskwarrior#get_args(field), 'interactive')
+    endif
 endfunction
 
 function! taskwarrior#delete()
@@ -99,14 +117,21 @@ function! taskwarrior#set_done()
     call taskwarrior#system_call(taskwarrior#get_uuid(), ' done', '', 'silent')
 endfunction
 
-function! taskwarrior#get_args()
-    let due         = input("due:")
-    let project     = input("project:")
-    let priority    = input("priority:")
-    let description = input("description:")
-    let tag         = substitute(input("tags:"), ' ', ',', 'g')
-    let depends     = substitute(input("depends:"), ' ', ',', 'g')
-    return " due:".due." project:".project." priority:".priority." depends:".depends." tag:".tag." ".description
+function! taskwarrior#get_args(...)
+    if a:0 != 0
+        let arg = ' '
+        for key in a:000
+            execute 'let this_'.key.'=input("'.key.':")'
+            if key == 'description'
+                execute "let arg = arg.' '.this_".key
+            else
+                execute "let arg = arg.' '.key.':'.this_".key
+            endif
+        endfor
+        return arg
+    else
+        return taskwarrior#get_args('due', 'project', 'priority', 'description', 'tag', 'depends')
+    endif
 endfunction
 
 function! taskwarrior#get_id()
@@ -116,8 +141,10 @@ endfunction
 function! taskwarrior#system_call(filter, command, args, mode)
     if a:mode == 'silent'
         call system("task ".a:filter.a:command.a:args)
-    else
+    elseif a:mode == 'interactive'
         echo system("task ".a:filter.a:command.a:args)
+    else
+        execute '!task '.a:filter.a:command.a:args
     endif
     call taskwarrior#list()
 endfunction
@@ -173,5 +200,28 @@ function! taskwarrior#command_type()
 
     let b:command = b:command.' '.g:task_report_name
     return [ g:task_report_name, 'report' ]
+endfunction
+
+function! taskwarrior#move_cursor(direction)
+    let ci = taskwarrior#current_column()
+    if ci == -1 || (ci == 0 && a:direction == 'left') || (ci == len(b:task_columns)-1 && a:direction == 'right')
+        return
+    endif
+    if a:direction == 'left'
+        call search('\%'.(b:task_columns[ci-1]+1).'v', 'be')
+    else
+        call search('\%'.(b:task_columns[ci+1]+1).'v', 'e')
+    endif
+endfunction
+
+function! taskwarrior#current_column()
+    if getline('.') =~ '^\s*$' || !exists('b:task_columns') || !exists('b:task_report_columns')
+        return -1
+    endif
+    let i = 0
+    while  i < len(b:task_columns) && len(getline('.')[0:getpos('.')[2]-1]) > len(matchstr(getline('.'), '^.*\%'.b:task_columns[i].'v'))
+        let i += 1
+    endwhile
+    return i-1
 endfunction
 " vim:ts=4:sw=4:tw=78:ft=vim:fdm=indent
