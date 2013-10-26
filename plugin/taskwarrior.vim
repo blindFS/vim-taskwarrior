@@ -22,7 +22,7 @@ command! TWComplete :call taskwarrior#set_done()
 "command! TWConfigShow
 command! TWDelete :call taskwarrior#delete()
 command! TWDeleteAnnotation :call taskwarrior#annotate('del')
-"command! TWDeleteCompleted
+command! TWDeleteCompleted :call taskwarrior#clear_completed()
 "command! TWDeleteNote
 "command! TWEdit
 "command! TWEditAnnotation
