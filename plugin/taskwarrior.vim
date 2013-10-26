@@ -14,7 +14,7 @@ command! TWAnnotate :call taskwarrior#annotate('add')
 "command! TWArchiveCompleted
 "command! TWArchiveDeleted
 "command! TWArchiveNotes
-"command! TWComplete :call taskwarrior#set_done()
+command! TWComplete :call taskwarrior#set_done()
 "command! TWConfigColor
 "command! TWConfigDiagnostic
 "command! TWConfigGet
@@ -65,7 +65,7 @@ command! TWSync call taskwarrior#sync('sync')
 "command! TWTheme
 "command! TWThemeEdit
 "command! TWThemeShow
-"command! TWUndo :call taskwarrior#undo()
+command! TWUndo :call taskwarrior#undo()
 "command! TWWiki
 "command! TWWikiDiary
 "command! TWWikiDiaryAdd
