@@ -79,11 +79,11 @@ command! TWUndo :call taskwarrior#undo()
 
 " TODO get proper value to complete
 function! s:cmdcomplete(A,L,P)
-    let all = deepcopy(g:task_all_commands)
+    let command = deepcopy(g:task_all_commands)
     let filter = deepcopy(g:task_filter)
     let lead = a:A == '' ? '.*' : a:A
-    if index(all, matchstr(a:L, '\S\+\ze\s\+\S*$')) != -1
+    if index(command, matchstr(a:L, '\S\+\ze\s\+\S*$')) != -1
         return filter(filter, 'matchstr(v:val,"'.lead.'") != ""')
     endif
-    return filter(all, 'matchstr(v:val,"'.lead.'") != ""')
+    return filter(command+filter, 'matchstr(v:val,"'.lead.'") != ""')
 endfunction

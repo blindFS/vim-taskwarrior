@@ -169,7 +169,7 @@ function! taskwarrior#command_type(cstring)
         endif
     endfor
 
-    let b:command = b:command.g:task_report_name
+    let b:command = b:command.' '.g:task_report_name
     return [ g:task_report_name, 'report' ]
 endfunction
 " vim:ts=4:sw=4:tw=78:ft=vim:fdm=indent
