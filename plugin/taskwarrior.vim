@@ -22,8 +22,8 @@ command! TWComplete :call taskwarrior#set_done()
 "command! TWConfigColor
 "command! TWConfigDiagnostic
 "command! TWConfigGet
-"command! TWConfigSet
-"command! TWConfigShow
+" command! TWConfigSet
+command! TWConfigShow :call taskwarrior#init('show')
 command! TWDelete :call taskwarrior#delete()
 command! TWDeleteAnnotation :call taskwarrior#annotate('del')
 command! TWDeleteCompleted :call taskwarrior#clear_completed()

@@ -14,6 +14,7 @@ function! taskwarrior#list(...) abort
 
     if type == 'special'
         call append(0, split((system("task ".b:command)), '\n'))
+        setlocal filetype=text
     else
         call append(0, split((system("task ".b:command)), '\n')[:-3])
         let b:task_report_columns = split(substitute(substitute(system("task _get -- rc.report.".re_cmd.".columns"), '*\|\n', '', 'g'), '\.', '_', 'g'), ',')
@@ -38,9 +39,9 @@ function! taskwarrior#list(...) abort
                 let b:task_columns += [col+1]
             endif
         endfor
+        setlocal filetype=taskwarrior
     endif
 
-    setlocal filetype=taskwarrior
     setlocal buftype=nofile
     setlocal nomodifiable
 
@@ -95,9 +96,6 @@ function! taskwarrior#annotate(op)
 endfunction
 
 function! taskwarrior#set_done()
-    if !exists('b:task_columns') || getline('.')[b:task_columns[1]:b:task_columns[2]-2] =~ 'Completed'
-        return
-    endif
     call taskwarrior#system_call(taskwarrior#get_uuid(), ' done', '', 'silent')
 endfunction
 
