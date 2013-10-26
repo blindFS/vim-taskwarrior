@@ -1,4 +1,5 @@
 let g:task_report_command = ['active', 'all', 'blocked', 'completed', 'list', 'long', 'ls', 'minimal', 'newest', 'next', 'oldest', 'overdue', 'ready', 'recurring', 'unblocked', 'waiting']
+let g:task_interactive_command = ['delete', 'undo', 'config', 'edit', 'start', 'synchronize', 'add', 'modify']
 let g:task_all_commands = split(system('task _command'), '\n')
 let g:task_filter = ['id:', 'description:', 'due:', 'proj:', 'pri:', 'status:', 'tag:']
 let g:task_report_name = index(g:task_report_command, get(g:, 'task_report_name')) != -1 ? get(g:, 'task_report_name') : 'next'

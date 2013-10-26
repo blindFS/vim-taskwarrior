@@ -10,7 +10,7 @@ function! taskwarrior#list(...) abort
         let b:command = ''
     endif
 
-    let [re_cmd, type] = taskwarrior#command_type(b:command)
+    let [re_cmd, type] = taskwarrior#command_type()
 
     if type == 'special'
         call append(0, split((system("task ".b:command)), '\n'))
@@ -160,10 +160,14 @@ function! taskwarrior#sync(action)
     endif
 endfunction
 
-function! taskwarrior#command_type(cstring)
-    for sub in split(a:cstring, ' ')
+function! taskwarrior#command_type()
+    for sub in split(b:command, ' ')
         if index(g:task_report_command, sub) != -1
             return [ sub, 'report' ]
+        elseif index(g:task_interactive_command, sub) != -1
+            execute '!task '.b:command
+            let b:command = g:task_report_name
+            return [ g:task_report_name, 'report' ]
         elseif index(g:task_all_commands, sub) != -1
             return [ sub, 'special' ]
         endif
