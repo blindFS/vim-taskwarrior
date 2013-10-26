@@ -31,7 +31,7 @@ Commands:
 ```vim
 :TW [args]            " task [filter report arguments]
 :TWAdd                " add new tasks interactively
-:TWAnnotation         " add an annotation
+:TWAnnotate           " add an annotation
 :TWComplete           " mark task done
 :TWDelete             " deleta a task
 :TWDeleteAnnotation   " delete an annotation
