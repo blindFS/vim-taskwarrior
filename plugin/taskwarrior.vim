@@ -11,20 +11,25 @@ let g:task_report_name = index(g:task_report_command, get(g:, 'task_report_name'
 "commands;
 "
 command! -nargs=? -complete=customlist,s:cmdcomplete TW :call taskwarrior#init(<q-args>)
-"command! TWAdd
-"command! TWAnnotate
+command! TWAdd :call taskwarrior#system_call('', 'add', taskwarrior#get_args(), 'interactive')
+command! TWAnnotate :call taskwarrior#annotate('add')
 "command! TWArchive
 "command! TWArchiveCompleted
 "command! TWArchiveDeleted
 "command! TWArchiveNotes
-"command! TWComplete
+command! TWComplete :call taskwarrior#set_done()
 "command! TWConfigColor
 "command! TWConfigDiagnostic
 "command! TWConfigGet
 "command! TWConfigSet
 "command! TWConfigShow
+<<<<<<< HEAD
 "command! TWDelete
 "command! TWDeleteAnnotation
+=======
+command! TWDelete :call taskwarrior#delete()
+command! TWDeleteAnnotation :call taskwarrior#annotate('del')
+>>>>>>> 4dc1ad96bcf7813c2a4b68036b243b0266e4fbff
 command! TWDeleteCompleted :call taskwarrior#clear_completed()
 "command! TWDeleteNote
 "command! TWEdit
@@ -41,6 +46,7 @@ command! TWEditVitrc :execute "e ".$HOME."/.vitrc"
 "command! TWImport
 "command! TWModify
 "command! TWModifyIncrement
+command! TWModifyInteractive :call taskwarrior#system_call(taskwarrior#get_id(), 'modify', taskwarrior#get_args(), 'interactive')
 "command! TWModifyReplace
 "command! TWNote
 "command! TWOpen
@@ -57,7 +63,7 @@ command! TWEditVitrc :execute "e ".$HOME."/.vitrc"
 "command! TWReportDesc
 "command! TWReportEdit
 "command! TWReportGantt
-"command! TWReportInfo
+command! TWReportInfo :call taskwarrior#info(taskwarrior#get_uuid().' info')
 "command! TWReportProjects
 "command! TWReportSort
 "command! TWReportTags
@@ -67,7 +73,7 @@ command! TWSync call taskwarrior#sync('sync')
 "command! TWTheme
 "command! TWThemeEdit
 "command! TWThemeShow
-"command! TWUndo
+command! TWUndo :call taskwarrior#undo()
 "command! TWWiki
 "command! TWWikiDiary
 "command! TWWikiDiaryAdd
