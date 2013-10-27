@@ -2,7 +2,12 @@ if exists('b:task_report_labels')
     syntax match taskwarrior_tablehead /.*\%1l/
 endif
 
-let exp = 'syntax match taskwarrior_%s /\%%>1l\%%%dv.*\%%<%dv/'
+if search('[^\x00-\xff]') == 0
+    let exp = 'syntax match taskwarrior_%s /\%%>1l\%%%dc.*\%%<%dc/'
+else
+    let exp = 'syntax match taskwarrior_%s /\%%>1l\%%%dv.*\%%<%dv/'
+endif
+
 if exists('b:task_columns') && exists('b:task_report_columns')
     for i in range(0, len(b:task_report_columns)-1)
         if exists('b:task_columns['.(i+1).']')

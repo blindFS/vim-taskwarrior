@@ -110,7 +110,7 @@ function! taskwarrior#modify()
         return
     endif
     let field = b:task_report_columns[taskwarrior#current_column()]
-    if field == 'uuid' || field == 'id'
+    if index(['id', 'uuid', 'status', 'entry_age'], field) != -1
         return
     elseif field == 'description'
         call taskwarrior#system_call(taskwarrior#get_id(), 'modify', taskwarrior#get_args(field), 'external')
