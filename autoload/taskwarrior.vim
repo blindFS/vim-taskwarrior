@@ -16,39 +16,40 @@ function! taskwarrior#list(...) abort
         call append(0, split((system("task ".b:command)), '\n'))
         execute 'setlocal filetype=task'.re_cmd
         nnoremap <buffer> q       :call taskwarrior#quit()<CR>
+        call setpos('.', pos)
         return
     elseif type == 'interactive'
         call taskwarrior#quit()
         call taskwarrior#init(g:task_report_name)
         return
-    else
-        call append(0, split((system("task ".b:command)), '\n')[:-3])
-        let b:task_report_columns = split(substitute(substitute(system("task _get -- rc.report.".re_cmd.".columns"), '*\|\n', '', 'g'), '\.', '_', 'g'), ',')
-        let b:task_report_labels = split(substitute(system("task _get -- rc.report.".re_cmd.".labels"), '*\|\n', '', 'g'), ',')
-        let line1 = join(b:task_report_labels, ' ')
-
-        if len(getline(1)) == 0
-            call append(line('$')-1, line1)
-        else
-            2d
-        endif
-
-        for label in b:task_report_labels
-            if index(split(getline(1), ' '), label) == -1
-                call remove(b:task_report_columns, index(b:task_report_labels, label))
-                call remove(b:task_report_labels, index(b:task_report_labels, label))
-            endif
-        endfor
-
-        let b:task_columns = [0]
-        for col in range(len(getline(1))-1)
-            if getline(1)[col] == " " && getline(1)[col+1] != " "
-                let b:task_columns += [col+1]
-            endif
-        endfor
-        let b:task_columns += [999]
-        setlocal filetype=taskreport
     endif
+
+    call append(0, split((system("task ".b:command)), '\n')[:-3])
+    let b:task_report_columns = split(substitute(substitute(system("task _get -- rc.report.".re_cmd.".columns"), '*\|\n', '', 'g'), '\.', '_', 'g'), ',')
+    let b:task_report_labels = split(substitute(system("task _get -- rc.report.".re_cmd.".labels"), '*\|\n', '', 'g'), ',')
+    let line1 = join(b:task_report_labels, ' ')
+
+    if len(getline(1)) == 0
+        call append(line('$')-1, line1)
+    else
+        2d
+    endif
+
+    for label in b:task_report_labels
+        if index(split(getline(1), ' '), label) == -1
+            call remove(b:task_report_columns, index(b:task_report_labels, label))
+            call remove(b:task_report_labels, index(b:task_report_labels, label))
+        endif
+    endfor
+
+    let b:task_columns = [0]
+    for col in range(len(getline(1))-1)
+        if getline(1)[col] == " " && getline(1)[col+1] != " "
+            let b:task_columns += [col+1]
+        endif
+    endfor
+    let b:task_columns += [999]
+    setlocal filetype=taskreport
 
     setlocal buftype=nofile
     setlocal nomodifiable
@@ -96,8 +97,7 @@ endfunction
 function! taskwarrior#hi_field()
     silent! syntax clear taskwarrior_field
     let index = taskwarrior#current_column()
-    execute 'syntax match taskwarrior_field /\%>1l\%'.line('.').'l\%'.(b:task_columns[index]+1).'v.*\%<'.(b:task_columns[index+1]+1).'v/ containedin=ALL'
-    highlight default link taskwarrior_field       Search
+    execute 'syntax match taskwarrior_field /\%>1l\%'.line('.').'l\%'.(b:task_columns[index]+1).'v.*\%<'.(b:task_columns[index+1]+1).'v/'
 endfunction
 
 function! taskwarrior#quit()
