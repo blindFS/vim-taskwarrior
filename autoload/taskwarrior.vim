@@ -15,6 +15,8 @@ function! taskwarrior#list(...) abort
     if type == 'special'
         call append(0, split((system("task ".b:command)), '\n'))
         execute 'setlocal filetype=task'.re_cmd
+        nnoremap <buffer> q       :call taskwarrior#quit()<CR>
+        return
     elseif type == 'interactive'
         call taskwarrior#quit()
         call taskwarrior#init(g:task_report_name)
@@ -50,23 +52,28 @@ function! taskwarrior#list(...) abort
 
     setlocal buftype=nofile
     setlocal nomodifiable
+    setlocal cursorline
 
     nnoremap <buffer> A       :call taskwarrior#annotate('add')<CR>
     nnoremap <buffer> D       :call taskwarrior#delete()<CR>
     nnoremap <buffer> a       :call taskwarrior#system_call('', 'add', taskwarrior#get_args(), 'echo')<CR>
     nnoremap <buffer> d       :call taskwarrior#set_done()<CR>
     nnoremap <buffer> m       :call taskwarrior#modify()<CR>
+    nnoremap <buffer> M       :call taskwarrior#system_call(taskwarrior#get_id(), 'modify', taskwarrior#get_args(), 'external')<CR>
     nnoremap <buffer> q       :call taskwarrior#quit()<CR>
     nnoremap <buffer> r       :call taskwarrior#clear_completed()<CR>
     nnoremap <buffer> u       :call taskwarrior#undo()<CR>
     nnoremap <buffer> x       :call taskwarrior#annotate('del')<CR>
     nnoremap <buffer> s       :call taskwarrior#sync('sync')<CR>
     nnoremap <buffer> <CR>    :call taskwarrior#info(taskwarrior#get_uuid().' info')<CR>
-    nnoremap <buffer> <left>  :call taskwarrior#move_cursor('left')<CR>
-    nnoremap <buffer> <S-tab> :call taskwarrior#move_cursor('left')<CR>
-    nnoremap <buffer> <tab>   :call taskwarrior#move_cursor('right')<CR>
-    nnoremap <buffer> <right> :call taskwarrior#move_cursor('right')<CR>
+    nnoremap <buffer> <left>  :call taskwarrior#move_cursor('left', 'skip')<CR>
+    nnoremap <buffer> <S-tab> :call taskwarrior#move_cursor('left', 'step')<CR>
+    nnoremap <buffer> <right> :call taskwarrior#move_cursor('right', 'skip')<CR>
+    nnoremap <buffer> <tab>   :call taskwarrior#move_cursor('right', 'step')<CR>
 
+    if g:task_highlight_field
+        autocmd CursorMoved <buffer> :call taskwarrior#hi_field()
+    endif
     call setpos('.', pos)
 
 endfunction
@@ -86,6 +93,13 @@ function! taskwarrior#init(...)
 
 endfunction
 
+function! taskwarrior#hi_field()
+    silent! syntax clear taskwarrior_field
+    let index = taskwarrior#current_column()
+    execute 'syntax match taskwarrior_field /\%>1l\%'.line('.').'l\%'.(b:task_columns[index]+1).'v.*\%<'.(b:task_columns[index+1]+1).'v/ containedin=ALL'
+    highlight default link taskwarrior_field       Search
+endfunction
+
 function! taskwarrior#quit()
     silent! execute g:task_view.'bd!'
     unlet g:task_view
@@ -96,12 +110,12 @@ function! taskwarrior#modify()
         return
     endif
     let field = b:task_report_columns[taskwarrior#current_column()]
-    if field == 'uuid'
+    if field == 'uuid' || field == 'id'
         return
     elseif field == 'description'
-        call taskwarrior#system_call(taskwarrior#get_id(), 'modify', taskwarrior#get_args(field), 'interactive')
+        call taskwarrior#system_call(taskwarrior#get_id(), 'modify', taskwarrior#get_args(field), 'external')
     else
-        call taskwarrior#system_call(taskwarrior#get_id(), 'modify', taskwarrior#get_args(field), 'echo')
+        call taskwarrior#system_call(taskwarrior#get_id(), 'modify', taskwarrior#get_args(field), 'silent')
     endif
 endfunction
 
@@ -208,7 +222,7 @@ function! taskwarrior#command_type()
     return [ g:task_report_name, 'report' ]
 endfunction
 
-function! taskwarrior#move_cursor(direction)
+function! taskwarrior#move_cursor(direction, mode)
     let ci = taskwarrior#current_column()
     if ci == -1 || (ci == 0 && a:direction == 'left') || (ci == len(b:task_columns)-1 && a:direction == 'right')
         return
@@ -218,6 +232,9 @@ function! taskwarrior#move_cursor(direction)
     else
         call search('\%'.(b:task_columns[ci+1]+1).'v', 'e')
     endif
+    if a:mode == 'skip' && getline('.')[getpos('.')[2]-1] == ' '
+        call taskwarrior#move_cursor(a:direction, 'skip')
+    endif
 endfunction
 
 function! taskwarrior#current_column()
@@ -225,7 +242,7 @@ function! taskwarrior#current_column()
         return -1
     endif
     let i = 0
-    while  i < len(b:task_columns) && virtcol('.') > b:task_columns[i]
+    while  i < len(b:task_columns) && virtcol('.') >= b:task_columns[i]
         let i += 1
     endwhile
     return i-1
