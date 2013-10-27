@@ -15,6 +15,10 @@ function! taskwarrior#list(...) abort
     if type == 'special'
         call append(0, split((system("task ".b:command)), '\n'))
         execute 'setlocal filetype=task'.re_cmd
+    elseif type == 'interactive'
+        call taskwarrior#quit()
+        call taskwarrior#init(g:task_report_name)
+        return
     else
         call append(0, split((system("task ".b:command)), '\n')[:-3])
         let b:task_report_columns = split(substitute(substitute(system("task _get -- rc.report.".re_cmd.".columns"), '*\|\n', '', 'g'), '\.', '_', 'g'), ',')
@@ -194,14 +198,13 @@ function! taskwarrior#command_type()
             return [ sub, 'report' ]
         elseif index(g:task_interactive_command, sub) != -1
             execute '!task '.b:command
-            let b:command = g:task_report_name
-            return [ g:task_report_name, 'report' ]
+            return [ sub, 'interactive' ]
         elseif index(g:task_all_commands, sub) != -1
             return [ sub, 'special' ]
         endif
     endfor
 
-    let b:command = b:command.' '.g:task_report_name
+    let b:command .= ' '.g:task_report_name
     return [ g:task_report_name, 'report' ]
 endfunction
 
