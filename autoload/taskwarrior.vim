@@ -55,22 +55,22 @@ function! taskwarrior#list(...) abort
     setlocal nomodifiable
     setlocal cursorline
 
-    nnoremap <buffer> A       :call taskwarrior#annotate('add')<CR>
-    nnoremap <buffer> D       :call taskwarrior#delete()<CR>
-    nnoremap <buffer> a       :call taskwarrior#system_call('', 'add', taskwarrior#get_args(), 'echo')<CR>
-    nnoremap <buffer> d       :call taskwarrior#set_done()<CR>
-    nnoremap <buffer> m       :call taskwarrior#modify()<CR>
-    nnoremap <buffer> M       :call taskwarrior#system_call(taskwarrior#get_id(), 'modify', taskwarrior#get_args(), 'external')<CR>
-    nnoremap <buffer> q       :call taskwarrior#quit()<CR>
-    nnoremap <buffer> r       :call taskwarrior#clear_completed()<CR>
-    nnoremap <buffer> u       :call taskwarrior#undo()<CR>
-    nnoremap <buffer> x       :call taskwarrior#annotate('del')<CR>
-    nnoremap <buffer> s       :call taskwarrior#sync('sync')<CR>
-    nnoremap <buffer> <CR>    :call taskwarrior#info(taskwarrior#get_uuid().' info')<CR>
-    nnoremap <buffer> <left>  :call taskwarrior#move_cursor('left', 'skip')<CR>
-    nnoremap <buffer> <S-tab> :call taskwarrior#move_cursor('left', 'step')<CR>
-    nnoremap <buffer> <right> :call taskwarrior#move_cursor('right', 'skip')<CR>
-    nnoremap <buffer> <tab>   :call taskwarrior#move_cursor('right', 'step')<CR>
+    nnoremap <buffer> A                :call taskwarrior#annotate('add')<CR>
+    nnoremap <buffer> D                :call taskwarrior#delete()<CR>
+    nnoremap <buffer> a                :call taskwarrior#system_call('', 'add', taskwarrior#get_args(), 'echo')<CR>
+    nnoremap <buffer> d                :call taskwarrior#set_done()<CR>
+    nnoremap <buffer> r                :call taskwarrior#clear_completed()<CR>
+    nnoremap <buffer> u                :call taskwarrior#undo()<CR>
+    nnoremap <buffer> x                :call taskwarrior#annotate('del')<CR>
+    nnoremap <buffer> s                :call taskwarrior#sync('sync')<CR>
+    nnoremap <buffer> <CR>             :call taskwarrior#info(taskwarrior#get_uuid().' info')<CR>
+    nnoremap <silent> <buffer> m       :call taskwarrior#modify()<CR>
+    nnoremap <silent> <buffer> M       :call taskwarrior#system_call(taskwarrior#get_uuid(), 'modify', taskwarrior#get_args(), 'external')<CR>
+    nnoremap <silent> <buffer> q       :call taskwarrior#quit()<CR>
+    nnoremap <silent> <buffer> <left>  :call taskwarrior#move_cursor('left', 'skip')<CR>
+    nnoremap <silent> <buffer> <S-tab> :call taskwarrior#move_cursor('left', 'step')<CR>
+    nnoremap <silent> <buffer> <right> :call taskwarrior#move_cursor('right', 'skip')<CR>
+    nnoremap <silent> <buffer> <tab>   :call taskwarrior#move_cursor('right', 'step')<CR>
 
     if g:task_highlight_field
         autocmd CursorMoved <buffer> :call taskwarrior#hi_field()
@@ -94,6 +94,15 @@ function! taskwarrior#init(...)
 
 endfunction
 
+function! taskwarrior#refresh()
+    if exists('g:task_view')
+        execute g:task_view.'buffer'
+        call taskwarrior#list()
+    else
+        call taskwarrior#refresh()
+    endif
+endfunction
+
 function! taskwarrior#hi_field()
     silent! syntax clear taskwarrior_field
     let index = taskwarrior#current_column()
@@ -106,22 +115,22 @@ function! taskwarrior#quit()
 endfunction
 
 function! taskwarrior#modify()
-    if !exists('b:task_columns') || !exists('b:task_report_columns') || taskwarrior#get_id() =~ '^\s*$'
+    if !exists('b:task_columns') || !exists('b:task_report_columns') || taskwarrior#get_uuid() == ''
         return
     endif
     let field = b:task_report_columns[taskwarrior#current_column()]
-    if index(['id', 'uuid', 'status', 'entry_age'], field) != -1
+    if index(['id', 'uuid', 'status', 'entry_age', 'urgency'], field) != -1
         return
     elseif field == 'description'
-        call taskwarrior#system_call(taskwarrior#get_id(), 'modify', taskwarrior#get_args(field), 'external')
+        call taskwarrior#system_call(taskwarrior#get_uuid(), 'modify', taskwarrior#get_args(field), 'external')
     else
-        call taskwarrior#system_call(taskwarrior#get_id(), 'modify', taskwarrior#get_args(field), 'silent')
+        call taskwarrior#system_call(taskwarrior#get_uuid(), 'modify', taskwarrior#get_args(field), 'silent')
     endif
 endfunction
 
 function! taskwarrior#delete()
     execute "!task ".taskwarrior#get_uuid()." delete"
-    call taskwarrior#list()
+    call taskwarrior#refresh()
 endfunction
 
 function! taskwarrior#annotate(op)
@@ -154,27 +163,38 @@ function! taskwarrior#get_args(...)
     endif
 endfunction
 
+function! taskwarrior#get_uuid()
+    if !exists('b:task_report_columns')
+        return taskwarrior#get_id()
+    endif
+    let index = index(b:task_report_columns, 'uuid')
+    if index >= 0 && exists('b:task_columns['.index.']') &&  exists('b:task_columns['.(index+1).']')
+        return substitute(matchstr(getline('.'), '\%'.(b:task_columns[index]+1).'v.*\%<'.(b:task_columns[index+1]+1).'v'), '\s', '', 'g')
+    endif
+    return taskwarrior#get_id()
+endfunction
+
 function! taskwarrior#get_id()
-    return matchstr(getline('.'), '^\s*\zs\d\+')." "
+    if !exists('b:task_columns') || !exists('b:task_report_columns')
+        return ''
+    endif
+    let index = index(b:task_report_columns, 'id')
+    if index >=0 && exists('b:task_columns['.index.']') &&  exists('b:task_columns['.(index+1).']')
+        return substitute(matchstr(getline('.'), '\%'.(b:task_columns[index]+1).'v.*\%<'.(b:task_columns[index+1]+1).'v'), '\s', '', 'g')
+    endif
+    return ''
 endfunction
 
 function! taskwarrior#system_call(filter, command, args, mode)
     if a:mode == 'silent'
-        call system("task ".a:filter.a:command.a:args)
+        call system("task ".a:filter.' '.a:command.' '.a:args)
     elseif a:mode == 'echo'
         echo "\n----------------\n"
-        echo system("task ".a:filter.a:command.a:args)
+        echo system("task ".a:filter.' '.a:command.' '.a:args)
     else
-        execute '!task '.a:filter.a:command.a:args
+        execute '!task '.a:filter.' '.a:command.' '.a:args
     endif
-    call taskwarrior#list()
-endfunction
-
-function! taskwarrior#get_uuid()
-    if !exists('b:task_report_columns') || index(b:task_report_columns, 'uuid') == -1
-        return taskwarrior#get_id()
-    endif
-    return matchstr(getline('.'), '[0-9a-f]\{8}\(-[0-9a-f]\{4}\)\{3}-[0-9a-f]\{12}')
+    call taskwarrior#refresh()
 endfunction
 
 function! taskwarrior#undo()
@@ -185,7 +205,7 @@ function! taskwarrior#undo()
     else
         !task undo
     endif
-    call taskwarrior#list()
+    call taskwarrior#refresh()
 endfunction
 
 function! taskwarrior#info(command)
@@ -196,7 +216,7 @@ endfunction
 
 function! taskwarrior#clear_completed()
     !task status:completed delete
-    call taskwarrior#init()
+    call taskwarrior#refresh()
 endfunction
 
 function! taskwarrior#sync(action)
