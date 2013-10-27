@@ -99,7 +99,7 @@ function! taskwarrior#refresh()
         execute g:task_view.'buffer'
         call taskwarrior#list()
     else
-        call taskwarrior#refresh()
+        call taskwarrior#init()
     endif
 endfunction
 
@@ -134,6 +134,9 @@ function! taskwarrior#delete()
 endfunction
 
 function! taskwarrior#annotate(op)
+    while line('.') > 1 && taskwarrior#get_uuid() == ''
+        normal k
+    endwhile
     let annotation = input("annotation:")
     if a:op == 'add'
         call taskwarrior#system_call(taskwarrior#get_uuid(), ' annotate ', annotation, 'silent')
