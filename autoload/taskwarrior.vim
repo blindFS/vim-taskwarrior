@@ -14,16 +14,17 @@ function! taskwarrior#list(...) abort
 
     if type == 'special'
         call append(0, split((system("task ".b:command)), '\n'))
-        setlocal filetype=text
+        execute 'setlocal filetype=task'.re_cmd
     else
         call append(0, split((system("task ".b:command)), '\n')[:-3])
         let b:task_report_columns = split(substitute(substitute(system("task _get -- rc.report.".re_cmd.".columns"), '*\|\n', '', 'g'), '\.', '_', 'g'), ',')
         let b:task_report_labels = split(substitute(system("task _get -- rc.report.".re_cmd.".labels"), '*\|\n', '', 'g'), ',')
         let line1 = join(b:task_report_labels, ' ')
-        let line2 = substitute(line1, '\S', '-', 'g')
 
         if len(getline(1)) == 0
-            call append(line('$')-1, [line1, line2])
+            call append(line('$')-1, line1)
+        else
+            2d
         endif
 
         for label in b:task_report_labels
@@ -39,26 +40,27 @@ function! taskwarrior#list(...) abort
                 let b:task_columns += [col+1]
             endif
         endfor
-        setlocal filetype=taskwarrior
+        let b:task_columns += [999]
+        setlocal filetype=taskreport
     endif
 
     setlocal buftype=nofile
     setlocal nomodifiable
 
-    nnoremap <buffer> A :call taskwarrior#annotate('add')<CR>
-    nnoremap <buffer> D :call taskwarrior#delete()<CR>
-    nnoremap <buffer> a :call taskwarrior#system_call('', 'add', taskwarrior#get_args(), 'echo')<CR>
-    nnoremap <buffer> d :call taskwarrior#set_done()<CR>
-    nnoremap <buffer> m :call taskwarrior#modify()<CR>
-    nnoremap <buffer> q :call taskwarrior#quit()<CR>
-    nnoremap <buffer> r :call taskwarrior#clear_completed()<CR>
-    nnoremap <buffer> u :call taskwarrior#undo()<CR>
-    nnoremap <buffer> x :call taskwarrior#annotate('del')<CR>
-    nnoremap <buffer> s :call taskwarrior#sync('sync')<CR>
-    nnoremap <buffer> <CR> :call taskwarrior#info(taskwarrior#get_uuid().' info')<CR>
-    nnoremap <buffer> <left> :call taskwarrior#move_cursor('left')<CR>
+    nnoremap <buffer> A       :call taskwarrior#annotate('add')<CR>
+    nnoremap <buffer> D       :call taskwarrior#delete()<CR>
+    nnoremap <buffer> a       :call taskwarrior#system_call('', 'add', taskwarrior#get_args(), 'echo')<CR>
+    nnoremap <buffer> d       :call taskwarrior#set_done()<CR>
+    nnoremap <buffer> m       :call taskwarrior#modify()<CR>
+    nnoremap <buffer> q       :call taskwarrior#quit()<CR>
+    nnoremap <buffer> r       :call taskwarrior#clear_completed()<CR>
+    nnoremap <buffer> u       :call taskwarrior#undo()<CR>
+    nnoremap <buffer> x       :call taskwarrior#annotate('del')<CR>
+    nnoremap <buffer> s       :call taskwarrior#sync('sync')<CR>
+    nnoremap <buffer> <CR>    :call taskwarrior#info(taskwarrior#get_uuid().' info')<CR>
+    nnoremap <buffer> <left>  :call taskwarrior#move_cursor('left')<CR>
     nnoremap <buffer> <S-tab> :call taskwarrior#move_cursor('left')<CR>
-    nnoremap <buffer> <tab> :call taskwarrior#move_cursor('right')<CR>
+    nnoremap <buffer> <tab>   :call taskwarrior#move_cursor('right')<CR>
     nnoremap <buffer> <right> :call taskwarrior#move_cursor('right')<CR>
 
     call setpos('.', pos)
@@ -220,7 +222,7 @@ function! taskwarrior#current_column()
         return -1
     endif
     let i = 0
-    while  i < len(b:task_columns) && len(getline('.')[0:getpos('.')[2]-1]) > len(matchstr(getline('.'), '^.*\%'.b:task_columns[i].'v'))
+    while  i < len(b:task_columns) && virtcol('.') > b:task_columns[i]
         let i += 1
     endwhile
     return i-1
