@@ -2,29 +2,28 @@ function! taskwarrior#list(...) abort
     let pos = getpos('.')
     setlocal modifiable
     %delete
-    if a:0 > 0
-        let b:command = join(a:000, ' ')
-    endif
-    if !exists('b:command')
-        let b:command = ''
+    if a:0 > 2
+        let b:filter = a:1
+        let b:command = a:2
+        let b:type = a:3
+    else
+        let b:command = exists('b:command')? b:command : g:task_report_name
+        let b:filter = exists('b:filter')? b:filter : ''
+        let b:type = exists('b:type')? b:type : 'report'
     endif
 
-    let [re_cmd, type] = taskwarrior#command_type()
-
-    if type == 'special'
-        call append(0, split((system("task ".b:command)), '\n'))
-        execute 'setlocal filetype=task'.re_cmd
-        nnoremap <buffer> q       :call taskwarrior#quit()<CR>
+    if b:type == 'special'
+        setlocal buftype=nofile
+        call append(0, split((system("task ".b:filter.' '.b:command)), '\n'))
+        execute 'setlocal filetype=task'.b:command
+        nnoremap <buffer> q :call taskwarrior#quit()<CR>
         call setpos('.', pos)
         return
-    elseif type == 'interactive'
-        call taskwarrior#quit()
-        return
     endif
 
-    call append(0, split((system("task ".b:command)), '\n')[:-3])
-    let b:task_report_columns = split(substitute(system("task _get -- rc.report.".re_cmd.".columns"), '*\|\n', '', 'g'), ',')
-    let b:task_report_labels = split(substitute(system("task _get -- rc.report.".re_cmd.".labels"), '*\|\n', '', 'g'), ',')
+    call append(0, split((system("task ".b:filter.' '.b:command)), '\n')[:-3])
+    let b:task_report_columns = split(substitute(system("task _get -- rc.report.".b:command.".columns"), '*\|\n', '', 'g'), ',')
+    let b:task_report_labels = split(substitute(system("task _get -- rc.report.".b:command.".labels"), '*\|\n', '', 'g'), ',')
     let line1 = join(b:task_report_labels, ' ')
 
     if len(getline(1)) == 0
@@ -57,19 +56,25 @@ function! taskwarrior#init(...)
        echoerr "This plugin depends on taskwarrior(http://taskwarrior.org)."
        return
     endif
-    if a:0 == 0
-        let argstring = exists('b:command') ? b:command : ''
-    else
-        let argstring = join(a:000, ' ')
+
+    let argstring = join(a:000, ' ')
+    let [command, filter, type] = taskwarrior#command_type(argstring)
+    if type == 'interactive'
+        if !g:task_readonly
+            execute '!task '.argstring
+            call taskwarrior#refresh()
+        endif
+        return
     endif
+
     if exists('g:task_view')
         call taskwarrior#quit()
     endif
 
-    execute 'edit task\ '.escape(join(a:000, ' '), ' ')
+    execute 'edit task\ '.escape(argstring, ' ')
     let g:task_view = bufnr('%')
     setlocal noswapfile
-    call taskwarrior#list(argstring)
+    call taskwarrior#list(filter, command, type)
 
 endfunction
 
@@ -132,7 +137,7 @@ function! taskwarrior#get_value_by_column(line, column)
     if !exists('b:task_columns') || !exists('b:task_report_columns')
         return ''
     endif
-    let index = index(b:task_report_columns, a:column)
+    let index = match(b:task_report_columns, a:column.'.*')
     if index != -1
         return taskwarrior#get_value_by_index(a:line, index)
     endif
@@ -210,27 +215,21 @@ endfunction
 
 function! taskwarrior#sync(action)
     execute '!task '.a:action.' '
-    if exists('g:task_view')
-        call taskwarrior#list()
-    endif
+    call taskwarrior#refresh()
 endfunction
 
-function! taskwarrior#command_type()
-    for sub in split(b:command, ' ')
+function! taskwarrior#command_type(string)
+    for sub in split(a:string, ' ')
         if index(g:task_report_command, sub) != -1
-            return [ sub, 'report' ]
+            return [ sub, substitute(' '.a:string, ' '.sub, '', ''), 'report' ]
         elseif index(g:task_interactive_command, sub) != -1
-            if !g:task_readonly
-                execute '!task '.b:command
-            endif
-            return [ sub, 'interactive' ]
+            return [ sub, substitute(' '.a:string, ' '.sub, '', ''), 'interactive' ]
         elseif index(g:task_all_commands, sub) != -1
-            return [ sub, 'special' ]
+            return [ sub, substitute(' '.a:string, ' '.sub, '', ''), 'special' ]
         endif
     endfor
 
-    let b:command .= ' '.g:task_report_name
-    return [ g:task_report_name, 'report' ]
+    return [ g:task_report_name, a:string, 'report' ]
 endfunction
 
 function! taskwarrior#move_cursor(direction, mode)
