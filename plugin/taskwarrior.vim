@@ -73,7 +73,7 @@ command! TWSync call taskwarrior#sync('sync')
 "command! TWThemeEdit
 "command! TWThemeShow
 command! TWToggleReadonly :let g:task_readonly = (g:task_readonly ? 0 : 1) | call taskwarrior#init()
-command! TWToggleHLField :let g:task_highlight_field = (g:task_highlight_field ? 0 : 1) | echo (g:task_highlight_field ? 'enabled' : 'disabled') | call taskwarrior#refresh()
+command! TWToggleHLField :let g:task_highlight_field = (g:task_highlight_field ? 0 : 1) | call taskwarrior#refresh()
 command! TWUndo :call taskwarrior#undo()
 "command! TWWiki
 "command! TWWikiDiary

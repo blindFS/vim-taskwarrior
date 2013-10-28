@@ -11,7 +11,7 @@ endif
 if exists('b:task_columns') && exists('b:task_report_columns')
     for i in range(0, len(b:task_report_columns)-1)
         if exists('b:task_columns['.(i+1).']')
-            execute printf(exp, substitute(b:task_report_columns[i], '\.', '_', 'g') , b:task_columns[i]+1, b:task_columns[i+1]+1)
+            execute printf(exp, matchstr(b:task_report_columns[i], '^\w\+') , b:task_columns[i]+1, b:task_columns[i+1]+1)
         endif
     endfor
 endif
@@ -24,7 +24,7 @@ highlight default link taskwarrior_priority    Class
 highlight default link taskwarrior_due         Todo
 highlight default link taskwarrior_end         Keyword
 highlight default link taskwarrior_description Normal
-highlight default link taskwarrior_entry_age   Special
+highlight default link taskwarrior_entry       Special
 highlight default link taskwarrior_depends     Todo
 highlight default link taskwarrior_tags        Keyword
 highlight default link taskwarrior_uuid        VarId

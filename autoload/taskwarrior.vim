@@ -68,6 +68,12 @@ function! taskwarrior#init(...)
     endif
 
     if exists('g:task_view')
+        if argstring == ''
+            execute g:task_view.'buffer'
+            let command = exists('b:command')? b:command : g:task_report_name
+            let filter = exists('b:filter')? b:filter : ''
+            let type = exists('b:type')? b:type : 'report'
+        endif
         call taskwarrior#quit()
     endif
 
@@ -159,7 +165,7 @@ function! taskwarrior#get_uuid()
         return ''
     endif
     let vol = taskwarrior#get_value_by_column('.', 'uuid')
-    return vol == '' ? taskwarrior#get_value_by_column('.', 'id') : vol
+    return vol =~ '[0-9a-f]\{8}\(-[0-9a-f]\{4}\)\{3}-[0-9a-f]\{12}' ? vol : taskwarrior#get_value_by_column('.', 'id')
 endfunction
 
 function! taskwarrior#get_args(...)
