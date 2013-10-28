@@ -29,4 +29,9 @@ highlight default link taskwarrior_depends     Todo
 highlight default link taskwarrior_tags        Keyword
 highlight default link taskwarrior_uuid        VarId
 highlight default link taskwarrior_urgency     Todo
-highlight default link taskwarrior_field       IncSearch
+
+if g:task_field_highlight_advanced != ''
+    execute 'highlight taskwarrior_field '.g:task_field_highlight_advanced
+else
+    execute 'highlight default link taskwarrior_field '.g:task_field_highlight_link
+endif

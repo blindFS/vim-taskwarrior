@@ -74,6 +74,8 @@ function! taskwarrior#list(...) abort
 
     if g:task_highlight_field
         autocmd CursorMoved <buffer> :call taskwarrior#hi_field()
+    else
+        autocmd! CursorMoved <buffer>
     endif
     call setpos('.', pos)
 
@@ -149,11 +151,40 @@ function! taskwarrior#set_done()
     call taskwarrior#system_call(taskwarrior#get_uuid(), ' done', '', 'silent')
 endfunction
 
+function! taskwarrior#get_value_by_column(line, column)
+    if !exists('b:task_columns') || !exists('b:task_report_columns')
+        return ''
+    endif
+    let index = index(b:task_report_columns, a:column)
+    if index != -1
+        return taskwarrior#get_value_by_index(a:line, index)
+    endif
+    return ''
+endfunction
+
+function! taskwarrior#get_value_by_index(line, index)
+    if !exists('b:task_columns')
+        return ''
+    endif
+    if exists('b:task_columns['.a:index.']')
+        return substitute(getline(a:line)[b:task_columns[a:index]:b:task_columns[a:index+1]-1], '\s*$', '',  'g')
+    endif
+    return ''
+endfunction
+
+function! taskwarrior#get_uuid()
+    if !exists('b:task_report_columns')
+        return ''
+    endif
+    let vol = taskwarrior#get_value_by_column('.', 'uuid')
+    return vol == '' ? taskwarrior#get_value_by_column('.', 'id') : vol
+endfunction
+
 function! taskwarrior#get_args(...)
     if a:0 != 0
         let arg = ' '
         for key in a:000
-            execute 'let this_'.key.'=input("'.key.':")'
+            execute 'let this_'.key.'=input("'.key.':", "'.taskwarrior#get_value_by_column('.', key).'")'
             if key == 'description'
                 execute "let arg = arg.' '.this_".key
             else
@@ -164,28 +195,6 @@ function! taskwarrior#get_args(...)
     else
         return taskwarrior#get_args('due', 'project', 'priority', 'description', 'tag', 'depends')
     endif
-endfunction
-
-function! taskwarrior#get_uuid()
-    if !exists('b:task_report_columns')
-        return taskwarrior#get_id()
-    endif
-    let index = index(b:task_report_columns, 'uuid')
-    if index >= 0 && exists('b:task_columns['.index.']') &&  exists('b:task_columns['.(index+1).']')
-        return substitute(matchstr(getline('.'), '\%'.(b:task_columns[index]+1).'v.*\%<'.(b:task_columns[index+1]+1).'v'), '\s', '', 'g')
-    endif
-    return taskwarrior#get_id()
-endfunction
-
-function! taskwarrior#get_id()
-    if !exists('b:task_columns') || !exists('b:task_report_columns')
-        return ''
-    endif
-    let index = index(b:task_report_columns, 'id')
-    if index >=0 && exists('b:task_columns['.index.']') &&  exists('b:task_columns['.(index+1).']')
-        return substitute(matchstr(getline('.'), '\%'.(b:task_columns[index]+1).'v.*\%<'.(b:task_columns[index+1]+1).'v'), '\s', '', 'g')
-    endif
-    return ''
 endfunction
 
 function! taskwarrior#system_call(filter, command, args, mode)
@@ -234,7 +243,9 @@ function! taskwarrior#command_type()
         if index(g:task_report_command, sub) != -1
             return [ sub, 'report' ]
         elseif index(g:task_interactive_command, sub) != -1
-            execute '!task '.b:command
+            if !g:task_readonly
+                execute '!task '.b:command
+            endif
             return [ sub, 'interactive' ]
         elseif index(g:task_all_commands, sub) != -1
             return [ sub, 'special' ]

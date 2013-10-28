@@ -4,7 +4,10 @@ let g:task_all_commands = split(system('task _command'), '\n')
 let g:task_all_configurations = split(system('task _config'), '\n')
 let g:task_filter = ['id:', 'description:', 'due:', 'proj:', 'pri:', 'status:', 'tag:']
 let g:task_report_name = index(g:task_report_command, get(g:, 'task_report_name')) != -1 ? get(g:, 'task_report_name') : 'next'
-let g:task_highlight_field= get(g:, 'task_highlight_field', 1)
+let g:task_highlight_field = get(g:, 'task_highlight_field', 1)
+let g:task_field_highlight_link = get(g:, 'task_field_highlight_link', 'IncSearch')
+let g:task_field_highlight_advanced = get(g:, 'task_field_highlight_advanced', '')
+let g:task_readonly = get(g:, 'task_readonly', 1)
 "
 "commented out pending taskd collision avoidance
 "command! TaskPush call tw#remote('push')
@@ -71,6 +74,8 @@ command! TWSync call taskwarrior#sync('sync')
 "command! TWTheme
 "command! TWThemeEdit
 "command! TWThemeShow
+command! TWToggleReadonly :let g:task_readonly = (g:task_readonly ? 0 : 1) | echo (g:task_readonly ? 'now readonly' : 'cancel readonly')
+command! TWToggleHLField :let g:task_highlight_field = (g:task_highlight_field ? 0 : 1) | echo (g:task_highlight_field ? 'enabled' : 'disabled') | call taskwarrior#refresh()
 command! TWUndo :call taskwarrior#undo()
 "command! TWWiki
 "command! TWWikiDiary
