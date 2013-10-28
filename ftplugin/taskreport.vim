@@ -3,6 +3,7 @@ setlocal nomodifiable
 setlocal cursorline
 setlocal nowrap
 
+nnoremap <silent> <buffer> <F1>    :h taskwarrior<CR>
 nnoremap <silent> <buffer> q       :call taskwarrior#quit()<CR>
 nnoremap <silent> <buffer> <left>  :call taskwarrior#move_cursor('left', 'skip')<CR>
 nnoremap <silent> <buffer> <S-tab> :call taskwarrior#move_cursor('left', 'step')<CR>
@@ -26,6 +27,8 @@ else
     nnoremap <buffer> u                :call taskwarrior#undo()<CR>
     nnoremap <buffer> x                :call taskwarrior#annotate('del')<CR>
     nnoremap <buffer> s                :call taskwarrior#sync('sync')<CR>
+    nnoremap <buffer> +                :call taskwarrior#sort_current('+')<CR>
+    nnoremap <buffer> -                :call taskwarrior#sort_current('-')<CR>
     nnoremap <buffer> <CR>             :call taskwarrior#info(taskwarrior#get_uuid().' info')<CR>
     nnoremap <silent> <buffer> m       :call taskwarrior#modify()<CR>
     nnoremap <silent> <buffer> M       :call taskwarrior#system_call(taskwarrior#get_uuid(), 'modify', taskwarrior#get_args(), 'external')<CR>

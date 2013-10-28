@@ -8,6 +8,7 @@ let g:task_highlight_field = get(g:, 'task_highlight_field', 1)
 let g:task_field_highlight_link = get(g:, 'task_field_highlight_link', 'IncSearch')
 let g:task_field_highlight_advanced = get(g:, 'task_field_highlight_advanced', '')
 let g:task_readonly = get(g:, 'task_readonly', 0)
+let g:task_rc_override = get(g:, 'task_rc_override', '')
 "
 "commented out pending taskd collision avoidance
 "command! TaskPush call tw#remote('push')

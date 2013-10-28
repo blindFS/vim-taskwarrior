@@ -1,27 +1,27 @@
 function! taskwarrior#list(...) abort
     let pos = getpos('.')
+    setlocal noreadonly
     setlocal modifiable
     %delete
-    if a:0 > 2
+    if a:0 > 3
         let b:filter = a:1
         let b:command = a:2
         let b:type = a:3
+        let b:rc =a:4
     else
-        let b:command = exists('b:command')? b:command : g:task_report_name
-        let b:filter = exists('b:filter')? b:filter : ''
-        let b:type = exists('b:type')? b:type : 'report'
+        call taskwarrior#buffer_var_init()
     endif
 
     if b:type == 'special'
         setlocal buftype=nofile
-        call append(0, split((system("task ".b:filter.' '.b:command)), '\n'))
+        call append(0, split((system("task ".b:rc.' '.b:filter.' '.b:command)), '\n'))
         execute 'setlocal filetype=task'.b:command
         nnoremap <buffer> q :call taskwarrior#quit()<CR>
         call setpos('.', pos)
         return
     endif
 
-    call append(0, split((system("task ".b:filter.' '.b:command)), '\n')[:-3])
+    call append(0, split((system("task ".b:rc.' '.b:filter.' '.b:command)), '\n')[:-3])
     let b:task_report_columns = split(substitute(system("task _get -- rc.report.".b:command.".columns"), '*\|\n', '', 'g'), ',')
     let b:task_report_labels = split(substitute(system("task _get -- rc.report.".b:command.".labels"), '*\|\n', '', 'g'), ',')
     let line1 = join(b:task_report_labels, ' ')
@@ -51,6 +51,13 @@ function! taskwarrior#list(...) abort
 
 endfunction
 
+function! taskwarrior#buffer_var_init()
+    let b:command = exists('b:command')? b:command : g:task_report_name
+    let b:filter = exists('b:filter')? b:filter : ''
+    let b:type = exists('b:type')? b:type : 'report'
+    let b:rc = exists('b:rc')? b:rc : ''
+endfunction
+
 function! taskwarrior#init(...)
     if !executable('task')
        echoerr "This plugin depends on taskwarrior(http://taskwarrior.org)."
@@ -70,9 +77,7 @@ function! taskwarrior#init(...)
     if exists('g:task_view')
         if argstring == ''
             execute g:task_view.'buffer'
-            let command = exists('b:command')? b:command : g:task_report_name
-            let filter = exists('b:filter')? b:filter : ''
-            let type = exists('b:type')? b:type : 'report'
+            call taskwarrior#buffer_var_init()
         endif
         call taskwarrior#quit()
     endif
@@ -80,7 +85,7 @@ function! taskwarrior#init(...)
     execute 'edit task\ '.escape(argstring, ' ')
     let g:task_view = bufnr('%')
     setlocal noswapfile
-    call taskwarrior#list(filter, command, type)
+    call taskwarrior#list(filter, command, type, g:task_rc_override)
 
 endfunction
 
@@ -95,7 +100,7 @@ endfunction
 
 function! taskwarrior#hi_field()
     silent! syntax clear taskwarrior_field
-    let index = taskwarrior#current_column()
+    let index = taskwarrior#current_index()
     execute 'syntax match taskwarrior_field /\%>1l\%'.line('.').'l\%'.(b:task_columns[index]+1).'v.*\%<'.(b:task_columns[index+1]+1).'v/'
 endfunction
 
@@ -105,10 +110,7 @@ function! taskwarrior#quit()
 endfunction
 
 function! taskwarrior#modify()
-    if !exists('b:task_columns') || !exists('b:task_report_columns') || taskwarrior#get_uuid() == ''
-        return
-    endif
-    let field = matchstr(b:task_report_columns[taskwarrior#current_column()], '^\w\+')
+    let field = taskwarrior#current_column()
     if index(['id', 'uuid', 'status', 'urgency'], field) != -1
         return
     elseif field == 'description'
@@ -133,6 +135,14 @@ function! taskwarrior#annotate(op)
     else
         call taskwarrior#system_call(taskwarrior#get_uuid(), ' denotate ', annotation, 'silent')
     endif
+endfunction
+
+function! taskwarrior#sort_current(polarity)
+    call taskwarrior#buffer_var_init()
+    let b:rc = 'rc.report.'.b:command.'.sort:'.
+                \taskwarrior#current_column().a:polarity.
+                \','.system('task _get -- rc.report.'.b:command.'.sort')[0:-2]
+    call taskwarrior#list()
 endfunction
 
 function! taskwarrior#set_done()
@@ -239,7 +249,7 @@ function! taskwarrior#command_type(string)
 endfunction
 
 function! taskwarrior#move_cursor(direction, mode)
-    let ci = taskwarrior#current_column()
+    let ci = taskwarrior#current_index()
     if ci == -1 || (ci == 0 && a:direction == 'left') || (ci == len(b:task_columns)-1 && a:direction == 'right')
         return
     endif
@@ -253,7 +263,7 @@ function! taskwarrior#move_cursor(direction, mode)
     endif
 endfunction
 
-function! taskwarrior#current_column()
+function! taskwarrior#current_index()
     if getline('.') =~ '^\s*$' || !exists('b:task_columns') || !exists('b:task_report_columns')
         return -1
     endif
@@ -262,5 +272,12 @@ function! taskwarrior#current_column()
         let i += 1
     endwhile
     return i-1
+endfunction
+
+function! taskwarrior#current_column()
+    if !exists('b:task_columns') || !exists('b:task_report_columns') || taskwarrior#get_uuid() == ''
+        return ''
+    endif
+    return matchstr(b:task_report_columns[taskwarrior#current_index()], '^\w\+')
 endfunction
 " vim:ts=4:sw=4:tw=78:ft=vim:fdm=indent
