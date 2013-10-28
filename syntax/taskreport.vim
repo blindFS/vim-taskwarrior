@@ -11,7 +11,7 @@ endif
 if exists('b:task_columns') && exists('b:task_report_columns')
     for i in range(0, len(b:task_report_columns)-1)
         if exists('b:task_columns['.(i+1).']')
-            execute printf(exp, b:task_report_columns[i] , b:task_columns[i]+1, b:task_columns[i+1]+1)
+            execute printf(exp, substitute(b:task_report_columns[i], '\.', '_', 'g') , b:task_columns[i]+1, b:task_columns[i+1]+1)
         endif
     endfor
 endif

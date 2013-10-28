@@ -1,7 +1,6 @@
 function! taskwarrior#list(...) abort
     let pos = getpos('.')
     setlocal modifiable
-    setlocal nowrap
     %delete
     if a:0 > 0
         let b:command = join(a:000, ' ')
@@ -20,12 +19,11 @@ function! taskwarrior#list(...) abort
         return
     elseif type == 'interactive'
         call taskwarrior#quit()
-        call taskwarrior#init(g:task_report_name)
         return
     endif
 
     call append(0, split((system("task ".b:command)), '\n')[:-3])
-    let b:task_report_columns = split(substitute(substitute(system("task _get -- rc.report.".re_cmd.".columns"), '*\|\n', '', 'g'), '\.', '_', 'g'), ',')
+    let b:task_report_columns = split(substitute(system("task _get -- rc.report.".re_cmd.".columns"), '*\|\n', '', 'g'), ',')
     let b:task_report_labels = split(substitute(system("task _get -- rc.report.".re_cmd.".labels"), '*\|\n', '', 'g'), ',')
     let line1 = join(b:task_report_labels, ' ')
 
@@ -50,39 +48,7 @@ function! taskwarrior#list(...) abort
     endfor
     let b:task_columns += [999]
     setlocal filetype=taskreport
-
-    setlocal buftype=nofile
-    setlocal nomodifiable
-    setlocal cursorline
-
-    nnoremap <silent> <buffer> q       :call taskwarrior#quit()<CR>
-    nnoremap <silent> <buffer> <left>  :call taskwarrior#move_cursor('left', 'skip')<CR>
-    nnoremap <silent> <buffer> <S-tab> :call taskwarrior#move_cursor('left', 'step')<CR>
-    nnoremap <silent> <buffer> <right> :call taskwarrior#move_cursor('right', 'skip')<CR>
-    nnoremap <silent> <buffer> <tab>   :call taskwarrior#move_cursor('right', 'step')<CR>
-
-    if g:task_highlight_field
-        autocmd CursorMoved <buffer> :call taskwarrior#hi_field()
-    else
-        autocmd! CursorMoved <buffer>
-    endif
     call setpos('.', pos)
-
-    if g:task_readonly
-        setlocal readonly
-        return
-    endif
-    nnoremap <buffer> A                :call taskwarrior#annotate('add')<CR>
-    nnoremap <buffer> D                :call taskwarrior#delete()<CR>
-    nnoremap <buffer> a                :call taskwarrior#system_call('', 'add', taskwarrior#get_args(), 'echo')<CR>
-    nnoremap <buffer> d                :call taskwarrior#set_done()<CR>
-    nnoremap <buffer> r                :call taskwarrior#clear_completed()<CR>
-    nnoremap <buffer> u                :call taskwarrior#undo()<CR>
-    nnoremap <buffer> x                :call taskwarrior#annotate('del')<CR>
-    nnoremap <buffer> s                :call taskwarrior#sync('sync')<CR>
-    nnoremap <buffer> <CR>             :call taskwarrior#info(taskwarrior#get_uuid().' info')<CR>
-    nnoremap <silent> <buffer> m       :call taskwarrior#modify()<CR>
-    nnoremap <silent> <buffer> M       :call taskwarrior#system_call(taskwarrior#get_uuid(), 'modify', taskwarrior#get_args(), 'external')<CR>
 
 endfunction
 
@@ -131,8 +97,8 @@ function! taskwarrior#modify()
     if !exists('b:task_columns') || !exists('b:task_report_columns') || taskwarrior#get_uuid() == ''
         return
     endif
-    let field = b:task_report_columns[taskwarrior#current_column()]
-    if index(['id', 'uuid', 'status', 'entry_age', 'urgency'], field) != -1
+    let field = matchstr(b:task_report_columns[taskwarrior#current_column()], '^\w\+')
+    if index(['id', 'uuid', 'status', 'urgency'], field) != -1
         return
     elseif field == 'description'
         call taskwarrior#system_call(taskwarrior#get_uuid(), 'modify', taskwarrior#get_args(field), 'external')
@@ -178,7 +144,7 @@ function! taskwarrior#get_value_by_index(line, index)
         return ''
     endif
     if exists('b:task_columns['.a:index.']')
-        return substitute(getline(a:line)[b:task_columns[a:index]:b:task_columns[a:index+1]-1], '\s*$', '',  'g')
+        return substitute(getline(a:line)[b:task_columns[a:index]:b:task_columns[a:index+1]-1], '\(\s*$\|^\s*\)', '',  'g')
     endif
     return ''
 endfunction
