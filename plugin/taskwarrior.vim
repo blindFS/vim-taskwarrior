@@ -7,7 +7,7 @@ let g:task_report_name = index(g:task_report_command, get(g:, 'task_report_name'
 let g:task_highlight_field = get(g:, 'task_highlight_field', 1)
 let g:task_field_highlight_link = get(g:, 'task_field_highlight_link', 'IncSearch')
 let g:task_field_highlight_advanced = get(g:, 'task_field_highlight_advanced', '')
-let g:task_readonly = get(g:, 'task_readonly', 1)
+let g:task_readonly = get(g:, 'task_readonly', 0)
 "
 "commented out pending taskd collision avoidance
 "command! TaskPush call tw#remote('push')
@@ -26,9 +26,7 @@ command! TWAnnotate :call taskwarrior#annotate('add')
 command! TWComplete :call taskwarrior#set_done()
 "command! TWConfigColor
 "command! TWConfigDiagnostic
-"command! TWConfigGet
-" command! TWConfigSet
-command! TWConfigShow :call taskwarrior#init('show')
+"command! TWConfigSet
 command! TWDelete :call taskwarrior#delete()
 command! TWDeleteAnnotation :call taskwarrior#annotate('del')
 command! TWDeleteCompleted :call taskwarrior#clear_completed()
@@ -74,7 +72,7 @@ command! TWSync call taskwarrior#sync('sync')
 "command! TWTheme
 "command! TWThemeEdit
 "command! TWThemeShow
-command! TWToggleReadonly :let g:task_readonly = (g:task_readonly ? 0 : 1) | echo (g:task_readonly ? 'now readonly' : 'cancel readonly')
+command! TWToggleReadonly :let g:task_readonly = (g:task_readonly ? 0 : 1) | call taskwarrior#init()
 command! TWToggleHLField :let g:task_highlight_field = (g:task_highlight_field ? 0 : 1) | echo (g:task_highlight_field ? 'enabled' : 'disabled') | call taskwarrior#refresh()
 command! TWUndo :call taskwarrior#undo()
 "command! TWWiki

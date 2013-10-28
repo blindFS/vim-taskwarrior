@@ -55,17 +55,6 @@ function! taskwarrior#list(...) abort
     setlocal nomodifiable
     setlocal cursorline
 
-    nnoremap <buffer> A                :call taskwarrior#annotate('add')<CR>
-    nnoremap <buffer> D                :call taskwarrior#delete()<CR>
-    nnoremap <buffer> a                :call taskwarrior#system_call('', 'add', taskwarrior#get_args(), 'echo')<CR>
-    nnoremap <buffer> d                :call taskwarrior#set_done()<CR>
-    nnoremap <buffer> r                :call taskwarrior#clear_completed()<CR>
-    nnoremap <buffer> u                :call taskwarrior#undo()<CR>
-    nnoremap <buffer> x                :call taskwarrior#annotate('del')<CR>
-    nnoremap <buffer> s                :call taskwarrior#sync('sync')<CR>
-    nnoremap <buffer> <CR>             :call taskwarrior#info(taskwarrior#get_uuid().' info')<CR>
-    nnoremap <silent> <buffer> m       :call taskwarrior#modify()<CR>
-    nnoremap <silent> <buffer> M       :call taskwarrior#system_call(taskwarrior#get_uuid(), 'modify', taskwarrior#get_args(), 'external')<CR>
     nnoremap <silent> <buffer> q       :call taskwarrior#quit()<CR>
     nnoremap <silent> <buffer> <left>  :call taskwarrior#move_cursor('left', 'skip')<CR>
     nnoremap <silent> <buffer> <S-tab> :call taskwarrior#move_cursor('left', 'step')<CR>
@@ -79,11 +68,33 @@ function! taskwarrior#list(...) abort
     endif
     call setpos('.', pos)
 
+    if g:task_readonly
+        setlocal readonly
+        return
+    endif
+    nnoremap <buffer> A                :call taskwarrior#annotate('add')<CR>
+    nnoremap <buffer> D                :call taskwarrior#delete()<CR>
+    nnoremap <buffer> a                :call taskwarrior#system_call('', 'add', taskwarrior#get_args(), 'echo')<CR>
+    nnoremap <buffer> d                :call taskwarrior#set_done()<CR>
+    nnoremap <buffer> r                :call taskwarrior#clear_completed()<CR>
+    nnoremap <buffer> u                :call taskwarrior#undo()<CR>
+    nnoremap <buffer> x                :call taskwarrior#annotate('del')<CR>
+    nnoremap <buffer> s                :call taskwarrior#sync('sync')<CR>
+    nnoremap <buffer> <CR>             :call taskwarrior#info(taskwarrior#get_uuid().' info')<CR>
+    nnoremap <silent> <buffer> m       :call taskwarrior#modify()<CR>
+    nnoremap <silent> <buffer> M       :call taskwarrior#system_call(taskwarrior#get_uuid(), 'modify', taskwarrior#get_args(), 'external')<CR>
+
 endfunction
 
 function! taskwarrior#init(...)
     if !executable('task')
        echoerr "This plugin depends on taskwarrior(http://taskwarrior.org)."
+       return
+    endif
+    if a:0 == 0
+        let argstring = exists('b:command') ? b:command : ''
+    else
+        let argstring = join(a:000, ' ')
     endif
     if exists('g:task_view')
         call taskwarrior#quit()
@@ -92,7 +103,7 @@ function! taskwarrior#init(...)
     execute 'edit task\ '.escape(join(a:000, ' '), ' ')
     let g:task_view = bufnr('%')
     setlocal noswapfile
-    call taskwarrior#list(join(a:000, ' '))
+    call taskwarrior#list(argstring)
 
 endfunction
 
