@@ -141,10 +141,24 @@ function! taskwarrior#annotate(op)
     endif
 endfunction
 
-function! taskwarrior#sort_current(polarity)
+function! taskwarrior#sort_by_arg(...)
+    if a:0 == 0
+        return
+    elseif a:0 == 1 && len(a:1) > 1
+        let col = a:1[-1:-1] =~ '[+-]' ? a:1[0:-2] : a:1[0:-1]
+        let pol = a:1[-1:-1] =~ '[+-]' ? a:[-1:-1] : '-'
+        call taskwarrior#sort_by_column('m', col)
+        call taskwarrior#sort_by_column(pol, col)
+    else
+        let b:rc = g:task_rc_override.' rc.report.'.b:command.'.sort:'.join(a:000, ',')
+        call taskwarrior#list()
+    endif
+endfunction
+
+function! taskwarrior#sort_by_column(polarity, column)
     let fromrc = matchstr(b:rc, 'rc\.report\.'.b:command.'\.sort.\zs\S*')
     let default = system('task _get -- rc.report.'.b:command.'.sort')[0:-2]
-    let ccol = taskwarrior#current_column()
+    let ccol = index(b:task_report_columns, a:column) == -1 ? taskwarrior#current_column() : a:column
     let list = split(fromrc, ',')
     let ind = index(split(fromrc, '[-+],\='), ccol)
     let dlist = split(default, ',')
@@ -163,7 +177,7 @@ function! taskwarrior#sort_current(polarity)
             endif
             let b:rc .= ' rc.report.'.b:command.'.sort:'.join(dlist, ',')
         else
-            let polarity = a:polarity == 'm' ? '+' : a:polarity
+            let polarity = a:polarity == 'm' ? '-' : a:polarity
             let b:rc .= ' rc.report.'.b:command.'.sort:'.ccol.polarity.','.default
         endif
     elseif ind != -1
@@ -189,7 +203,7 @@ function! taskwarrior#sort_current(polarity)
         let g:listabc = list
         let b:rc = substitute(b:rc, 'report\.'.b:command.'\.sort.'.fromrc, 'report.'.b:command.'.sort:'.join(list, ','), '')
     else
-        let polarity = a:polarity == 'm' ? '+' : a:polarity
+        let polarity = a:polarity == 'm' ? '-' : a:polarity
         let b:rc = substitute(b:rc, 'report\.'.b:command.'\.sort.', 'report.'.b:command.'.sort:'.ccol.polarity.',', '')
     endif
     call taskwarrior#list()
@@ -342,5 +356,29 @@ endfunction
 
 function! taskwarrior#status()
     return b:filter.' '.b:rc.' '.b:command
+endfunction
+
+function! taskwarrior#TW_complete(A,L,P)
+    let command = deepcopy(g:task_all_commands)
+    let filter = deepcopy(g:task_filter)
+    let config = deepcopy(g:task_all_configurations)
+    let lead = a:A == '' ? '.*' : a:A
+    for ph in split(a:L, ' ')[0:-1]
+        if ph == 'config' || ph == 'show'
+            return filter(config, 'matchstr(v:val,"'.lead.'") != ""')
+        elseif index(command, ph) != -1
+            return filter(filter, 'matchstr(v:val,"'.lead.'") != ""')
+        endif
+    endfor
+    return filter(command+filter, 'matchstr(v:val,"'.lead.'") != ""')
+endfunction
+
+function! taskwarrior#sort_complete(A,L,P)
+    if !exists('b:task_report_columns')
+        return []
+    endif
+    let lead = a:A == '' ? '.*' : a:A
+    let cols = map(deepcopy(b:task_report_columns), 'matchstr(v:val, "^\\w*")')
+    return filter(cols, 'matchstr(v:val,"'.lead.'") != ""')
 endfunction
 " vim:ts=4:sw=4:tw=78:ft=vim:fdm=indent

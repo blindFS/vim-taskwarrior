@@ -27,10 +27,21 @@ else
     nnoremap <buffer> u                :call taskwarrior#undo()<CR>
     nnoremap <buffer> x                :call taskwarrior#annotate('del')<CR>
     nnoremap <buffer> S                :call taskwarrior#sync('sync')<CR>
-    nnoremap <buffer> +                :call taskwarrior#sort_current('+')<CR>
-    nnoremap <buffer> -                :call taskwarrior#sort_current('-')<CR>
-    nnoremap <buffer> s                :call taskwarrior#sort_current('m')<CR>
+    nnoremap <buffer> +                :call taskwarrior#sort_by_column('+', '')<CR>
+    nnoremap <buffer> -                :call taskwarrior#sort_by_column('-', '')<CR>
+    nnoremap <buffer> s                :call taskwarrior#sort_by_column('m', '')<CR>
     nnoremap <buffer> <CR>             :call taskwarrior#info(taskwarrior#get_uuid().' info')<CR>
     nnoremap <silent> <buffer> m       :call taskwarrior#modify()<CR>
     nnoremap <silent> <buffer> M       :call taskwarrior#system_call(taskwarrior#get_uuid(), 'modify', taskwarrior#get_args(), 'external')<CR>
 endif
+
+command! -buffer TWAdd               :call taskwarrior#system_call('', 'add', taskwarrior#get_args(), 'interactive')
+command! -buffer TWAnnotate          :call taskwarrior#annotate('add')
+command! -buffer TWComplete          :call taskwarrior#set_done()
+command! -buffer TWDelete            :call taskwarrior#delete()
+command! -buffer TWDeleteAnnotation  :call taskwarrior#annotate('del')
+command! -buffer TWModifyInteractive :call taskwarrior#system_call(taskwarrior#get_uuid(), 'modify', taskwarrior#get_args(), 'interactive')
+command! -buffer TWReportInfo        :call taskwarrior#info(taskwarrior#get_uuid().' info')
+command! -buffer TWToggleReadonly    :let g:task_readonly = (g:task_readonly ? 0 : 1) | call taskwarrior#init()
+command! -buffer TWToggleHLField     :let g:task_highlight_field = (g:task_highlight_field ? 0 : 1) | call taskwarrior#refresh()
+" command! -buffer -nargs=? -complete=customlist,taskwarrior#sort_complete TWReportSort :call taskwarrior#sort_by_arg(<q-args>)
