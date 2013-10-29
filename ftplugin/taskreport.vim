@@ -26,9 +26,10 @@ else
     nnoremap <buffer> r                :call taskwarrior#clear_completed()<CR>
     nnoremap <buffer> u                :call taskwarrior#undo()<CR>
     nnoremap <buffer> x                :call taskwarrior#annotate('del')<CR>
-    nnoremap <buffer> s                :call taskwarrior#sync('sync')<CR>
+    nnoremap <buffer> S                :call taskwarrior#sync('sync')<CR>
     nnoremap <buffer> +                :call taskwarrior#sort_current('+')<CR>
     nnoremap <buffer> -                :call taskwarrior#sort_current('-')<CR>
+    nnoremap <buffer> s                :call taskwarrior#sort_current('m')<CR>
     nnoremap <buffer> <CR>             :call taskwarrior#info(taskwarrior#get_uuid().' info')<CR>
     nnoremap <silent> <buffer> m       :call taskwarrior#modify()<CR>
     nnoremap <silent> <buffer> M       :call taskwarrior#system_call(taskwarrior#get_uuid(), 'modify', taskwarrior#get_args(), 'external')<CR>

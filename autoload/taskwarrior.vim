@@ -22,7 +22,7 @@ function! taskwarrior#list(...) abort
     endif
 
     let context = split((system("task ".b:rc.' '.b:filter.' '.b:command)), '\n')
-    let b:summary = join(filter(context[-2:-1], "v:val =~ 'tasks\\=$'"), '')
+    let b:summary = join(filter(context[-2:-1], "v:val =~ '\\d\\s\\+tasks\\='"), '')
     call append(0, context[:-3])
     let b:task_report_columns = split(substitute(system("task _get -- rc.report.".b:command.".columns"), '*\|\n', '', 'g'), ',')
     let b:task_report_labels = split(substitute(system("task _get -- rc.report.".b:command.".labels"), '*\|\n', '', 'g'), ',')
@@ -66,7 +66,7 @@ function! taskwarrior#init(...)
        return
     endif
 
-    let argstring = join(a:000, ' ')
+    let argstring = substitute(join(a:000, ' '), 'rc\.\S*', '', 'g')
     let [command, filter, type] = taskwarrior#command_type(argstring)
     if type == 'interactive'
         if !g:task_readonly
@@ -142,14 +142,60 @@ function! taskwarrior#annotate(op)
 endfunction
 
 function! taskwarrior#sort_current(polarity)
-    call taskwarrior#buffer_var_init()
-    let b:rc = 'rc.report.'.b:command.'.sort:'.
-                \taskwarrior#current_column().a:polarity.
-                \','.system('task _get -- rc.report.'.b:command.'.sort')[0:-2]
+    let fromrc = matchstr(b:rc, 'rc\.report\.'.b:command.'\.sort.\zs\S*')
+    let default = system('task _get -- rc.report.'.b:command.'.sort')[0:-2]
+    let ccol = taskwarrior#current_column()
+    let list = split(fromrc, ',')
+    let ind = index(split(fromrc, '[-+],\='), ccol)
+    let dlist = split(default, ',')
+    let dind = index(split(default, '[-+],\='), ccol)
+    if fromrc == ''
+        if dind != -1
+            if a:polarity == 'm'
+                if dind == 0
+                    return
+                endif
+                call insert(dlist, remove(dlist, dind))
+            elseif dlist[dind] == ccol.a:polarity
+                return
+            else
+                let dlist[dind] = ccol.a:polarity
+            endif
+            let b:rc .= ' rc.report.'.b:command.'.sort:'.join(dlist, ',')
+        else
+            let polarity = a:polarity == 'm' ? '+' : a:polarity
+            let b:rc .= ' rc.report.'.b:command.'.sort:'.ccol.polarity.','.default
+        endif
+    elseif ind != -1
+        if a:polarity == 'm'
+            if ind == 0
+                let list[0] = list[0][0:-2].(list[0][-1:-1] == '+' ? '-' : '+')
+            else
+                call insert(list, remove(list, ind))
+            endif
+        elseif list[ind] == ccol.a:polarity
+            if a:polarity == '+'
+                call insert(list, remove(list, ind), ind > 1 ? ind-1 : 0)
+            else
+                if ind > len(list)-3
+                    call add(list, remove(list, ind))
+                else
+                    call insert(list, remove(list, ind), ind+1)
+                endif
+            endif
+        else
+            let list[ind] = ccol.a:polarity
+        endif
+        let g:listabc = list
+        let b:rc = substitute(b:rc, 'report\.'.b:command.'\.sort.'.fromrc, 'report.'.b:command.'.sort:'.join(list, ','), '')
+    else
+        let polarity = a:polarity == 'm' ? '+' : a:polarity
+        let b:rc = substitute(b:rc, 'report\.'.b:command.'\.sort.', 'report.'.b:command.'.sort:'.ccol.polarity.',', '')
+    endif
     call taskwarrior#list()
 endfunction
 
-function! taskwarrior#sort_list()
+function! taskwarrior#sort_order_list()
     let fromrc = matchstr(b:rc, 'rc\.report\.'.b:command.'\.sort.\zs\S*')
     if fromrc == ''
         return split(system('task _get -- rc.report.'.b:command.'.sort')[0:-2], ',')
