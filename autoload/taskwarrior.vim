@@ -77,12 +77,14 @@ function! taskwarrior#init(...)
     if exists('g:task_view')
         if argstring == ''
             execute g:task_view.'buffer'
-            call taskwarrior#buffer_var_init()
+            let command = exists('b:command')? b:command : g:task_report_name
+            let filter = exists('b:filter')? b:filter : ''
+            let type = exists('b:type')? b:type : 'report'
         endif
         call taskwarrior#quit()
     endif
 
-    execute 'edit task\ '.escape(argstring, ' ')
+    execute 'edit task\ '.command
     let g:task_view = bufnr('%')
     setlocal noswapfile
     call taskwarrior#list(filter, command, type, g:task_rc_override)
@@ -275,7 +277,7 @@ function! taskwarrior#current_index()
 endfunction
 
 function! taskwarrior#current_column()
-    if !exists('b:task_columns') || !exists('b:task_report_columns') || taskwarrior#get_uuid() == ''
+    if !exists('b:task_columns') || !exists('b:task_report_columns')
         return ''
     endif
     return matchstr(b:task_report_columns[taskwarrior#current_index()], '^\w\+')
