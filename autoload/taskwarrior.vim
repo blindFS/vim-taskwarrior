@@ -21,7 +21,9 @@ function! taskwarrior#list(...) abort
         return
     endif
 
-    call append(0, split((system("task ".b:rc.' '.b:filter.' '.b:command)), '\n')[:-3])
+    let context = split((system("task ".b:rc.' '.b:filter.' '.b:command)), '\n')
+    let b:summary = join(context[-2:-1], '')
+    call append(0, context[:-3])
     let b:task_report_columns = split(substitute(system("task _get -- rc.report.".b:command.".columns"), '*\|\n', '', 'g'), ',')
     let b:task_report_labels = split(substitute(system("task _get -- rc.report.".b:command.".labels"), '*\|\n', '', 'g'), ',')
     let line1 = join(b:task_report_labels, ' ')
@@ -281,5 +283,9 @@ function! taskwarrior#current_column()
         return ''
     endif
     return matchstr(b:task_report_columns[taskwarrior#current_index()], '^\w\+')
+endfunction
+
+function! taskwarrior#status()
+    return b:filter.' '.b:rc.' '.b:command
 endfunction
 " vim:ts=4:sw=4:tw=78:ft=vim:fdm=indent
