@@ -22,7 +22,7 @@ function! taskwarrior#list(...) abort
     endif
 
     let context = split((system("task ".b:rc.' '.b:filter.' '.b:command)), '\n')
-    let b:summary = join(filter(context[-2:-1], 'v:val =~ "tasks"'), '')
+    let b:summary = join(filter(context[-2:-1], "v:val =~ 'tasks\\=$'"), '')
     call append(0, context[:-3])
     let b:task_report_columns = split(substitute(system("task _get -- rc.report.".b:command.".columns"), '*\|\n', '', 'g'), ',')
     let b:task_report_labels = split(substitute(system("task _get -- rc.report.".b:command.".labels"), '*\|\n', '', 'g'), ',')
