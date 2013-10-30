@@ -1,16 +1,13 @@
 function! taskwarrior#list(...) abort
-    let pos = getpos('.')
     setlocal noreadonly
     setlocal modifiable
+    let pos = getpos('.')
     %delete
-    if a:0 > 3
-        let b:filter = a:1
-        let b:command = a:2
-        let b:type = a:3
-        let b:rc =a:4
-    else
-        call taskwarrior#buffer_var_init()
-    endif
+    call taskwarrior#buffer_var_init()
+    let b:filter = exists('a:1') ? a:1 :b:filter
+    let b:command = exists('a:2') ? a:2 : b:command
+    let b:type = exists('a:3') ? a:3 : b:type
+    let b:rc = exists('a:4') ? a:4 : b:rc
 
     if b:type == 'special'
         setlocal buftype=nofile
@@ -57,7 +54,7 @@ function! taskwarrior#buffer_var_init()
     let b:command = exists('b:command')? b:command : g:task_report_name
     let b:filter = exists('b:filter')? b:filter : ''
     let b:type = exists('b:type')? b:type : 'report'
-    let b:rc = exists('b:rc')? b:rc : ''
+    let b:rc = exists('b:rc')? b:rc : g:task_rc_override
 endfunction
 
 function! taskwarrior#init(...)
@@ -68,6 +65,7 @@ function! taskwarrior#init(...)
 
     let argstring = substitute(join(a:000, ' '), 'rc\.\S*', '', 'g')
     let [command, filter, type] = taskwarrior#command_type(argstring)
+    let rc = g:task_rc_override
     if type == 'interactive'
         if !g:task_readonly
             execute '!task '.argstring
@@ -77,11 +75,12 @@ function! taskwarrior#init(...)
     endif
 
     if exists('g:task_view')
-        if argstring == ''
+        if a:0 == 0
             execute g:task_view.'buffer'
             let command = exists('b:command')? b:command : g:task_report_name
             let filter = exists('b:filter')? b:filter : ''
             let type = exists('b:type')? b:type : 'report'
+            let rc = exists('b:rc')? b:rc : g:task_rc_override
         endif
         call taskwarrior#quit()
     endif
@@ -89,7 +88,7 @@ function! taskwarrior#init(...)
     execute 'edit task\ '.command
     let g:task_view = bufnr('%')
     setlocal noswapfile
-    call taskwarrior#list(filter, command, type, g:task_rc_override)
+    call taskwarrior#list(filter, command, type, rc)
 
 endfunction
 
@@ -142,23 +141,18 @@ function! taskwarrior#annotate(op)
 endfunction
 
 function! taskwarrior#sort_by_arg(...)
-    if a:0 == 0
-        return
-    elseif a:0 == 1 && len(a:1) > 1
-        let col = a:1[-1:-1] =~ '[+-]' ? a:1[0:-2] : a:1[0:-1]
-        let pol = a:1[-1:-1] =~ '[+-]' ? a:[-1:-1] : '-'
-        call taskwarrior#sort_by_column('m', col)
-        call taskwarrior#sort_by_column(pol, col)
-    else
-        let b:rc = g:task_rc_override.' rc.report.'.b:command.'.sort:'.join(a:000, ',')
-        call taskwarrior#list()
-    endif
+    let args = substitute(join(a:000, ' '), '\s\+', ',', 'g')
+    let args = substitute(args, '\w\zs,', '-,', 'g')
+    let args = substitute(args, '\w\zs$', '-', '')
+    let b:rc = args == '' ? '' : g:task_rc_override.' rc.report.'.b:command.'.sort:'.args
+    call taskwarrior#list()
 endfunction
 
 function! taskwarrior#sort_by_column(polarity, column)
     let fromrc = matchstr(b:rc, 'rc\.report\.'.b:command.'\.sort.\zs\S*')
     let default = system('task _get -- rc.report.'.b:command.'.sort')[0:-2]
-    let ccol = index(b:task_report_columns, a:column) == -1 ? taskwarrior#current_column() : a:column
+    let colshort = map(deepcopy(b:task_report_columns), 'matchstr(v:val, "^\\w*")')
+    let ccol = index(colshort, a:column) == -1 ? taskwarrior#current_column() : a:column
     let list = split(fromrc, ',')
     let ind = index(split(fromrc, '[-+],\='), ccol)
     let dlist = split(default, ',')

@@ -59,7 +59,6 @@ command! TWEditVitrc :execute "e ".$HOME."/.vitrc"
 "command! TWReportGantt
 "command! TWReportProjects
 "command! TWReportTags
-command! TWSync call taskwarrior#sync('sync')
 "command! TWSyncFiles
 "command! TWSyncStatus
 "command! TWTheme
