@@ -19,6 +19,7 @@ function! taskwarrior#list(...) abort
     endif
 
     let b:summary = taskwarrior#global_stats()
+    let b:sort = taskwarrior#sort_order_list()[0]
     let context = split((system("task ".b:rc.' '.b:filter.' '.b:command)), '\n')
     call append(0, context[:-3])
     global/^\s*$/delete
