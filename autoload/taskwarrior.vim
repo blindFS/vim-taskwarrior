@@ -4,10 +4,10 @@ function! taskwarrior#list(...) abort
     let pos = getpos('.')
     %delete
     call taskwarrior#buffer_var_init()
-    let b:filter = exists('a:1') ? a:1 :b:filter
+    let b:filter  = exists('a:1') ? a:1 :b:filter
     let b:command = exists('a:2') ? a:2 : b:command
-    let b:type = exists('a:3') ? a:3 : b:type
-    let b:rc = exists('a:4') ? a:4 : b:rc
+    let b:type    = exists('a:3') ? a:3 : b:type
+    let b:rc      = exists('a:4') ? a:4 : b:rc
 
     if b:type == 'special'
         setlocal buftype=nofile
@@ -18,8 +18,8 @@ function! taskwarrior#list(...) abort
         return
     endif
 
+    let b:summary = taskwarrior#global_stats()
     let context = split((system("task ".b:rc.' '.b:filter.' '.b:command)), '\n')
-    let b:summary = join(filter(context[-2:-1], "v:val =~ '\\d\\s\\+tasks\\='"), '')
     call append(0, context[:-3])
     global/^\s*$/delete
     let b:task_report_columns = split(substitute(system("task _get -- rc.report.".b:command.".columns"), '*\|\n', '', 'g'), ',')
@@ -53,9 +53,9 @@ endfunction
 
 function! taskwarrior#buffer_var_init()
     let b:command = exists('b:command')? b:command : g:task_report_name
-    let b:filter = exists('b:filter')? b:filter : ''
-    let b:type = exists('b:type')? b:type : 'report'
-    let b:rc = exists('b:rc')? b:rc : g:task_rc_override
+    let b:filter  = exists('b:filter')?  b:filter  : ''
+    let b:type    = exists('b:type')?    b:type    : 'report'
+    let b:rc      = exists('b:rc')?      b:rc      : g:task_rc_override
 endfunction
 
 function! taskwarrior#init(...)
@@ -151,14 +151,14 @@ function! taskwarrior#sort_by_arg(...)
 endfunction
 
 function! taskwarrior#sort_by_column(polarity, column)
-    let fromrc = matchstr(b:rc, 'rc\.report\.'.b:command.'\.sort.\zs\S*')
-    let default = system('task _get -- rc.report.'.b:command.'.sort')[0:-2]
+    let fromrc   = matchstr(b:rc, 'rc\.report\.'.b:command.'\.sort.\zs\S*')
+    let default  = system('task _get -- rc.report.'.b:command.'.sort')[0:-2]
     let colshort = map(deepcopy(b:task_report_columns), 'matchstr(v:val, "^\\w*")')
-    let ccol = index(colshort, a:column) == -1 ? taskwarrior#current_column() : a:column
-    let list = split(fromrc, ',')
-    let ind = index(split(fromrc, '[-+],\='), ccol)
-    let dlist = split(default, ',')
-    let dind = index(split(default, '[-+],\='), ccol)
+    let ccol     = index(colshort, a:column) == -1 ? taskwarrior#current_column() : a:column
+    let list     = split(fromrc, ',')
+    let ind      = index(split(fromrc, '[-+],\='), ccol)
+    let dlist    = split(default, ',')
+    let dind     = index(split(default, '[-+],\='), ccol)
     if fromrc == ''
         if dind != -1
             if a:polarity == 'm'
@@ -247,12 +247,16 @@ function! taskwarrior#get_uuid()
     return vol =~ '[0-9a-f]\{8}\(-[0-9a-f]\{4}\)\{3}-[0-9a-f]\{12}' ? vol : taskwarrior#get_value_by_column('.', 'id')
 endfunction
 
-function! taskwarrior#get_stats()
+function! taskwarrior#get_stats(method)
     let dict = {}
-    let uuid = taskwarrior#get_uuid()
-    let stat = split(system("task ".taskwarrior#get_uuid().' stats'), '\n')
-    if uuid =~ '^\s*$' || len(stat) < 5
-        return {}
+    if a:method != 'current'
+        let stat = split(system('task '.a:method.' stats'), '\n')
+    else
+        let uuid = taskwarrior#get_uuid()
+        let stat = split(system('task '.taskwarrior#get_uuid().' stats'), '\n')
+        if uuid =~ '^\s*$' || len(stat) < 5
+            return {}
+        endif
     endif
     for line in stat[2:-1]
         if line !~ '^\W*$'
@@ -369,10 +373,15 @@ function! taskwarrior#status()
     return b:filter.' '.b:rc.' '.b:command
 endfunction
 
+function! taskwarrior#global_stats()
+    let dict = taskwarrior#get_stats(b:filter)
+    return [dict['Pending']]+[dict['Completed']]+[taskwarrior#get_stats('')['Pending']]
+endfunction
+
 function! taskwarrior#TW_complete(A,L,P)
     let command = deepcopy(g:task_all_commands)
-    let filter = deepcopy(g:task_filter)
-    let config = deepcopy(g:task_all_configurations)
+    let filter  = deepcopy(g:task_filter)
+    let config  = deepcopy(g:task_all_configurations)
     let lead = a:A == '' ? '.*' : a:A
     for ph in split(a:L, ' ')[0:-1]
         if ph == 'config' || ph == 'show'
