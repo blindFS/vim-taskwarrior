@@ -7,7 +7,7 @@ function! airline#extensions#taskwarrior#apply(...)
         call a:1.add_section('airline_x', ' %{taskwarrior#current_column()} ')
         call a:1.add_section('airline_y', ' %{taskwarrior#sort_order_list()[0]} ')
         call a:1.add_section('airline_z', ' %{b:summary[0]}%#__accent_green# ')
-        call a:1.add_section('airline_z', ' %{b:summary[1]}%#__accent_yellow# ')
+        call a:1.add_section('airline_z', ' %{b:summary[1]}%#__restore__# ')
         call a:1.add_section('airline_z', ' %{b:summary[2]} ')
         return 1
     endif

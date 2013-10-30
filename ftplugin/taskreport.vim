@@ -12,7 +12,7 @@ nnoremap <silent> <buffer> <tab>   :call taskwarrior#move_cursor('right', 'step'
 nnoremap <silent> <buffer> <       :call taskwarrior#sort_by_column('+', '')<CR>
 nnoremap <silent> <buffer> >       :call taskwarrior#sort_by_column('-', '')<CR>
 nnoremap <silent> <buffer> s       :call taskwarrior#sort_by_column('m', '')<CR>
-nnoremap <silent> <buffer> <CR>    :call taskwarrior#get_info(taskwarrior#get_uuid().' info')<CR>
+nnoremap <silent> <buffer> <CR>    :call taskwarrior#get_info()<CR>
 
 if g:task_highlight_field
     autocmd CursorMoved <buffer> :call taskwarrior#hi_field()
@@ -31,8 +31,8 @@ else
     nnoremap <silent> <buffer> u         :call taskwarrior#undo()<CR>
     nnoremap <silent> <buffer> x         :call taskwarrior#annotate('del')<CR>
     nnoremap <silent> <buffer> S         :call taskwarrior#sync('sync')<CR>
-    nnoremap <silent> <buffer> m         :call taskwarrior#modify()<CR>
-    nnoremap <silent> <buffer> M         :call taskwarrior#system_call(taskwarrior#get_uuid(), 'modify', taskwarrior#get_args(), 'external')<CR>
+    nnoremap <silent> <buffer> m         :call taskwarrior#modify('current')<CR>
+    nnoremap <silent> <buffer> M         :call taskwarrior#modify('')<CR>
     nnoremap <silent> <buffer> +         :call taskwarrior#system_call(taskwarrior#get_uuid(), 'start', '', 'silent')<CR>
     nnoremap <silent> <buffer> -         :call taskwarrior#system_call(taskwarrior#get_uuid(), 'stop', '', 'silent')<CR>
     command! -buffer TWAdd               :call taskwarrior#system_call('', 'add', taskwarrior#get_args(), 'interactive')
@@ -40,7 +40,7 @@ else
     command! -buffer TWComplete          :call taskwarrior#set_done()
     command! -buffer TWDelete            :call taskwarrior#delete()
     command! -buffer TWDeleteAnnotation  :call taskwarrior#annotate('del')
-    command! -buffer TWModifyInteractive :call taskwarrior#system_call(taskwarrior#get_uuid(), 'modify', taskwarrior#get_args(), 'interactive')
+    command! -buffer TWModifyInteractive :call taskwarrior#modify('')
     command! -buffer TWSync              :call taskwarrior#sync('sync')
 endif
 

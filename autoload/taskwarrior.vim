@@ -113,15 +113,22 @@ function! taskwarrior#quit()
     unlet g:task_view
 endfunction
 
-function! taskwarrior#modify()
-    let field = taskwarrior#current_column()
+function! taskwarrior#modify(mode)
     let uuid = taskwarrior#get_uuid()
-    if index(['id', 'uuid', 'status', 'urgency'], field) != -1 || uuid =~ '^\s*$'
+    if uuid =~ '^\s*$'
         return
-    elseif field == 'description'
-        call taskwarrior#system_call(uuid, 'modify', taskwarrior#get_args(field), 'external')
+    endif
+    if a:mode == 'current'
+        let field = taskwarrior#current_column()
+        if index(['id', 'uuid', 'status', 'urgency'], field) != -1
+            return
+        elseif field == 'description'
+            call taskwarrior#system_call(uuid, 'modify', taskwarrior#get_args(field), 'external')
+        else
+            call taskwarrior#system_call(uuid, 'modify', taskwarrior#get_args(field), 'silent')
+        endif
     else
-        call taskwarrior#system_call(uuid, 'modify', taskwarrior#get_args(field), 'silent')
+        call taskwarrior#system_call(uuid, 'modify', taskwarrior#get_args(), 'external')
     endif
 endfunction
 
@@ -219,7 +226,7 @@ function! taskwarrior#set_done()
 endfunction
 
 function! taskwarrior#get_value_by_column(line, column)
-    if !exists('b:task_columns') || !exists('b:task_report_columns')
+    if !exists('b:task_columns') || !exists('b:task_report_columns') || line('.') == 1
         return ''
     endif
     let index = match(b:task_report_columns, a:column.'.*')
@@ -240,11 +247,12 @@ function! taskwarrior#get_value_by_index(line, index)
 endfunction
 
 function! taskwarrior#get_uuid()
-    if !exists('b:task_report_columns')
+    if !exists('b:task_report_columns') || line('.') == 1
         return ''
     endif
     let vol = taskwarrior#get_value_by_column('.', 'uuid')
-    return vol =~ '[0-9a-f]\{8}\(-[0-9a-f]\{4}\)\{3}-[0-9a-f]\{12}' ? vol : taskwarrior#get_value_by_column('.', 'id')
+    let vol = vol =~ '[0-9a-f]\{8}\(-[0-9a-f]\{4}\)\{3}-[0-9a-f]\{12}' ? vol : taskwarrior#get_value_by_column('.', 'id')
+    return vol =~ '^\s*-\s*$' ? '' : vol
 endfunction
 
 function! taskwarrior#get_stats(method)
@@ -306,8 +314,22 @@ function! taskwarrior#undo()
     call taskwarrior#refresh()
 endfunction
 
-function! taskwarrior#get_info(command)
-    for line in split(system("task ".a:command), '\n')
+function! taskwarrior#get_info()
+    let ccol = taskwarrior#current_column()
+    let command = 'summary'
+    if ccol == 'project'
+        let command = 'projects'
+    elseif ccol == 'tags'
+        let command = 'tags'
+    elseif ccol == 'id'
+        let command = 'stats'.' '.taskwarrior#get_uuid()
+    elseif ccol =~ '\v(entry|end|due)'
+        let command = 'cal'
+    elseif taskwarrior#get_uuid() !~ '^\s*$'
+        let command = taskwarrior#get_uuid().' information'
+    endif
+    echom command
+    for line in split(system('task '.command), '\n')
         echo line
     endfor
 endfunction
