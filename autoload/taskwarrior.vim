@@ -21,6 +21,7 @@ function! taskwarrior#list(...) abort
     let context = split((system("task ".b:rc.' '.b:filter.' '.b:command)), '\n')
     let b:summary = join(filter(context[-2:-1], "v:val =~ '\\d\\s\\+tasks\\='"), '')
     call append(0, context[:-3])
+    global/^\s*$/delete
     let b:task_report_columns = split(substitute(system("task _get -- rc.report.".b:command.".columns"), '*\|\n', '', 'g'), ',')
     let b:task_report_labels = split(substitute(system("task _get -- rc.report.".b:command.".labels"), '*\|\n', '', 'g'), ',')
     let line1 = join(b:task_report_labels, ' ')
@@ -114,12 +115,13 @@ endfunction
 
 function! taskwarrior#modify()
     let field = taskwarrior#current_column()
-    if index(['id', 'uuid', 'status', 'urgency'], field) != -1
+    let uuid = taskwarrior#get_uuid()
+    if index(['id', 'uuid', 'status', 'urgency'], field) != -1 || uuid =~ '^\s*$'
         return
     elseif field == 'description'
-        call taskwarrior#system_call(taskwarrior#get_uuid(), 'modify', taskwarrior#get_args(field), 'external')
+        call taskwarrior#system_call(uuid, 'modify', taskwarrior#get_args(field), 'external')
     else
-        call taskwarrior#system_call(taskwarrior#get_uuid(), 'modify', taskwarrior#get_args(field), 'silent')
+        call taskwarrior#system_call(uuid, 'modify', taskwarrior#get_args(field), 'silent')
     endif
 endfunction
 
@@ -245,6 +247,21 @@ function! taskwarrior#get_uuid()
     return vol =~ '[0-9a-f]\{8}\(-[0-9a-f]\{4}\)\{3}-[0-9a-f]\{12}' ? vol : taskwarrior#get_value_by_column('.', 'id')
 endfunction
 
+function! taskwarrior#get_stats()
+    let dict = {}
+    let uuid = taskwarrior#get_uuid()
+    let stat = split(system("task ".taskwarrior#get_uuid().' stats'), '\n')
+    if uuid =~ '^\s*$' || len(stat) < 5
+        return {}
+    endif
+    for line in stat[2:-1]
+        if line !~ '^\W*$'
+            let dict[split(line, '\s\s')[0]] = substitute(split(line, '\s\s')[-1], '^\s*', '', '')
+        endif
+    endfor
+    return dict
+endfunction
+
 function! taskwarrior#get_args(...)
     if a:0 != 0
         let arg = ' '
@@ -285,7 +302,7 @@ function! taskwarrior#undo()
     call taskwarrior#refresh()
 endfunction
 
-function! taskwarrior#info(command)
+function! taskwarrior#get_info(command)
     for line in split(system("task ".a:command), '\n')
         echo line
     endfor

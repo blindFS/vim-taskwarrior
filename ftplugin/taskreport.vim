@@ -12,7 +12,7 @@ nnoremap <silent> <buffer> <tab>   :call taskwarrior#move_cursor('right', 'step'
 nnoremap <silent> <buffer> <       :call taskwarrior#sort_by_column('+', '')<CR>
 nnoremap <silent> <buffer> >       :call taskwarrior#sort_by_column('-', '')<CR>
 nnoremap <silent> <buffer> s       :call taskwarrior#sort_by_column('m', '')<CR>
-nnoremap <silent> <buffer> <CR>    :call taskwarrior#info(taskwarrior#get_uuid().' info')<CR>
+nnoremap <silent> <buffer> <CR>    :call taskwarrior#get_info(taskwarrior#get_uuid().' info')<CR>
 
 if g:task_highlight_field
     autocmd CursorMoved <buffer> :call taskwarrior#hi_field()
