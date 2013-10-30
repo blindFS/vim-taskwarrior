@@ -324,7 +324,7 @@ function! taskwarrior#get_info()
     elseif ccol == 'id'
         let command = 'stats'.' '.taskwarrior#get_uuid()
     elseif ccol =~ '\v(entry|end|due)'
-        let command = 'cal'
+        let command = 'history.monthly'
     elseif taskwarrior#get_uuid() !~ '^\s*$'
         let command = taskwarrior#get_uuid().' information'
     endif
