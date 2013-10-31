@@ -1,6 +1,6 @@
 function! airline#extensions#taskwarrior#apply(...)
     if &ft == 'taskreport'
-        call a:1.add_section('airline_a', ' taskwarrior ')
+        call a:1.add_section('airline_a', ' Taskwarrior ')
         call a:1.add_section('airline_b', ' %{b:command} %{&readonly ? g:airline_readonly_symbol : ""}')
         call a:1.add_section('airline_c', ' %{b:filter} ')
         call a:1.split()

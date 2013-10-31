@@ -4,7 +4,7 @@ function! taskwarrior#list(...) abort
     let pos = getpos('.')
     %delete
     call taskwarrior#buffer_var_init()
-    let b:filter  = exists('a:1') ? a:1 :b:filter
+    let b:filter  = exists('a:1') ? a:1 : b:filter
     let b:command = exists('a:2') ? a:2 : b:command
     let b:type    = exists('a:3') ? a:3 : b:type
     let b:rc      = exists('a:4') ? a:4 : b:rc
@@ -278,7 +278,7 @@ endfunction
 function! taskwarrior#get_args(...)
     if a:0 != 0
         let arg = ' '
-        for key in a:000
+        for key in a:1
             execute 'let this_'.key.'=input("'.key.':", "'.taskwarrior#get_value_by_column('.', key).'")'
             if key == 'description'
                 execute "let arg = arg.' '.this_".key
@@ -288,7 +288,7 @@ function! taskwarrior#get_args(...)
         endfor
         return arg
     else
-        return taskwarrior#get_args('due', 'project', 'priority', 'description', 'tag', 'depends')
+        return taskwarrior#get_args(g:task_default_prompt)
     endif
 endfunction
 
@@ -323,13 +323,17 @@ function! taskwarrior#get_info()
     elseif ccol == 'tags'
         let command = 'tags'
     elseif ccol == 'id'
-        let command = 'stats'.' '.taskwarrior#get_uuid()
-    elseif ccol =~ '\v(entry|end|due)'
+        let command = 'stats'
+    elseif ccol =~ '\v^(entry|end|due)$'
         let command = 'history.monthly'
-    elseif taskwarrior#get_uuid() !~ '^\s*$'
-        let command = taskwarrior#get_uuid().' information'
     endif
-    echom command
+    let uuid = taskwarrior#get_uuid()
+    if uuid !~ '^\s*$'
+        let command = substitute(command, 'summary', 'information', '')
+        let command .= ' '.taskwarrior#get_uuid()
+    else
+        let command .= ' '.b:filter
+    endif
     for line in split(system('task '.command), '\n')
         echo line
     endfor
@@ -421,7 +425,7 @@ function! taskwarrior#sort_complete(A,L,P)
         return []
     endif
     let lead = a:A == '' ? '.*' : a:A
-    let cols = map(deepcopy(b:task_report_columns), 'matchstr(v:val, "^\\w*")')
+    let cols = map(split(substitute(system("task _get -- rc.report.".b:command.".columns"), '*\|\n', '', 'g'), ','), 'matchstr(v:val, "^\\w*")')
     return filter(cols, 'matchstr(v:val,"'.lead.'") != ""')
 endfunction
 " vim:ts=4:sw=4:tw=78:ft=vim:fdm=indent
