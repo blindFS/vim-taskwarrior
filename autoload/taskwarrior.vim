@@ -317,16 +317,17 @@ endfunction
 
 function! taskwarrior#get_info()
     let ccol = taskwarrior#current_column()
-    let command = 'summary'
-    if ccol == 'project'
-        let command = 'projects'
-    elseif ccol == 'tags'
-        let command = 'tags'
-    elseif ccol == 'id'
-        let command = 'stats'
-    elseif ccol =~ '\v^(entry|end|due)$'
-        let command = 'history.monthly'
-    endif
+    let dict = { 'project': 'projects',
+                \ 'tags': 'tags',
+                \ 'id': 'stats',
+                \ 'depends': 'blocking',
+                \ 'recur': 'recurring',
+                \ 'due': 'overdue',
+                \ 'wait': 'waiting',
+                \ 'urgency': 'ready',
+                \ 'entry': 'history.monthly',
+                \ 'end': 'history.monthly'}
+    let command = exists('dict["'.ccol.'"]')? dict[ccol] : 'summary'
     let uuid = taskwarrior#get_uuid()
     if uuid !~ '^\s*$'
         let command = substitute(command, 'summary', 'information', '')
