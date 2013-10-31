@@ -44,7 +44,7 @@ else
     command! -buffer TWSync              :call taskwarrior#sync('sync')
 endif
 
-command! -buffer TWReportInfo        :call taskwarrior#info(taskwarrior#get_uuid().' info')
+command! -buffer TWReportInfo        :call taskwarrior#get_info()
 command! -buffer TWToggleReadonly    :let g:task_readonly = (g:task_readonly ? 0 : 1) | call taskwarrior#init()
 command! -buffer TWToggleHLField     :let g:task_highlight_field = (g:task_highlight_field ? 0 : 1) | call taskwarrior#refresh()
 command! -buffer -nargs=? -complete=customlist,taskwarrior#sort_complete TWReportSort :call taskwarrior#sort_by_arg(<q-args>)

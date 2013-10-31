@@ -124,9 +124,9 @@ function! taskwarrior#modify(mode)
         if index(['id', 'uuid', 'status', 'urgency'], field) != -1
             return
         elseif field == 'description'
-            call taskwarrior#system_call(uuid, 'modify', taskwarrior#get_args(field), 'external')
+            call taskwarrior#system_call(uuid, 'modify', taskwarrior#get_args([field]), 'external')
         else
-            call taskwarrior#system_call(uuid, 'modify', taskwarrior#get_args(field), 'silent')
+            call taskwarrior#system_call(uuid, 'modify', taskwarrior#get_args([field]), 'silent')
         endif
     else
         call taskwarrior#system_call(uuid, 'modify', taskwarrior#get_args(), 'external')
