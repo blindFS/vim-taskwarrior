@@ -18,8 +18,6 @@ function! taskwarrior#list(...) abort
         return
     endif
 
-    let b:summary = taskwarrior#global_stats()
-    let b:sort = taskwarrior#sort_order_list()[0]
     let context = split((system("task ".b:rc.' '.b:filter.' '.b:command)), '\n')
     call append(0, context[:-3])
     global/^\s*$/delete
@@ -47,6 +45,9 @@ function! taskwarrior#list(...) abort
         endif
     endfor
     let b:task_columns += [999]
+    let b:summary = taskwarrior#global_stats()
+    let b:sort = taskwarrior#sort_order_list()[0]
+
     setlocal filetype=taskreport
     call setpos('.', pos)
 
@@ -216,10 +217,14 @@ endfunction
 function! taskwarrior#sort_order_list()
     let fromrc = matchstr(b:rc, 'rc\.report\.'.b:command.'\.sort.\zs\S*')
     if fromrc == ''
-        return split(system('task _get -- rc.report.'.b:command.'.sort')[0:-2], ',')
+        let list = split(system('task _get -- rc.report.'.b:command.'.sort')[0:-2], ',')
     else
-        return split(fromrc, ',')
+        let list = split(fromrc, ',')
     endif
+    while exists('list[0]') && match(b:task_report_columns, list[0][0:-2]) == -1 && system('task count '.list[0][0:-2].'.any:')[0] == '0'
+        let list = ['status-']
+    endwhile
+    return list
 endfunction
 
 function! taskwarrior#set_done()
@@ -426,7 +431,7 @@ function! taskwarrior#sort_complete(A,L,P)
         return []
     endif
     let lead = a:A == '' ? '.*' : a:A
-    let cols = map(split(substitute(system("task _get -- rc.report.".b:command.".columns"), '*\|\n', '', 'g'), ','), 'matchstr(v:val, "^\\w*")')
+    let cols = map(split(system('task _columns'), '\n'), 'matchstr(v:val, "^\\w*")')
     return filter(cols, 'matchstr(v:val,"'.lead.'") != ""')
 endfunction
 " vim:ts=4:sw=4:tw=78:ft=vim:fdm=indent

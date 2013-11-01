@@ -1,0 +1,98 @@
+*vim-taskwarrior.txt* -  a vim interface for Taskwarrior  - version 0.4.1    ~
+         _               _           _                        _              ~
+    __ _(_)_ __    ___  | |_ __ _ __| |____ __ ____ _ _ _ _ _(_)___ _ _      ~
+    \ V / | '  \  |___| |  _/ _` (_-< / /\ V  V / _` | '_| '_| / _ \ '_|     ~
+     \_/|_|_|_|_|        \__\__,_/__/_\_\ \_/\_/\__,_|_| |_| |_\___/_|       ~
+                                                                             ~
+                                                                             ~
+==============================================================================
+QUICK-REFERENCE                                              *vim-tw-quickref*
+
+ a  = add task    | q  = quit buffer | S  = taskd sync |<TAB>  = next col
+ A  = annotate    | r  = clear done  | s  = sort col   |<S-TAB>= prev col
+ d  = task done   | u  = undo last   | <  = sort incr  |<right>= r field
+ D  = delete      | x  = del annot   | >  = sort decr  |<left> = l field
+ m  = modify      | +  = start       |<F1>= this help  |<C>c   = abort
+ M  = mod prompts | -  = stop        |<CR>= task info  |
+                   
+==============================================================================
+CONTENTS                                                     *vim-tw-contents*
+
+	1. Intro				|vim-tw|
+	2. Prerequisites			|vim-tw-prerequisites|
+	3. Mappings				|vim-tw-mappings|
+		3.1 Global mappings		|vim-tw-global-mappings|
+		3.2 Local Mappings		|vim-tw-local-mappings| 
+	4. Commands				|vim-tw-commands|
+		4.1 Global Commands
+		4.2 Local commands
+
+	5, Customization
+	6. Help
+	7. Developers
+	8. Changelog 
+	9. License
+
+==============================================================================
+1. INTRODUCTION *taskwarrior*
+
+Taskwarrior is a command-line todo list manager. It maintains a task list, 
+allowing you to add/remove, and otherwise manipulate your tasks with a rich 
+set of subcommands that allow you to do sophisticated things.
+Find out more at http://taskwarrior.org and read man task and man taskrc.
+
+vim-taskwarrior is a vim plugin that extends taskwarrior with an interactive
+interface. It makes navigating and maintaining your task list easy, adding,
+annotating, deleting, modifying and marking done, sorting, with simple 
+keybindings, powerful commands, vim syntax highlighting and status bar.
+
+==============================================================================
+2. PREREQUISITES 
+
+This plugin requires taskwarrior of version 2.3.x or higher. This may be too
+recent for many package-managers, and you may need to compile your own veraion
+or wait for the package-maintainer to catch up. Find out about the latest
+versions at http://taskwarrior.org/projects/taskwarrior/wiki/Download
+
+Vim version 7.x
+
+add "defaultwidth=999: to your .taskrc to correct any line-wrapping problems.
+
+==============================================================================
+3. MAPPING *taskwarrior-map*
+
+A        add annotation
+D        delete task
+a        create new task.
+d        set the task in current line done.
+m        modify current field.
+M        modify current task.
+q        quit buffer.
+r        clear all completed task.
+u        undo last change.
+x        delete annotation.
++        start task
+-        stop task
+S        sync with taskd server.
+s        sort by this column primarily.(if already of the highest priority 
+		then switch the polarity)
+<        sort by this column increasingly.(if already increasingly then 
+		increase its priority)
+>        sort by this column decreasingly.(if already decreasingly then 
+		decrease its priority)
+<F1>     view the documents
+<CR>     show task info.
+<TAB>    jump to the next column
+<S-TAB>  jump to the previous column
+<right>  jump to the next non-empty column
+<left>   jump to the previous non-empty column
+
+==============================================================================
+4. COMMAND *:TW*
+TWDeleteCompleted
+TWEditTaskrc
+TWEditVitrc
+TWUndo
+
+.. in progress!
+
