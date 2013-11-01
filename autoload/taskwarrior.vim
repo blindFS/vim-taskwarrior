@@ -222,8 +222,11 @@ function! taskwarrior#sort_order_list()
         let list = split(fromrc, ',')
     endif
     while exists('list[0]') && match(b:task_report_columns, list[0][0:-2]) == -1 && system('task count '.list[0][0:-2].'.any:')[0] == '0'
-        let list = ['status-']
+        call remove(list, 0)
     endwhile
+    if len(list) == 0
+        let list = ['status-']
+    endif
     return list
 endfunction
 
