@@ -13,6 +13,7 @@ nnoremap <silent> <buffer> <       :call taskwarrior#sort_by_column('+', '')<CR>
 nnoremap <silent> <buffer> >       :call taskwarrior#sort_by_column('-', '')<CR>
 nnoremap <silent> <buffer> s       :call taskwarrior#sort_by_column('m', '')<CR>
 nnoremap <silent> <buffer> <CR>    :call taskwarrior#get_info()<CR>
+nnoremap <silent> <buffer> f       :call taskwarrior#filter('')<CR>
 
 if g:task_highlight_field
     autocmd CursorMoved <buffer> :call taskwarrior#hi_field()

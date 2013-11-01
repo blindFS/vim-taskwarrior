@@ -172,7 +172,7 @@ function! taskwarrior#sort_by_column(polarity, column)
         if dind != -1
             if a:polarity == 'm'
                 if dind == 0
-                    return
+                    let dlist[0] = dlist[0][0:-2].(dlist[0][-1:-1] == '+' ? '-' : '+')
                 endif
                 call insert(dlist, remove(dlist, dind))
             elseif dlist[dind] == ccol.a:polarity
@@ -405,8 +405,18 @@ function! taskwarrior#current_column()
     return matchstr(b:task_report_columns[taskwarrior#current_index()], '^\w\+')
 endfunction
 
-function! taskwarrior#status()
-    return b:filter.' '.b:rc.' '.b:command
+function! taskwarrior#filter(filter)
+    if a:filter != ''
+        let b:filter = a:filter
+    else
+        let column = taskwarrior#current_column()
+        if index(['project', 'tags', 'depends', 'status', 'priority'], column) != -1 && line('.') > 1
+            let b:filter = substitute(taskwarrior#get_args([column]), ':\(\s\|$\)', '.any: ', '')
+        else
+            let b:filter = input('new filter:', b:filter)
+        endif
+    endif
+    call taskwarrior#list()
 endfunction
 
 function! taskwarrior#global_stats()
