@@ -410,41 +410,84 @@ function! taskwarrior#filter(filter)
         let b:filter = a:filter
     else
         let column = taskwarrior#current_column()
-        if index(['project', 'tags', 'depends', 'status', 'priority'], column) != -1 && line('.') > 1
-            let b:filter = substitute(taskwarrior#get_args([column]), ':\(\s\|$\)', '.any: ', '')
+        if index(['project', 'tags', 'status', 'priority'], column) != -1 && line('.') > 1
+            let b:filter = substitute(taskwarrior#get_args([column]), 'tags:', '+', '')
+        elseif column =~ '\v^(entry|end|due)$'
+            let b:filter = column.'.before:'.input(column.'.before:', taskwarrior#get_value_by_column('.', column))
+        elseif column == 'description'
+            let b:filter = 'description:'.input('description:', taskwarrior#get_value_by_column('.', column) )
         else
-            let b:filter = input('new filter:', b:filter)
+            let b:filter = input('new filter:', b:filter, 'customlist,taskwarrior#filter_complete')
         endif
+        let b:filter = substitute(b:filter, 'status:\(\s\|$\)', 'status.any: ', 'g')
+    endif
+    call taskwarrior#list()
+endfunction
+
+function! taskwarrior#command(command)
+    let cold = b:command
+    if index(g:task_all_commands, a:command) != -1
+        let b:command = a:command
+    else
+        let b:command = input('new command:', b:command, 'customlist,taskwarrior#command_complete')
+        if index(g:task_all_commands, b:command) == -1
+            let b:command = cold
+            return
+        endif
+    endif
+    if index(g:task_interactive_command, b:command) != -1
+        if !g:task_readonly
+            execute '!task '.b:rc.' '.b:filter.' '.b:command
+        endif
+        let b:command = cold
+    elseif index(g:task_report_command, b:command) == -1
+        call taskwarrior#init(b:filter, b:command)
+        return
     endif
     call taskwarrior#list()
 endfunction
 
 function! taskwarrior#global_stats()
     let dict = taskwarrior#get_stats(b:filter)
-    return [dict['Pending']]+[dict['Completed']]+[taskwarrior#get_stats('')['Pending']]
+    if !exists('dict["Pending"]') || !exists('dict["Completed"]')
+        return ['0', '0', taskwarrior#get_stats('')['Pending']]
+    endif
+    return [dict['Pending'], dict['Completed'], taskwarrior#get_stats('')['Pending']]
 endfunction
 
-function! taskwarrior#TW_complete(A,L,P)
+function! taskwarrior#TW_complete(A, L, P)
     let command = deepcopy(g:task_all_commands)
     let filter  = deepcopy(g:task_filter)
     let config  = deepcopy(g:task_all_configurations)
-    let lead = a:A == '' ? '.*' : a:A
-    for ph in split(a:L, ' ')[0:-1]
+    for ph in split(a:L, ' ')
         if ph == 'config' || ph == 'show'
-            return filter(config, 'matchstr(v:val,"'.lead.'") != ""')
+            return filter(config, 'match(v:val, a:A) != -1')
         elseif index(command, ph) != -1
-            return filter(filter, 'matchstr(v:val,"'.lead.'") != ""')
+            return filter(filter, 'match(v:val, a:A) != -1')
         endif
     endfor
-    return filter(command+filter, 'matchstr(v:val,"'.lead.'") != ""')
+    return filter(command+filter, 'match(v:val, a:A) != -1')
 endfunction
 
-function! taskwarrior#sort_complete(A,L,P)
+function! taskwarrior#sort_complete(A, L, P)
     if !exists('b:task_report_columns')
         return []
     endif
-    let lead = a:A == '' ? '.*' : a:A
     let cols = map(split(system('task _columns'), '\n'), 'matchstr(v:val, "^\\w*")')
-    return filter(cols, 'matchstr(v:val,"'.lead.'") != ""')
+    return filter(cols, 'match(v:val, a:A) != -1')
+endfunction
+
+function! taskwarrior#filter_complete(A, L, P)
+    let lead = matchstr(a:A, '\S*$')
+    let lead = lead == '' ? '.*' : lead
+    let dict = deepcopy(g:task_filter)
+    for ph in split(a:L, ' ')
+        call remove(dict, index(dict, matchstr(ph, '.*:\ze')))
+    endfor
+    return map(filter(dict, 'match(v:val, lead) != -1'), "matchstr(a:L, '.*\\ze\\s\\+\\S*').' '.v:val")
+endfunction
+
+function! taskwarrior#command_complete(A, L, P)
+    return filter(deepcopy(g:task_all_commands), 'match(v:val, a:A) != -1')
 endfunction
 " vim:ts=4:sw=4:tw=78:ft=vim:fdm=indent
