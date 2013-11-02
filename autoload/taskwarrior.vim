@@ -382,7 +382,7 @@ function! taskwarrior#move_cursor(direction, mode)
     else
         call search('\%'.(b:task_columns[ci+1]+1).'v', 'e')
     endif
-    if a:mode == 'skip' && getline('.')[getpos('.')[2]-1] == ' '
+    if a:mode == 'skip' && taskwarrior#get_value_by_index('.', taskwarrior#current_index()) =~ '^\s*$'
         call taskwarrior#move_cursor(a:direction, 'skip')
     endif
 endfunction
@@ -429,7 +429,7 @@ function! taskwarrior#command(command)
     if index(g:task_all_commands, a:command) != -1
         let b:command = a:command
     else
-        let b:command = input('new command:', b:command, 'customlist,taskwarrior#command_complete')
+        let b:command = input('new command:', g:task_report_name, 'customlist,taskwarrior#command_complete')
         if index(g:task_all_commands, b:command) == -1
             let b:command = cold
             return
