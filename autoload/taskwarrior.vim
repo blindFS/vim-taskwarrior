@@ -47,6 +47,8 @@ function! taskwarrior#list(...) abort
     let b:task_columns += [999]
     let b:summary = taskwarrior#global_stats()
     let b:sort = taskwarrior#sort_order_list()[0]
+    let b:now = substitute(system('task active limit:1 rc.verbose:nothing rc.report.active.sort=start- rc.report.active.columns=start.active,start.age,id,description.desc rc.report.active.labels=A,Age,ID,Description'), '\n', '', 'g')
+    let b:active = split(system('task start.any: count'), '\n')[0]
 
     setlocal filetype=taskreport
     call setpos('.', pos)
