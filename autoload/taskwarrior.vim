@@ -366,7 +366,7 @@ function! taskwarrior#get_info()
     let command = exists('dict["'.ccol.'"]')? dict[ccol] : 'summary'
     let uuid = taskwarrior#get_uuid()
     if uuid !~ '^\s*$'
-        let command = substitute(command, 'summary', 'information', '')
+        let command = substitute(command, '\v(summary|stats)', 'information', '')
         let filter = taskwarrior#get_uuid()
     else
         let filter = b:filter
