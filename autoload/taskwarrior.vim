@@ -153,6 +153,31 @@ function! taskwarrior#annotate(op)
     endif
 endfunction
 
+function! taskwarrior#category()
+    let dict              = {}
+    let dict['Pending']   = []
+    let dict['Waiting']   = []
+    let dict['Recurring'] = []
+    let dict['Completed'] = []
+    for i in range(2, line('$'))
+        let uuid = taskwarrior#get_uuid(i)
+        if uuid =~ '^\s*$'
+            continue
+        endif
+        let subdict = taskwarrior#get_stats(uuid)
+        if subdict['Pending']       == '1'
+            let dict['Pending'] += [i]
+        elseif subdict['Waiting']   == '1'
+            let dict['Waiting'] += [i]
+        elseif subdict['Recurring'] == '1'
+            let dict['Recurring'] += [i]
+        elseif subdict['Completed'] == '1'
+            let dict['Completed'] += [i]
+        endif
+    endfor
+    return dict
+endfunction
+
 function! taskwarrior#sort_by_arg(...)
     let args = substitute(join(a:000, ' '), '\s\+', ',', 'g')
     let args = substitute(args, '\w\zs,', '-,', 'g')
@@ -257,12 +282,13 @@ function! taskwarrior#get_value_by_index(line, index)
     return ''
 endfunction
 
-function! taskwarrior#get_uuid()
+function! taskwarrior#get_uuid(...)
     if !exists('b:task_report_columns') || line('.') == 1
         return ''
     endif
-    let vol = taskwarrior#get_value_by_column('.', 'uuid')
-    let vol = vol =~ '[0-9a-f]\{8}\(-[0-9a-f]\{4}\)\{3}-[0-9a-f]\{12}' ? vol : taskwarrior#get_value_by_column('.', 'id')
+    let line = a:0 == 0 ? '.' : a:1
+    let vol = taskwarrior#get_value_by_column(line, 'uuid')
+    let vol = vol =~ '[0-9a-f]\{8}\(-[0-9a-f]\{4}\)\{3}-[0-9a-f]\{12}' ? vol : taskwarrior#get_value_by_column(line, 'id')
     return vol =~ '^\s*-\s*$' ? '' : vol
 endfunction
 
@@ -341,13 +367,11 @@ function! taskwarrior#get_info()
     let uuid = taskwarrior#get_uuid()
     if uuid !~ '^\s*$'
         let command = substitute(command, 'summary', 'information', '')
-        let command .= ' '.taskwarrior#get_uuid()
+        let filter = taskwarrior#get_uuid()
     else
-        let command .= ' '.b:filter
+        let filter = b:filter
     endif
-    for line in split(system('task '.command), '\n')
-        echo line
-    endfor
+    call taskinfo#init(command, filter, split(system('task '.command.' '.filter), '\n'))
 endfunction
 
 function! taskwarrior#clear_completed()

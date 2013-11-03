@@ -19,6 +19,16 @@ function! airline#extensions#taskwarrior#apply(...)
         call a:1.add_section('airline_z', ' %{b:summary[2]} ')
         call airline#load_theme()
         return 1
+    elseif &ft == 'taskinfo'
+        call a:1.add_section('airline_a', ' Taskinfo ')
+        call a:1.add_section('airline_b', ' %{b:command." ".g:airline_readonly_symbol }')
+        call a:1.add_section('airline_c', ' %{b:filter} ')
+        call a:1.split()
+        " call a:1.add_section('airline_x', '')
+        " call a:1.add_section('airline_y', '')
+        " call a:1.add_section('airline_z', '')
+        call airline#load_theme()
+        return 1
     endif
 endfunction
 

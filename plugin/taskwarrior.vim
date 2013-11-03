@@ -10,6 +10,8 @@ let g:task_field_highlight_advanced = get(g:, 'task_field_highlight_advanced', '
 let g:task_readonly                 = get(g:, 'task_readonly', 0)
 let g:task_rc_override              = get(g:, 'task_rc_override', '')
 let g:task_default_prompt           = get(g:, 'task_default_prompt', ['due', 'project', 'priority', 'description', 'tag', 'depends'])
+let g:task_info_vsplit              = get(g:, 'task_info_vsplit', 0)
+let g:task_info_size                = get(g:, 'task_info_size', 15)
 "
 "commented out pending taskd collision avoidance
 "command! TaskPush call tw#remote('push')
