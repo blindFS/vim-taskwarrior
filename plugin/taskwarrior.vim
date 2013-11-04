@@ -17,25 +17,25 @@ let g:airline_readonly_symbol       = get(g:, 'airline_readonly_symbol', '  '
 let g:task_columns_format           = {
             \ 'depends':     ['list', 'count', 'indicator'],
             \ 'description': ['combined', 'desc', 'oneline', 'truncated', 'count'],
-            \ 'due':         ['formatted', 'julian', 'epoch', 'iso', 'age', 'remaining', 'countdown'],
-            \ 'end':         ['formatted', 'julian', 'epoch', 'iso', 'age', 'remaining', 'countdown'],
-            \ 'entry':       ['formatted', 'julian', 'epoch', 'iso', 'age', 'remaining', 'countdown'],
+            \ 'due':         ['formatted', 'julian', 'epoch', 'iso', 'age', 'countdown'],
+            \ 'end':         ['formatted', 'julian', 'epoch', 'iso', 'age', 'countdown'],
+            \ 'entry':       ['formatted', 'julian', 'epoch', 'iso', 'age', 'countdown'],
             \ 'id':          ['number'],
             \ 'imask':       ['number'],
             \ 'mask':        ['default'],
-            \ 'modified':    ['formatted', 'julian', 'epoch', 'iso', 'age', 'remaining', 'countdown'],
+            \ 'modified':    ['formatted', 'julian', 'epoch', 'iso', 'age', 'countdown'],
             \ 'parent':      ['long', 'short'],
             \ 'priority':    ['short', 'long'],
             \ 'project':     ['full', 'parent', 'indented'],
             \ 'recur':       ['duration', 'indicator'],
-            \ 'scheduled':   ['formatted', 'julian', 'epoch', 'iso', 'age', 'remaining', 'countdown'],
-            \ 'start':       ['formatted', 'julian', 'epoch', 'iso', 'age', 'remaining', 'countdown', 'active'],
+            \ 'scheduled':   ['formatted', 'julian', 'epoch', 'iso', 'age', 'countdown'],
+            \ 'start':       ['formatted', 'julian', 'epoch', 'iso', 'age', 'countdown', 'active'],
             \ 'status':      ['long', 'short'],
             \ 'tags':        ['list', 'indicator', 'count'],
-            \ 'until':       ['formatted', 'julian', 'epoch', 'iso', 'age', 'remaining', 'countdown'],
+            \ 'until':       ['formatted', 'julian', 'epoch', 'iso', 'age', 'countdown'],
             \ 'urgency':     ['real', 'integer'],
             \ 'uuid':        ['long', 'short'],
-            \ 'wait':        ['formatted', 'julian', 'epoch', 'iso', 'age', 'remaining', 'countdown'] }
+            \ 'wait':        ['formatted', 'julian', 'epoch', 'iso', 'age', 'countdown'] }
 "
 "commented out pending taskd collision avoidance
 "command! TaskPush call tw#remote('push')

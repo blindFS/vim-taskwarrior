@@ -9,28 +9,26 @@ function! taskwarrior#list(...) abort
     let b:type    = exists('a:3') ? a:3 : b:type
     let b:rc      = exists('a:4') ? a:4 : b:rc
 
-
-    let b:rc .= ' '.join(filter(split(b:filter, ' '), "v:val =~ '^rc\..*'"))
-    let b:filter = join(filter(split(b:filter, ' '), "v:val !~ '^rc\..*'"))
-    let rcs = split(b:rc, ' ')
-    let b:rc = join(filter(copy(rcs), "match(rcs, matchstr(v:val, '^[^=:]*'), v:key+1) == -1"), ' ')
+    let b:rc     .= ' '.join(filter(split(b:filter, ' '), "v:val =~ '^rc\..*'"))
+    let b:filter  = join(filter(split(b:filter, ' '), "v:val !~ '^rc\..*'"))
+    let rcs       = split(b:rc, ' ')
+    let b:rc      = join(filter(copy(rcs), "match(rcs, matchstr(v:val, '^[^=:]*'), v:key+1) == -1"), ' ')
 
     if b:type == 'special'
         setlocal buftype=nofile
-        call append(0, split((system("task ".b:rc.' '.b:filter.' '.b:command)), '\n'))
+        call append(0, split((system('task '.b:rc.' '.b:filter.' '.b:command)), '\n'))
         execute 'setlocal filetype=task'.b:command
         nnoremap <buffer> q :call taskwarrior#quit()<CR>
         call setpos('.', pos)
         return
     endif
 
-    let rcc = matchstr(b:rc, 'rc\.report\.'.b:command.'\.columns.\zs\S*')
-    let rcl = matchstr(b:rc, 'rc\.report\.'.b:command.'\.labels.\zs\S*')
+    let rcc                   = matchstr(b:rc, 'rc\.report\.'.b:command.'\.columns.\zs\S*')
+    let rcl                   = matchstr(b:rc, 'rc\.report\.'.b:command.'\.labels.\zs\S*')
     let b:task_report_columns = rcc == '' ? split(substitute(system("task _get -- rc.report.".b:command.".columns"), '*\|\n', '', 'g'), ',') : split(rcc, ',')
-    let b:task_report_labels = rcl == '' ? split(substitute(system("task _get -- rc.report.".b:command.".labels"), '*\|\n', '', 'g'), ',') : split(rcl, ',')
-    let line1 = join(b:task_report_labels, ' ')
-
-    let tcount = split(system("task ".b:rc.' '.b:filter.' count'), '\n')[0]
+    let b:task_report_labels  = rcl == '' ? split(substitute(system("task _get -- rc.report.".b:command.".labels"), '*\|\n', '', 'g'), ',') : split(rcl, ',')
+    let line1                 = join(b:task_report_labels, ' ')
+    let tcount                = split(system("task ".b:rc.' '.b:filter.' count'), '\n')[0]
 
     if tcount == '0'
         call append(0, line1)
@@ -42,24 +40,21 @@ function! taskwarrior#list(...) abort
         2d
     endif
 
-    for label in b:task_report_labels
-        if index(split(getline(1), ' '), label) == -1
-            call remove(b:task_report_columns, index(b:task_report_labels, label))
-            call remove(b:task_report_labels, index(b:task_report_labels, label))
-        endif
-    endfor
+    call filter(b:task_report_columns, "index(split(getline(1), ' '), b:task_report_labels[v:key]) != -1")
+    call filter(b:task_report_labels, "index(split(getline(1), ' '), v:val) != -1")
 
-    let b:task_columns = [0]
-    for col in range(len(getline(1))-1)
-        if getline(1)[col] == " " && getline(1)[col+1] != " "
-            let b:task_columns += [col+1]
-        endif
-    endfor
+    let b:task_columns = []
+    let ci = 0
+    while ci != -1
+        let b:task_columns += [ci]
+        let ci = match(getline(1), '\s\zs\S', ci)
+    endwhile
+
     let b:task_columns += [999]
-    let b:summary = taskwarrior#global_stats()
-    let b:sort = taskwarrior#sort_order_list()[0]
-    let b:now = substitute(system('task active limit:1 rc.verbose:nothing rc.report.active.sort=start- rc.report.active.columns=start.active,start.age,id,description.desc rc.report.active.labels=A,Age,ID,Description'), '\n', '', 'g')
-    let b:active = split(system('task start.any: count'), '\n')[0]
+    let b:summary       = taskwarrior#global_stats()
+    let b:sort          = taskwarrior#sort_order_list()[0]
+    let b:now           = system('task active limit:1 rc.verbose:nothing rc.report.active.sort=start- rc.report.active.columns=start.active,start.age,id,description.desc rc.report.active.labels=A,Age,ID,Description')[0:-2]
+    let b:active        = split(system('task start.any: count'), '\n')[0]
 
     setlocal filetype=taskreport
     call setpos('.', pos)
@@ -94,9 +89,9 @@ function! taskwarrior#init(...)
         if a:0 == 0
             execute g:task_view.'buffer'
             let command = exists('b:command')? b:command : g:task_report_name
-            let filter = exists('b:filter')? b:filter : ''
-            let type = exists('b:type')? b:type : 'report'
-            let rc = exists('b:rc')? b:rc : g:task_rc_override
+            let filter  = exists('b:filter')? b:filter : ''
+            let type    = exists('b:type')? b:type : 'report'
+            let rc      = exists('b:rc')? b:rc : g:task_rc_override
         endif
         call taskwarrior#quit()
     endif
@@ -281,9 +276,6 @@ function! taskwarrior#columns_format_change(direction)
     let index    = index == -1 ? 0 : index
     if a:direction == 'left'
         let index -= 1
-        if index == -1
-            let index = len(clist) -1
-        endif
     else
         let index += 1
         if index == len(clist)
@@ -314,9 +306,6 @@ function! taskwarrior#get_value_by_column(line, column)
 endfunction
 
 function! taskwarrior#get_value_by_index(line, index)
-    if !exists('b:task_columns')
-        return ''
-    endif
     if exists('b:task_columns['.a:index.']')
         return substitute(getline(a:line)[b:task_columns[a:index]:b:task_columns[a:index+1]-1], '\(\s*$\|^\s*\)', '',  'g')
     endif
@@ -384,7 +373,11 @@ endfunction
 function! taskwarrior#undo()
     if has("gui_running")
         if executable('xterm')
-            silent !xterm -e "task undo"
+            silent !xterm -e 'task undo'
+        elseif executable('urxvt')
+            silent !urxvt -e task undo
+        elseif executable('gnome-terminal')
+            silent !gnome-terminal -e 'task undo'
         endif
     else
         !task undo
