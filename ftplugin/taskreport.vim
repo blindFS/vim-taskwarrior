@@ -15,6 +15,8 @@ nnoremap <silent> <buffer> s       :call taskwarrior#sort_by_column('m', '')<CR>
 nnoremap <silent> <buffer> <CR>    :call taskwarrior#get_info()<CR>
 nnoremap <silent> <buffer> f       :call taskwarrior#filter('')<CR>
 nnoremap <silent> <buffer> c       :call taskwarrior#command('')<CR>
+nnoremap <silent> <buffer> H       :call taskwarrior#columns_format_change('left')<CR>
+nnoremap <silent> <buffer> L       :call taskwarrior#columns_format_change('right')<CR>
 
 if g:task_highlight_field
     autocmd CursorMoved <buffer> :call taskwarrior#hi_field()

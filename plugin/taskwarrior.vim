@@ -11,8 +11,31 @@ let g:task_readonly                 = get(g:, 'task_readonly', 0)
 let g:task_rc_override              = get(g:, 'task_rc_override', '')
 let g:task_default_prompt           = get(g:, 'task_default_prompt', ['due', 'project', 'priority', 'description', 'tag', 'depends'])
 let g:task_info_vsplit              = get(g:, 'task_info_vsplit', 0)
-let g:task_info_size                = get(g:, 'task_info_size', 15)
+let g:task_info_size                = get(g:, 'task_info_size', g:task_info_vsplit? 50 : 15)
+let g:task_info_position            = get(g:, 'task_info_position', 'belowright')
 let g:airline_readonly_symbol       = get(g:, 'airline_readonly_symbol', '  ')
+let g:task_columns_format           = {
+            \ 'depends':     ['list', 'count', 'indicator'],
+            \ 'description': ['combined', 'desc', 'oneline', 'truncated', 'count'],
+            \ 'due':         ['formatted', 'julian', 'epoch', 'iso', 'age', 'remaining', 'countdown'],
+            \ 'end':         ['formatted', 'julian', 'epoch', 'iso', 'age', 'remaining', 'countdown'],
+            \ 'entry':       ['formatted', 'julian', 'epoch', 'iso', 'age', 'remaining', 'countdown'],
+            \ 'id':          ['number'],
+            \ 'imask':       ['number'],
+            \ 'mask':        ['default'],
+            \ 'modified':    ['formatted', 'julian', 'epoch', 'iso', 'age', 'remaining', 'countdown'],
+            \ 'parent':      ['long', 'short'],
+            \ 'priority':    ['short', 'long'],
+            \ 'project':     ['full', 'parent', 'indented'],
+            \ 'recur':       ['duration', 'indicator'],
+            \ 'scheduled':   ['formatted', 'julian', 'epoch', 'iso', 'age', 'remaining', 'countdown'],
+            \ 'start':       ['formatted', 'julian', 'epoch', 'iso', 'age', 'remaining', 'countdown', 'active'],
+            \ 'status':      ['long', 'short'],
+            \ 'tags':        ['list', 'indicator', 'count'],
+            \ 'until':       ['formatted', 'julian', 'epoch', 'iso', 'age', 'remaining', 'countdown'],
+            \ 'urgency':     ['real', 'integer'],
+            \ 'uuid':        ['long', 'short'],
+            \ 'wait':        ['formatted', 'julian', 'epoch', 'iso', 'age', 'remaining', 'countdown'] }
 "
 "commented out pending taskd collision avoidance
 "command! TaskPush call tw#remote('push')
