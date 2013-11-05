@@ -25,8 +25,10 @@ function! taskwarrior#list(...) abort
 
     let rcc                   = matchstr(b:rc, 'rc\.report\.'.b:command.'\.columns.\zs\S*')
     let rcl                   = matchstr(b:rc, 'rc\.report\.'.b:command.'\.labels.\zs\S*')
-    let b:task_report_columns = rcc == '' ? split(substitute(system("task _get -- rc.report.".b:command.".columns"), '*\|\n', '', 'g'), ',') : split(rcc, ',')
-    let b:task_report_labels  = rcl == '' ? split(substitute(system("task _get -- rc.report.".b:command.".labels"), '*\|\n', '', 'g'), ',') : split(rcl, ',')
+    " let b:task_report_columns = rcc == '' ? split(system("task _get -- rc.report.".b:command.".columns")[0:-2], ',') : split(rcc, ',')
+    " let b:task_report_labels  = rcl == '' ? split(system("task _get -- rc.report.".b:command.".labels")[0:-2], ',') : split(rcl, ',')
+    let b:task_report_columns = rcc == '' ? split(matchstr(system("task show |grep report.".b:command.".columns")[0:-2], '\S*$'), ',') : split(rcc, ',')
+    let b:task_report_labels  = rcl == '' ? split(matchstr(system("task show |grep report.".b:command.".labels")[0:-2], '\S*$'), ',') : split(rcl, ',')
     let line1                 = join(b:task_report_labels, ' ')
     let tcount                = split(system("task ".b:rc.' '.b:filter.' count'), '\n')[0]
 
@@ -198,7 +200,8 @@ endfunction
 
 function! taskwarrior#sort_by_column(polarity, column)
     let fromrc   = matchstr(b:rc, 'rc\.report\.'.b:command.'\.sort.\zs\S*')
-    let default  = system('task _get -- rc.report.'.b:command.'.sort')[0:-2]
+    " let default  = system('task _get -- rc.report.'.b:command.'.sort')[0:-2]
+    let default  = matchstr(system('task show | grep report.'.b:command.'.sort')[0:-2], '\S*$')
     let colshort = map(deepcopy(b:task_report_columns), 'matchstr(v:val, "^\\w*")')
     let ccol     = index(colshort, a:column) == -1 ? taskwarrior#current_column() : a:column
     let list     = split(fromrc, ',')
@@ -254,7 +257,8 @@ endfunction
 function! taskwarrior#sort_order_list()
     let fromrc = matchstr(b:rc, 'rc\.report\.'.b:command.'\.sort.\zs\S*')
     if fromrc == ''
-        let list = split(system('task _get -- rc.report.'.b:command.'.sort')[0:-2], ',')
+        " let list = split(system('task _get -- rc.report.'.b:command.'.sort')[0:-2], ',')
+        let list = split(matchstr(system('task show | grep report.'.b:command.'.sort')[0:-2], '\S*$'), ',')
     else
         let list = split(fromrc, ',')
     endif
@@ -279,7 +283,8 @@ function! taskwarrior#columns_format_change(direction)
     let ccol_ful = b:task_report_columns[taskwarrior#current_index()]
     let ccol_sub = matchstr(ccol_ful, '\.\zs.*')
     let rcl      = matchstr(b:rc, 'rc\.report\.'.b:command.'\.columns.\zs\S*')
-    let dfl      = system('task _get -- rc.report.'.b:command.'.columns')[0:-2]
+    " let dfl      = system('task _get -- rc.report.'.b:command.'.columns')[0:-2]
+    let dfl      = matchstr(system('task show | grep report.'.b:command.'.columns')[0:-2], '\S*$')
     let index    = index(clist, ccol_sub)
     let index    = index == -1 ? 0 : index
     if a:direction == 'left'
@@ -304,7 +309,7 @@ function! taskwarrior#set_done()
 endfunction
 
 function! taskwarrior#get_value_by_column(line, column)
-    if !exists('b:task_columns') || !exists('b:task_report_columns') || line('.') == 1
+    if line('.') == 1
         return ''
     endif
     let index = match(b:task_report_columns, '^'.a:column.'.*')
@@ -322,7 +327,7 @@ function! taskwarrior#get_value_by_index(line, index)
 endfunction
 
 function! taskwarrior#get_uuid(...)
-    if !exists('b:task_report_columns') || line('.') == 1
+    if line('.') == 1
         return ''
     endif
     let line = a:0 == 0 ? '.' : a:1
@@ -457,9 +462,6 @@ function! taskwarrior#move_cursor(direction, mode)
 endfunction
 
 function! taskwarrior#current_index()
-    if getline('.') =~ '^\s*$' || !exists('b:task_columns') || !exists('b:task_report_columns')
-        return -1
-    endif
     let i = 0
     while  i < len(b:task_columns) && virtcol('.') >= b:task_columns[i]
         let i += 1
@@ -468,9 +470,6 @@ function! taskwarrior#current_index()
 endfunction
 
 function! taskwarrior#current_column()
-    if !exists('b:task_columns') || !exists('b:task_report_columns')
-        return ''
-    endif
     return matchstr(b:task_report_columns[taskwarrior#current_index()], '^\w\+')
 endfunction
 
@@ -541,9 +540,6 @@ function! taskwarrior#TW_complete(A, L, P)
 endfunction
 
 function! taskwarrior#sort_complete(A, L, P)
-    if !exists('b:task_report_columns')
-        return []
-    endif
     let cols = map(split(system('task _columns'), '\n'), 'matchstr(v:val, "^\\w*")')
     return filter(cols, 'match(v:val, a:A) != -1')
 endfunction

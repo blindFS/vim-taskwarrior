@@ -3,6 +3,8 @@ vim-taskwarrior
 
 A vim interface for [taskwarrior](http://taskwarrior.org)
 
+The newest version of taskwarrior is always suggested
+
 ----
 
 (add this line to .taskrc, or wrapping may be mangled :)
