@@ -1,5 +1,5 @@
 let g:task_report_command           = ['active', 'all', 'blocked', 'blocking', 'completed', 'list', 'long', 'ls', 'minimal', 'newest', 'next', 'oldest', 'overdue', 'ready', 'recurring', 'unblocked', 'waiting']
-let g:task_interactive_command      = ['annotate', 'denotate', 'exeucte', 'duplicate', 'append', 'prepend', 'stop', 'delete', 'done', 'undo', 'config', 'edit', 'start', 'sync', 'synchronize', 'add', 'modify', 'import', 'colors', 'logo']
+let g:task_interactive_command      = ['annotate', 'denotate', 'exeucte', 'duplicate', 'append', 'prepend', 'stop', 'delete', 'done', 'undo', 'config', 'edit', 'start', 'sync', 'synchronize', 'add', 'modify', 'import', 'colors', 'color', 'logo']
 let g:task_filter                   = ['description:', 'proj:', 'pri:', 'status:', 'tag:', 'due.before:', 'due.after:', 'entry.before', 'entry.after', 'end.before', 'end.after', '+']
 let g:task_all_commands             = split(system('task _command'), '\n')
 let g:task_all_configurations       = split(system('task _config'), '\n')

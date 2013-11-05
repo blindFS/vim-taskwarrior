@@ -188,7 +188,11 @@ function! taskwarrior#sort_by_arg(...)
     let args = substitute(join(a:000, ' '), '\s\+', ',', 'g')
     let args = substitute(args, '\w\zs,', '-,', 'g')
     let args = substitute(args, '\w\zs$', '-', '')
-    let b:rc .= args == '' ? '' : ' rc.report.'.b:command.'.sort:'.args
+    if args =~ '^\s*$'
+        let b:rc = substitute(b:rc, 'rc.report.'.b:command.'.sort[:=]\S*', '', 'g')
+    else
+        let b:rc .= args == '' ? '' : ' rc.report.'.b:command.'.sort:'.args
+    endif
     call taskwarrior#list()
 endfunction
 
