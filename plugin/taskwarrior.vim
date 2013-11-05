@@ -45,13 +45,7 @@ let g:task_columns_format           = {
 "commands;
 "
 command! -nargs=? -complete=customlist,taskwarrior#TW_complete TW :call taskwarrior#init(<q-args>)
-"command! TWArchive
-"command! TWArchiveCompleted
-"command! TWArchiveDeleted
-"command! TWArchiveNotes
 "command! TWConfigColor
-"command! TWConfigDiagnostic
-"command! TWConfigSet
 command! TWDeleteCompleted :call taskwarrior#clear_completed()
 "command! TWDeleteNote
 "command! TWEdit
@@ -61,22 +55,12 @@ command! TWEditTaskrc :execute "e ".$HOME."/.taskrc"
 command! TWEditVitrc :execute "e ".$HOME."/.vitrc"
 "command! TWExport
 "command! TWHelp
-"command! TWHelpCommands
-"command! TWHelpQuick
 "command! TWHistory
 "command! TWInsert
 "command! TWImport
-"command! TWModify
-"command! TWModifyIncrement
-"command! TWModifyReplace
 "command! TWNote
 "command! TWOpen
 "command! TWOpenInline
-"command! TWPackage
-"command! TWPackageInstall
-"command! TWPackageList
-"command! TWPackageRemove
-"command! TWPackageUpdate
 "command! TWReport
 "command! TWReportAgenda
 "command! TWReportBreak

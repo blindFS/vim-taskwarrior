@@ -12,8 +12,8 @@ QUICK-REFERENCE                                              *vim-tw-quickref*
  A  = annotate    | r  = clear done  | s  = sort col   |<S-TAB>= prev col
  d  = task done   | u  = undo last   | <  = sort incr  |<right>= r field
  D  = delete      | x  = del annot   | >  = sort decr  |<left> = l field
- m  = modify      | +  = start       |<F1>= this help  |<C>c   = abort
- M  = mod prompts | -  = stop        |<CR>= task info  |
+ m  = modify      | +  = start task  |<F1>= this help  |<C>c   = abort
+ M  = mod prompts | -  = stop task   |<CR>= task info  |
                    
 ==============================================================================
 CONTENTS                                                     *vim-tw-contents*
@@ -50,7 +50,7 @@ keybindings, powerful commands, vim syntax highlighting and status bar.
 2. PREREQUISITES 
 
 This plugin requires taskwarrior of version 2.3.x or higher. This may be too
-recent for many package-managers, and you may need to compile your own veraion
+recent for many package-managers, and you may need to compile your own version
 or wait for the package-maintainer to catch up. Find out about the latest
 versions at http://taskwarrior.org/projects/taskwarrior/wiki/Download
 
@@ -63,25 +63,29 @@ add "defaultwidth=999: to your .taskrc to correct any line-wrapping problems.
 
 A        add annotation
 D        delete task
-a        create new task.
-d        set the task in current line done.
-m        modify current field.
-M        modify current task.
-q        quit buffer.
-r        clear all completed task.
-u        undo last change.
-x        delete annotation.
+a        create new task (interactive)
+d        set the task in current line done
+c        issue new task command directly
+f        add new filter
+H        cycle column format left
+L        cycle column format right
+m        modify current field
+M        modify current task (interactive)
+q        quit buffer
+r        clear all completed task
+u        undo last change
+x        delete annotation
 +        start task
 -        stop task
-S        sync with taskd server.
+S        sync with taskd server
 s        sort by this column primarily.(if already of the highest priority 
 		then switch the polarity)
 <        sort by this column increasingly.(if already increasingly then 
 		increase its priority)
 >        sort by this column decreasingly.(if already decreasingly then 
 		decrease its priority)
-<F1>     view the documents
-<CR>     show task info.
+<F1>     view the help file
+<CR>     open task info window (<CR> again to close)
 <TAB>    jump to the next column
 <S-TAB>  jump to the previous column
 <right>  jump to the next non-empty column
