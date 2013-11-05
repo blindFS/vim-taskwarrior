@@ -269,11 +269,15 @@ endfunction
 
 function! taskwarrior#columns_format_change(direction)
     let ccol     = taskwarrior#current_column()
+    if !exists('g:task_columns_format[ccol]')
+        return
+    endif
     let clist    = g:task_columns_format[ccol]
     if len(clist) == 1
         return
     endif
-    let ccol_sub = matchstr(b:task_report_columns[taskwarrior#current_index()], '\.\zs.*')
+    let ccol_ful = b:task_report_columns[taskwarrior#current_index()]
+    let ccol_sub = matchstr(ccol_ful, '\.\zs.*')
     let rcl      = matchstr(b:rc, 'rc\.report\.'.b:command.'\.columns.\zs\S*')
     let dfl      = system('task _get -- rc.report.'.b:command.'.columns')[0:-2]
     let index    = index(clist, ccol_sub)
@@ -286,10 +290,11 @@ function! taskwarrior#columns_format_change(direction)
             let index = 0
         endif
     endif
+    let newsub = index == 0 ? '' : '.'.clist[index]
     if rcl != ''
-        let b:rc .= ' rc.report.'.b:command.'.columns:'.substitute(rcl, '[=:,]\zs'.(ccol_sub == '' ? ccol : ccol.'.'.ccol_sub), ccol.'.'.clist[index], 'g')
+        let b:rc .= ' rc.report.'.b:command.'.columns:'.substitute(rcl, '[=:,]\zs'.ccol_ful, ccol.newsub, 'g')
     else
-        let b:rc .= ' rc.report.'.b:command.'.columns:'.substitute(dfl, '[=:,]\zs'.(ccol_sub == '' ? ccol : ccol.'.'.ccol_sub), ccol.'.'.clist[index], 'g')
+        let b:rc .= ' rc.report.'.b:command.'.columns:'.substitute(dfl, '[=:,]\zs'.ccol_ful, ccol.newsub, 'g')
     endif
     call taskwarrior#list()
 endfunction
