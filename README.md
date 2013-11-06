@@ -13,7 +13,7 @@ The newest version of taskwarrior is always suggested
 
 ----
 
-Default map:
+### Default map:
 
 ```vim
 nnoremap <buffer> A       ...  " add annotation
@@ -41,7 +41,8 @@ nnoremap <buffer> <left>  ...  " jump to the previous non-empty column
 
 ```
 
-Commands:
+### Commands:
+
 ```vim
 :TW [args]            " task [filter report arguments]
 :TWAdd                " add new tasks interactively
@@ -58,3 +59,7 @@ Commands:
 :TWUndo               " undo the previous modification
 
 ```
+
+### License
+
+[MIT](https://raw.github.com/farseer90718/vim-taskwarrior/master/LICENSE.txt)
