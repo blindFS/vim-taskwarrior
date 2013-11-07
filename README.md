@@ -15,6 +15,8 @@ keybindings, powerful commands, vim syntax highlighting and status bar.
 
 ----
 
+### Prerequisites:
+
 This plugin requires taskwarrior version 2.2.0 or higher, although the
 latest version is always recommended.
 see: http://taskwarrior.org/projects/taskwarrior/wiki/Download
@@ -26,6 +28,19 @@ If you experience line-wrapping issues, add the following line to your .vimrc
 ```
 let g:task_rc_override = 'defaultwidth=999' 
 ```
+
+----
+
+### Installing:
+
+Using pathogen (http://www.vim.org/scripts/script.php?script_id=2332)
+
+    cd ~/.vim
+    mkdir bundle
+    cd bundle
+    git clone https://github.com/farseer90718/vim-taskwarrior
+
+Then launch vim and run `:help vim-taskwarrior` to verify it was installed.
 
 ----
 
