@@ -1,15 +1,28 @@
 vim-taskwarrior
 ===============
 
-A vim interface for [taskwarrior](http://taskwarrior.org)
+a vim interface for [taskwarrior](http://taskwarrior.org)
 
-The newest version of taskwarrior is always suggested
+Taskwarrior is a command-line todo list manager. It maintains a task list,
+allowing you to add/remove, and otherwise manipulate your tasks with a rich
+set of subcommands that allow you to do sophisticated things.
+Find out more at http://taskwarrior.org and read man task and man taskrc.
+
+vim-taskwarrior is a vim plugin that extends taskwarrior with an interactive
+interface. It makes navigating and maintaining your task list easy, adding,
+annotating, deleting, modifying and marking done, sorting, with simple
+keybindings, powerful commands, vim syntax highlighting and status bar.
 
 ----
 
-(add this line to .taskrc, or wrapping may be mangled :)
+This plugin requires taskwarrior version 2.2.0 or higher, although the
+latest version is always recommended.
+see: http://taskwarrior.org/projects/taskwarrior/wiki/Download
 
-    defaultwidth=999
+Vim version 7.x
+
+If you experience line-wrapping issues, add the following line to your .vimrc
+let g:task_rc_override = 'defaultwidth=999' 
 
 ----
 
