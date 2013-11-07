@@ -17,11 +17,14 @@ keybindings, powerful commands, vim syntax highlighting and status bar.
 
 ### Prerequisites:
 
-This plugin requires taskwarrior version 2.2.0 or higher, although the
-latest version is always recommended.
+This plugin requires taskwarrior version 2.2.0 or higher,  
+although the latest version is always recommended.  
 see: http://taskwarrior.org/projects/taskwarrior/wiki/Download
 
-Vim version 7.x
+Vim version 7.x is required (see: vim.org)
+
+vim-airline plugin is recommended (a lean and mean status/tabline for vim)  
+go to https://github.com/bling/vim-airline for details
 
 If you experience line-wrapping issues, add the following line to your .vimrc
 
@@ -32,6 +35,10 @@ let g:task_rc_override = 'defaultwidth=999'
 ----
 
 ### Installing:
+
+You can install this [the hard way](http://vimdoc.sourceforge.net/htmldoc/usr_05.html#05.4) like any vim plugin
+
+or (the easy way)
 
 Using pathogen (http://www.vim.org/scripts/script.php?script_id=2332)
 
@@ -75,6 +82,7 @@ nnoremap <buffer> <right> ...  " jump to the next non-empty column
 nnoremap <buffer> <left>  ...  " jump to the previous non-empty column
 
 ```
+----
 
 ### Commands:
 
@@ -91,12 +99,13 @@ nnoremap <buffer> <left>  ...  " jump to the previous non-empty column
 :TWDeleteAnnotation   " delete an annotation
 :TWModifyInteractive  " make changes to a task interactively (use with caution!)
 :TWReportInfo         " run the info report
-:TWReportSort         " overide the sort method, reset to default if no arguments passed
+:TWReportSort [args]  " overide the sort method, reset to default if no arguments passed
 :TWSync               " synchronise with taskd server
 :TWToggleReadonly     " toggle readonly option
 :TWToggleHLField      " toggle highlight field option
 
 ```
+----
 
 ### Options
 
@@ -118,6 +127,7 @@ let g:task_info_size       = 15
 " info window position
 let g:task_info_position   = 'belowright'
 ```
+----
 
 ### License
 
