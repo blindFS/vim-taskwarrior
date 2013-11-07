@@ -5,13 +5,14 @@ a vim interface for [taskwarrior](http://taskwarrior.org)
 
 Taskwarrior is a command-line todo list manager. It maintains a task list,
 allowing you to add/remove, and otherwise manipulate your tasks with a rich
-set of subcommands that allow you to do sophisticated things.
+set of subcommands that allow you to do sophisticated things.  
 Find out more at http://taskwarrior.org and read man task and man taskrc.
 
 vim-taskwarrior is a vim plugin that extends taskwarrior with an interactive
 interface. It makes navigating and maintaining your task list easy, adding,
 annotating, deleting, modifying and marking done, sorting, with simple
-keybindings, powerful commands, vim syntax highlighting and status bar.
+keybindings, powerful commands, vim syntax highlighting and enhanced  
+Airline status-bar.
 
 ----
 
@@ -23,8 +24,8 @@ see: http://taskwarrior.org/projects/taskwarrior/wiki/Download
 
 Vim version 7.x is required (see: vim.org)
 
-vim-airline plugin is recommended (a lean and mean status/tabline for vim)  
-go to https://github.com/bling/vim-airline for details
+vim-airline plugin (a lean and mean status/tabline for vim) is highly  
+recommended, go to https://github.com/bling/vim-airline for details
 
 If you experience line-wrapping issues, add the following line to your .vimrc
 
@@ -36,9 +37,7 @@ let g:task_rc_override = 'defaultwidth=999'
 
 ### Installing:
 
-You can install this [the hard way](http://vimdoc.sourceforge.net/htmldoc/usr_05.html#05.4) like any vim plugin
-
-or (the easy way)
+You can install this [the hard way](http://vimdoc.sourceforge.net/htmldoc/usr_05.html#05.4) like any vim plugin, or the easy way;
 
 Using pathogen (http://www.vim.org/scripts/script.php?script_id=2332)
 
@@ -47,7 +46,8 @@ Using pathogen (http://www.vim.org/scripts/script.php?script_id=2332)
     cd bundle
     git clone https://github.com/farseer90718/vim-taskwarrior
 
-Then launch vim and run `:help vim-taskwarrior` to verify it was installed.
+Then launch vim and run `:Helptags` then `:help vim-taskwarrior`  
+to verify it was installed.
 
 ----
 
