@@ -162,7 +162,7 @@ Copyright © 2013 Zc He.
 Copyright © 2013 David J Patrick.
 
 ==============================================================================
-9. LICENSE                                                        *tw-changelog*
+9. CHANGELOG                                                      *tw-changelog*
 
 .. in progress!
 
