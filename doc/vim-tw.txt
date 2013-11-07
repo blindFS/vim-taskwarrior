@@ -1,4 +1,4 @@
-*vim-tw.txt* -         a vim interface for |Taskwarrior|  - version 0.4.1    ~
+*vim-tw.txt*          a vim interface for |Taskwarrior|          version 1.0 ~
          _               _           _                        _              ~
     __ _(_)_ __    ___  | |_ __ _ __| |____ __ ____ _ _ _ _ _(_)___ _ _      ~
     \ V / | '  \  |___| |  _/ _` (_-< / /\ V  V / _` | '_| '_| / _ \ '_|     ~
@@ -48,14 +48,13 @@ keybindings, powerful commands, vim syntax highlighting and status bar.
 ==============================================================================
 2. PREREQUISITES                                              *tw-prerequisites*
 
-This plugin requires taskwarrior of version 2.3.x or higher. This may be too
-recent for many package-managers, and you may need to compile your own version
-or wait for the package-maintainer to catch up. Find out about the latest
-versions at http://taskwarrior.org/projects/taskwarrior/wiki/Download
+This plugin requires taskwarrior of version 2.2.0 or higher, although the 
+latest version is always recommended. 
+see: http://taskwarrior.org/projects/taskwarrior/wiki/Download
 
 Vim version 7.x
 
-add "defaultwidth=999: to your .taskrc to correct any line-wrapping problems.
+If you experience line-wrapping problems, add "defaultwidth=999" to .taskrc
 
 ==============================================================================
 3. MAPPING                                                         *tw-mappings*
