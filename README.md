@@ -18,14 +18,13 @@ Airline status-bar.
 
 ### Prerequisites:
 
-This plugin requires taskwarrior version 2.2.0 or higher,  
-although the latest version is always recommended.  
+This plugin requires taskwarrior version 2.2.0 or higher (although the latest version is recommended)    
 see: http://taskwarrior.org/projects/taskwarrior/wiki/Download
 
 Vim version 7.x is required (see: vim.org)
 
-vim-airline plugin (a lean and mean status/tabline for vim) is highly  
-recommended, go to https://github.com/bling/vim-airline for details
+vim-airline plugin (a lean and mean status/tabline for vim) is highly recommended for full enjoyment.  
+go to https://github.com/bling/vim-airline for details
 
 If you experience line-wrapping issues, add the following line to your .vimrc
 
@@ -46,8 +45,7 @@ Using pathogen (http://www.vim.org/scripts/script.php?script_id=2332)
     cd bundle
     git clone https://github.com/farseer90718/vim-taskwarrior
 
-Then launch vim and run `:Helptags` then `:help vim-taskwarrior`  
-to verify it was installed.
+Then launch vim and run `:Helptags` then `:help vim-taskwarrior` to verify it was installed.
 
 ----
 
