@@ -45,7 +45,7 @@ Using pathogen (http://www.vim.org/scripts/script.php?script_id=2332)
     cd bundle
     git clone https://github.com/farseer90718/vim-taskwarrior
 
-Then launch vim and run `:Helptags` then `:help vim-taskwarrior` to verify it was installed.
+Then launch vim and run `:Helptags` then `:help vim-tw` to verify it was installed.
 
 ----
 
