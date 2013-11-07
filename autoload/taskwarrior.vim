@@ -320,7 +320,7 @@ function! taskwarrior#get_value_by_column(line, column)
 endfunction
 
 function! taskwarrior#get_value_by_index(line, index)
-    if exists('b:task_columns['.a:index.']')
+    if exists('b:task_columns[a:index]')
         return substitute(getline(a:line)[b:task_columns[a:index]:b:task_columns[a:index+1]-1], '\(\s*$\|^\s*\)', '',  'g')
     endif
     return ''
@@ -411,7 +411,7 @@ function! taskwarrior#get_info()
                 \ 'urgency': 'ready',
                 \ 'entry': 'history.monthly',
                 \ 'end': 'history.monthly'}
-    let command = exists('dict["'.ccol.'"]')? dict[ccol] : 'summary'
+    let command = exists('dict[ccol]')? dict[ccol] : 'summary'
     let uuid = taskwarrior#get_uuid()
     if uuid !~ '^\s*$'
         let command = substitute(command, '\v(summary|stats)', 'information', '')

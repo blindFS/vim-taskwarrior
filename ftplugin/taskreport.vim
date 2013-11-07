@@ -3,7 +3,7 @@ setlocal nomodifiable
 setlocal cursorline
 setlocal nowrap
 
-nnoremap <silent> <buffer> <F1>    :h taskwarrior<CR>
+nnoremap <silent> <buffer> <F1>    :h tw-quickref<CR>
 nnoremap <silent> <buffer> q       :call taskwarrior#quit()<CR>
 nnoremap <silent> <buffer> <left>  :call taskwarrior#move_cursor('left', 'skip')<CR>
 nnoremap <silent> <buffer> <S-tab> :call taskwarrior#move_cursor('left', 'step')<CR>

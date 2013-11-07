@@ -1,4 +1,4 @@
-*vim-taskwarrior.txt* -  a vim interface for Taskwarrior  - version 0.4.1    ~
+*vim-tw.txt* -         a vim interface for |Taskwarrior|  - version 0.4.1    ~
          _               _           _                        _              ~
     __ _(_)_ __    ___  | |_ __ _ __| |____ __ ____ _ _ _ _ _(_)___ _ _      ~
     \ V / | '  \  |___| |  _/ _` (_-< / /\ V  V / _` | '_| '_| / _ \ '_|     ~
@@ -6,7 +6,7 @@
                                                                              ~
                                                                              ~
 ==============================================================================
-QUICK-REFERENCE                                              *vim-tw-quickref*
+QUICK-REFERENCE                                                    *tw-quickref*
 
  a  = add task    | q  = quit buffer | S  = taskd sync |<TAB>  = next col
  A  = annotate    | r  = clear done  | s  = sort col   |<S-TAB>= prev col
@@ -14,40 +14,37 @@ QUICK-REFERENCE                                              *vim-tw-quickref*
  D  = delete      | x  = del annot   | >  = sort decr  |<left> = l field
  m  = modify      | +  = start task  |<F1>= this help  |<C>c   = abort
  M  = mod prompts | -  = stop task   |<CR>= task info  |
-                   
-==============================================================================
-CONTENTS                                                     *vim-tw-contents*
-
-	1. Intro				|vim-tw|
-	2. Prerequisites			|vim-tw-prerequisites|
-	3. Mappings				|vim-tw-mappings|
-		3.1 Global mappings		|vim-tw-global-mappings|
-		3.2 Local Mappings		|vim-tw-local-mappings| 
-	4. Commands				|vim-tw-commands|
-		4.1 Global Commands
-		4.2 Local commands
-
-	5, Customization
-	6. Help
-	7. Developers
-	8. Changelog 
-	9. License
 
 ==============================================================================
-1. INTRODUCTION *taskwarrior*
+CONTENTS                                                           *tw-contents*
 
-Taskwarrior is a command-line todo list manager. It maintains a task list, 
-allowing you to add/remove, and otherwise manipulate your tasks with a rich 
+01. Intro ........................................................ |Taskwarrior|
+02. Prerequisites ........................................... |tw-prerequisites|
+03. Mappings ..................................................... |tw-mappings|
+04. Commands ..................................................... |tw-commands|
+    4.1 Global Commands ....................................... |tw-gl-commands|
+    4.2 Local commands ........................................ |tw-lc-commands|
+05. Customization ........................................... |tw-customization|
+06. Troubleshooting ....................................... |tw-troubleshooting|
+07. Contributions ........................................... |tw-contributions|
+08. License ....................................................... |tw-license|
+09. Changelog ................................................... |tw-changelog|
+
+==============================================================================
+1. INTRODUCTION                                                    *Taskwarrior*
+
+Taskwarrior is a command-line todo list manager. It maintains a task list,
+allowing you to add/remove, and otherwise manipulate your tasks with a rich
 set of subcommands that allow you to do sophisticated things.
 Find out more at http://taskwarrior.org and read man task and man taskrc.
 
 vim-taskwarrior is a vim plugin that extends taskwarrior with an interactive
 interface. It makes navigating and maintaining your task list easy, adding,
-annotating, deleting, modifying and marking done, sorting, with simple 
+annotating, deleting, modifying and marking done, sorting, with simple
 keybindings, powerful commands, vim syntax highlighting and status bar.
 
 ==============================================================================
-2. PREREQUISITES 
+2. PREREQUISITES                                              *tw-prerequisites*
 
 This plugin requires taskwarrior of version 2.3.x or higher. This may be too
 recent for many package-managers, and you may need to compile your own version
@@ -59,7 +56,7 @@ Vim version 7.x
 add "defaultwidth=999: to your .taskrc to correct any line-wrapping problems.
 
 ==============================================================================
-3. MAPPING *taskwarrior-map*
+3. MAPPING                                                         *tw-mappings*
 
 A        add annotation
 D        delete task
@@ -78,12 +75,12 @@ x        delete annotation
 +        start task
 -        stop task
 S        sync with taskd server
-s        sort by this column primarily.(if already of the highest priority 
-		then switch the polarity)
-<        sort by this column increasingly.(if already increasingly then 
-		increase its priority)
->        sort by this column decreasingly.(if already decreasingly then 
-		decrease its priority)
+s        sort by this column primarily.(if already of the highest priority
+then switch the polarity)
+<        sort by this column increasingly.(if already increasingly then
+increase its priority)
+>        sort by this column decreasingly.(if already decreasingly then
+decrease its priority)
 <F1>     view the help file
 <CR>     open task info window (<CR> again to close)
 <TAB>    jump to the next column
@@ -92,11 +89,78 @@ s        sort by this column primarily.(if already of the highest priority
 <left>   jump to the previous non-empty column
 
 ==============================================================================
-4. COMMAND *:TW*
-TWDeleteCompleted
-TWEditTaskrc
-TWEditVitrc
-TWUndo
+4. COMMAND                                                         *tw-commands*
+
+4.1 Global commands                                             *tw-gl-commands*
+------------------------------------------------------------------------------
+
+Almost the same as the shell command 'task'                                *:TW*
+Undo last move                                                         *:TWUndo*
+Edit taskrc right away                                           *:TWEditTaskrc*
+Edit vitrc                                                        *:TWEditVitrc*
+Delete completed tasks                                      *:TWDeleteCompleted*
+
+4.2 Local commands                                              *tw-lc-commands*
+------------------------------------------------------------------------------
+
+Add an annotation                                                  *:TWAnnotate*
+Mark task done                                                     *:TWComplete*
+Deleta a task                                                        *:TWDelete*
+Delete an annotation                                       *:TWDeleteAnnotation*
+Make changes to a task interactively                      *:TWModifyInteractive*
+Run the info report                                              *:TWReportInfo*
+Overide the sort method                                          *:TWReportSort*
+Synchronise with taskd server                                          *:TWSync*
+Toggle readonly option                                       *:TWToggleReadonly*
+Toggle highlight field option                                 *:TWToggleHLField*
+
+==============================================================================
+5. CUSTOMIZATION                                              *tw-customization*
+
+                                                            *g:task_report_name*
+Default task report type.
+Default value is 'next'.
+                                                        *g:task_highlight_field*
+Whether the field under the cursor is highlighted.
+Default value is 1.
+                                                               *g:task_readonly*
+Can not make change to task data when set to 1.
+Default value is 0.
+                                                            *g:task_rc_override*
+Allows user to override task configurations. Seperated by space.
+Default value is ''.
+                                                         *g:task_default_prompt*
+Default fields to ask when adding a new task.
+Default value is:
+['due', 'project', 'priority', 'description', 'tag', 'depends'].
+                                                            *g:task_info_vsplit*
+Whether the info window is splited vertically.
+Default value is 0.
+                                                              *g:task_info_size*
+Info window size.
+Default value is 15 for horizontal and 50 for vertical.
+                                                          *g:task_info_position*
+Info window position.
+Default value is 'belowright'.
+
+==============================================================================
+6. TROUBLESHOOTING                                          *tw-troubleshooting*
+
+
+==============================================================================
+7. CONTRIBUTIONS                                              *tw-contributions*
+
+Contributions and pull requests are welcome.
+
+==============================================================================
+8. LICENSE                                                          *tw-license*
+
+MIT License.
+Copyright © 2013 Zc He.
+Copyright © 2013 David J Patrick.
+
+==============================================================================
+9. LICENSE                                                        *tw-changelog*
 
 .. in progress!
 
