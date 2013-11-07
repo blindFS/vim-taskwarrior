@@ -22,7 +22,10 @@ see: http://taskwarrior.org/projects/taskwarrior/wiki/Download
 Vim version 7.x
 
 If you experience line-wrapping issues, add the following line to your .vimrc
+
+```
 let g:task_rc_override = 'defaultwidth=999' 
+```
 
 ----
 
