@@ -8,12 +8,14 @@
 ==============================================================================
 QUICK-REFERENCE                                                    *tw-quickref*
 
- a  = add task    | q  = quit buffer | S  = taskd sync |<TAB>  = next col
- A  = annotate    | r  = clear done  | s  = sort col   |<S-TAB>= prev col
- d  = task done   | u  = undo last   | <  = sort incr  |<right>= r field
- D  = delete      | x  = del annot   | >  = sort decr  |<left> = l field
- m  = modify      | +  = start task  |<F1>= this help  |<C>c   = abort
- M  = mod prompts | -  = stop task   |<CR>= task info  |
+| a  = add task    | m  = modify      | S  = taskd sync   | <F1> = this help |
+| A  = annotate    | M  = mod prompts | s  = sort col     | <CR> = task info |
+| d  = task done   | q  = quit buffer | <  = sort incr    | <C>c = abort     |
+| D  = delete      | r  = clear done  | >  = sort decr    |                  |
+| c  = task cmd    | u  = undo last   | <TAB>  = next col |                  |
+| f  = add filter  | x  = del annot   | <S-TAB>= prev col |                  |
+| H  = cycle fmt l | +  = start task  | <right>= r field  |                  |
+| L  = cycle fmt r | -  = stop task   | <left> = l field  |                  |
 
 ==============================================================================
 CONTENTS                                                           *tw-contents*
