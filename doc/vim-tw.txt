@@ -35,24 +35,29 @@ CONTENTS                                                           *tw-contents*
 ==============================================================================
 1. INTRODUCTION                                                    *Taskwarrior*
 
-Taskwarrior is a command-line todo list manager. It maintains a task list,
-allowing you to add/remove, and otherwise manipulate your tasks with a rich
-set of subcommands that allow you to do sophisticated things.
+Taskwarrior is a command-line todo list manager. It helps you manage task lists
+with projects, tags, dates, dependencies, annotations, recurrences and apply
+complex (or simple) queries with attribute modifiers, boolean, regex filters
+and produce any number of reports, built-in or customizable reports, attributes
+and color themes. Task keeps data in JSON text files and it's always improving. 
 Find out more at http://taskwarrior.org and read man task and man taskrc.
 
 vim-taskwarrior is a vim plugin that extends taskwarrior with an interactive
-interface. It makes navigating and maintaining your task list easy, adding,
-annotating, deleting, modifying and marking done, sorting, with simple
-keybindings, powerful commands, vim syntax highlighting and status bar.
+interface. It extends a rich set of mappings and commands, is easy to customize,
+and makes adding, modifying, sorting and marking done, fast, easy and fun!
+Homepage: https://github.com/farseer90718/vim-taskwarrior, patches welcome!
 
 ==============================================================================
 2. PREREQUISITES                                              *tw-prerequisites*
 
-This plugin requires taskwarrior of version 2.2.0 or higher, although the 
-latest version is always recommended. 
-see: http://taskwarrior.org/projects/taskwarrior/wiki/Download
+This plugin requires Taskwarrior 2.2.0 or higher, although >2.3.x is required
+for taskd sync functions, and recommended in general, and well worth the price; 
+free :) see: http://taskwarrior.org/projects/taskwarrior/wiki/Download
 
-Vim version 7.x
+Vim version 7.x is required.
+
+the vim-airline plugin (https://github.com/bling/vim-airline) is not required
+but it greatly enhances the status-bar and takes the guess-work out of reports. 
 
 If you experience line-wrapping issues, add the following line to your .vimrc
 let g:task_rc_override = 'defaultwidth=999' 
