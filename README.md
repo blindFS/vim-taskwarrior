@@ -21,7 +21,8 @@ Homepage: https://github.com/farseer90718/vim-taskwarrior, patches welcome!
 
 This plugin requires Taskwarrior 2.2.0 or higher, although >2.3.x is required
 for taskd sync functions, and recommended in general, and well worth the price; 
-free :) see: http://taskwarrior.org/projects/taskwarrior/wiki/Download
+free :)  
+see: http://taskwarrior.org/projects/taskwarrior/wiki/Download
 
 Vim version 7.x is required.
 
