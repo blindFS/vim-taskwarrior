@@ -11,7 +11,7 @@ and color themes. Task keeps data in JSON text files and it's always improving.
 Find out more at http://taskwarrior.org and read man task and man taskrc.
 
 vim-taskwarrior is a vim plugin that extends taskwarrior with an interactive
-interface. It extends a rich set of mappings and commands, is easy to customize,
+interface. It features a rich set of mappings and commands, is easy to customize,
 and makes adding, modifying, sorting and marking done, fast, easy and fun!  
 Homepage: https://github.com/farseer90718/vim-taskwarrior, patches welcome!
 
