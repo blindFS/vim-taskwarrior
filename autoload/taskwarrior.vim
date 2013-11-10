@@ -327,9 +327,6 @@ function! taskwarrior#get_value_by_index(line, index)
 endfunction
 
 function! taskwarrior#get_uuid(...)
-    if line('.') == 1
-        return ''
-    endif
     let line = a:0 == 0 ? '.' : a:1
     let vol = taskwarrior#get_value_by_column(line, 'uuid')
     let vol = vol =~ '[0-9a-f]\{8}\(-[0-9a-f]\{4}\)\{3}-[0-9a-f]\{12}' ? vol : taskwarrior#get_value_by_column(line, 'id')
@@ -521,6 +518,24 @@ function! taskwarrior#global_stats()
         return ['0', '0', taskwarrior#get_stats('')['Pending']]
     endif
     return [dict['Pending'], dict['Completed'], taskwarrior#get_stats('')['Pending']]
+endfunction
+
+function! taskwarrior#visual_action(action) range
+    let line1 = getpos("'<")[1]
+    let line2 = getpos("'>")[1]
+    let fil = []
+    for l in range(line1, line2)
+        let fil += [substitute(taskwarrior#get_uuid(l), '\s', '', 'g')]
+    endfor
+    let filter = join(fil, ',')
+    echom filter
+    if a:action == 'done'
+        call taskwarrior#system_call(filter, 'done', '', 'interactive')
+    elseif a:action == 'delete'
+        call taskwarrior#system_call(filter, 'delete', '', 'interactive')
+    elseif a:action == 'info'
+        call taskinfo#init('information', filter, split(system('task information '.filter), '\n'))
+    endif
 endfunction
 
 function! taskwarrior#TW_complete(A, L, P)

@@ -17,6 +17,7 @@ nnoremap <silent> <buffer> f       :call taskwarrior#filter('')<CR>
 nnoremap <silent> <buffer> c       :call taskwarrior#command('')<CR>
 nnoremap <silent> <buffer> H       :call taskwarrior#columns_format_change('left')<CR>
 nnoremap <silent> <buffer> L       :call taskwarrior#columns_format_change('right')<CR>
+vnoremap <silent> <buffer> <CR>    :call taskwarrior#visual_action('info')<CR>
 
 if g:task_highlight_field
     autocmd CursorMoved <buffer> :call taskwarrior#hi_field()
@@ -39,6 +40,8 @@ else
     nnoremap <silent> <buffer> M         :call taskwarrior#modify('')<CR>
     nnoremap <silent> <buffer> +         :call taskwarrior#system_call(taskwarrior#get_uuid(), 'start', '', 'silent')<CR>
     nnoremap <silent> <buffer> -         :call taskwarrior#system_call(taskwarrior#get_uuid(), 'stop', '', 'silent')<CR>
+    vnoremap <silent> <buffer> d         :call taskwarrior#visual_action('done')<CR>
+    vnoremap <silent> <buffer> D         :call taskwarrior#visual_action('delete')<CR>
     command! -buffer TWAdd               :call taskwarrior#system_call('', 'add', taskwarrior#get_args(), 'interactive')
     command! -buffer TWAnnotate          :call taskwarrior#annotate('add')
     command! -buffer TWComplete          :call taskwarrior#set_done()
