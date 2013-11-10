@@ -112,7 +112,7 @@ Delete completed tasks                                      *:TWDeleteCompleted*
 
 Add an annotation                                                  *:TWAnnotate*
 Mark task done                                                     *:TWComplete*
-Deleta a task                                                        *:TWDelete*
+Delete a task                                                        *:TWDelete*
 Delete an annotation                                       *:TWDeleteAnnotation*
 Make changes to a task interactively                      *:TWModifyInteractive*
 Run the info report                                              *:TWReportInfo*
