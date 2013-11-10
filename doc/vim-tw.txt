@@ -25,7 +25,7 @@ CONTENTS                                                           *tw-contents*
 03. Mappings ..................................................... |tw-mappings|
 04. Commands ..................................................... |tw-commands|
     4.1 Global Commands ....................................... |tw-gl-commands|
-    4.2 Local commands ........................................ |tw-lc-commands|
+    4.2 Local Commands ........................................ |tw-lc-commands|
 05. Customization ........................................... |tw-customization|
 06. Troubleshooting ....................................... |tw-troubleshooting|
 07. Contributions ........................................... |tw-contributions|
@@ -82,12 +82,12 @@ x        delete annotation
 +        start task
 -        stop task
 S        sync with taskd server
-s        sort by this column primarily.(if already of the highest priority
-then switch the polarity)
-<        sort by this column increasingly.(if already increasingly then
-increase its priority)
->        sort by this column decreasingly.(if already decreasingly then
-decrease its priority)
+s        sort by this column primarily ("s" again reverses sort)
+            (if already of the highest priority then switch the polarity)
+<        sort by this column increasingly
+            (if already increasingly then increase its priority)
+>        sort by this column decreasingly
+            (if already decreasingly then decrease its priority)
 <F1>     view the help file
 <CR>     open task info window (<CR> again to close)
 <TAB>    jump to the next column
@@ -98,7 +98,7 @@ decrease its priority)
 ==============================================================================
 4. COMMAND                                                         *tw-commands*
 
-4.1 Global commands                                             *tw-gl-commands*
+4.1 Global Commands                                             *tw-gl-commands*
 ------------------------------------------------------------------------------
 
 Almost the same as the shell command 'task'                                *:TW*
@@ -107,7 +107,7 @@ Edit taskrc right away                                           *:TWEditTaskrc*
 Edit vitrc                                                        *:TWEditVitrc*
 Delete completed tasks                                      *:TWDeleteCompleted*
 
-4.2 Local commands                                              *tw-lc-commands*
+4.2 Local Commands                                              *tw-lc-commands*
 ------------------------------------------------------------------------------
 
 Add an annotation                                                  *:TWAnnotate*
