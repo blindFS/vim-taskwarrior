@@ -179,3 +179,7 @@ in your vimrc.
 ### License:
 
 [MIT](https://raw.github.com/farseer90718/vim-taskwarrior/master/LICENSE.txt)
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/farseer90718/vim-taskwarrior/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
