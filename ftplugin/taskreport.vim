@@ -14,7 +14,6 @@ nnoremap <silent> <buffer> >       :call taskwarrior#sort_by_column('-', '')<CR>
 nnoremap <silent> <buffer> s       :call taskwarrior#sort_by_column('m', '')<CR>
 nnoremap <silent> <buffer> <CR>    :call taskwarrior#get_info()<CR>
 nnoremap <silent> <buffer> f       :call taskwarrior#filter('')<CR>
-nnoremap <silent> <buffer> c       :call taskwarrior#command('')<CR>
 nnoremap <silent> <buffer> H       :call taskwarrior#columns_format_change('left')<CR>
 nnoremap <silent> <buffer> L       :call taskwarrior#columns_format_change('right')<CR>
 vnoremap <silent> <buffer> <CR>    :call taskwarrior#visual_action('info')<CR>
@@ -30,18 +29,27 @@ if g:task_readonly
 else
     nnoremap <silent> <buffer> A         :call taskwarrior#annotate('add')<CR>
     nnoremap <silent> <buffer> D         :call taskwarrior#delete()<CR>
+    nnoremap <silent> <buffer> <Del>     :call taskwarrior#delete()<CR>
     nnoremap <silent> <buffer> a         :call taskwarrior#system_call('', 'add', taskwarrior#get_args(), 'echo')<CR>
+    nnoremap <silent> <buffer> c         :call taskwarrior#command()<CR>
     nnoremap <silent> <buffer> d         :call taskwarrior#set_done()<CR>
-    nnoremap <silent> <buffer> r         :call taskwarrior#clear_completed()<CR>
+    nnoremap <silent> <buffer> r         :call taskwarrior#report()<CR>
+    nnoremap <silent> <buffer> R         :call taskwarrior#list()<CR>
+    nnoremap <silent> <buffer> X         :call taskwarrior#clear_completed()<CR>
     nnoremap <silent> <buffer> u         :call taskwarrior#undo()<CR>
     nnoremap <silent> <buffer> x         :call taskwarrior#annotate('del')<CR>
     nnoremap <silent> <buffer> S         :call taskwarrior#sync('sync')<CR>
     nnoremap <silent> <buffer> m         :call taskwarrior#modify('current')<CR>
     nnoremap <silent> <buffer> M         :call taskwarrior#modify('')<CR>
+    nnoremap <silent> <buffer> p         :call taskwarrior#paste()<CR>
+    nnoremap <silent> <buffer> yy        :call taskwarrior#select()<CR>
+    nnoremap <silent> <buffer> Y         :call taskwarrior#select()<CR>
     nnoremap <silent> <buffer> +         :call taskwarrior#system_call(taskwarrior#get_uuid(), 'start', '', 'silent')<CR>
     nnoremap <silent> <buffer> -         :call taskwarrior#system_call(taskwarrior#get_uuid(), 'stop', '', 'silent')<CR>
     vnoremap <silent> <buffer> d         :call taskwarrior#visual_action('done')<CR>
+    vnoremap <silent> <buffer> y         :call taskwarrior#visual_action('select')<CR>
     vnoremap <silent> <buffer> D         :call taskwarrior#visual_action('delete')<CR>
+    vnoremap <silent> <buffer> <Del>     :call taskwarrior#visual_action('delete')<CR>
     command! -buffer TWAdd               :call taskwarrior#system_call('', 'add', taskwarrior#get_args(), 'interactive')
     command! -buffer TWAnnotate          :call taskwarrior#annotate('add')
     command! -buffer TWComplete          :call taskwarrior#set_done()

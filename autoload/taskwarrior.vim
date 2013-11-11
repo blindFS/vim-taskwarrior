@@ -57,6 +57,8 @@ function! taskwarrior#list(...) abort
     let b:sort          = taskwarrior#sort_order_list()[0]
     let b:now           = system('task active limit:1 rc.verbose:nothing rc.report.active.sort=start- rc.report.active.columns=start.active,start.age,id,description.desc rc.report.active.labels=A,Age,ID,Description')[0:-2]
     let b:active        = split(system('task start.any: count'), '\n')[0]
+    let b:selected      = []
+    let b:sstring       = ''
 
     setlocal filetype=taskreport
     call setpos('.', pos)
@@ -145,19 +147,29 @@ function! taskwarrior#modify(mode)
 endfunction
 
 function! taskwarrior#delete()
-    execute "!task ".taskwarrior#get_uuid()." delete"
+    let uuid = taskwarrior#get_uuid()
+    if uuid =~ '^\s*$'
+        call taskwarrior#annotate('del')
+    else
+        execute '!task '.taskwarrior#get_uuid().' delete'
+    endif
     call taskwarrior#refresh()
 endfunction
 
 function! taskwarrior#annotate(op)
-    while line('.') > 1 && taskwarrior#get_uuid() == ''
-        normal k
+    let ln = line('.')
+    while ln > 1 && taskwarrior#get_uuid(ln) =~ '^\s*$'
+        let ln -= 1
     endwhile
-    let annotation = input("annotation:")
+    let uuid = taskwarrior#get_uuid(ln)
+    if uuid =~ '^\s*$'
+        return
+    endif
+    let annotation = input('annotation:')
     if a:op == 'add'
-        call taskwarrior#system_call(taskwarrior#get_uuid(), ' annotate ', annotation, 'silent')
+        call taskwarrior#system_call(uuid, ' annotate ', annotation, 'silent')
     else
-        call taskwarrior#system_call(taskwarrior#get_uuid(), ' denotate ', annotation, 'silent')
+        call taskwarrior#system_call(uuid, ' denotate ', annotation, 'silent')
     endif
 endfunction
 
@@ -489,27 +501,25 @@ function! taskwarrior#filter(filter)
     call taskwarrior#list()
 endfunction
 
-function! taskwarrior#command(command)
-    let cold = b:command
-    if index(g:task_all_commands, a:command) != -1
-        let b:command = a:command
+function! taskwarrior#command()
+    if len(b:selected) == 0
+        let filter = taskwarrior#get_uuid()
     else
-        let b:command = input('new command:', g:task_report_name, 'customlist,taskwarrior#command_complete')
-        if index(g:task_all_commands, b:command) == -1
-            let b:command = cold
-            return
-        endif
+        let filter = join(b:selected, ',')
     endif
-    if index(g:task_interactive_command, b:command) != -1
-        if !g:task_readonly
-            execute '!task '.b:rc.' '.b:filter.' '.b:command
-        endif
-        let b:command = cold
-    elseif index(g:task_report_command, b:command) == -1
-        call taskwarrior#init(b:filter, b:command)
+    let command = input('command:', '', 'customlist,taskwarrior#command_complete')
+    if index(g:task_all_commands, b:command) == -1
         return
     endif
-    call taskwarrior#list()
+    call taskwarrior#system_call(filter, command, '', 'interactive')
+endfunction
+
+function! taskwarrior#report()
+    let command = input('new report:', g:task_report_name, 'customlist,taskwarrior#report_complete')
+    if index(g:task_report_command, command) != -1
+        let b:command = command
+        call taskwarrior#list()
+    endif
 endfunction
 
 function! taskwarrior#global_stats()
@@ -520,21 +530,55 @@ function! taskwarrior#global_stats()
     return [dict['Pending'], dict['Completed'], taskwarrior#get_stats('')['Pending']]
 endfunction
 
+function! taskwarrior#select()
+    let uuid = taskwarrior#get_uuid()
+    if uuid =~ '^\s*$'
+        return
+    endif
+    if index(b:selected, uuid) == -1
+        let b:selected += [uuid]
+    else
+        call remove(b:selected, index(b:selected, uuid))
+    endif
+    let b:sstring = join(b:selected, ' ')
+endfunction
+
+function! taskwarrior#paste()
+    if len(b:selected) == 0
+        return
+    elseif len(b:selected) < 3
+        call taskwarrior#system_call(join(b:selected, ','), 'duplicate', '', 'echo')
+    else
+        call taskwarrior#system_call(join(b:selected, ','), 'duplicate', '', 'interactive')
+    endif
+endfunction
+
 function! taskwarrior#visual_action(action) range
     let line1 = getpos("'<")[1]
     let line2 = getpos("'>")[1]
     let fil = []
     for l in range(line1, line2)
-        let fil += [substitute(taskwarrior#get_uuid(l), '\s', '', 'g')]
+        let uuid = taskwarrior#get_uuid(l)
+        if uuid !~ '^\s*$'
+            let fil += [uuid]
+        endif
     endfor
     let filter = join(fil, ',')
-    echom filter
     if a:action == 'done'
         call taskwarrior#system_call(filter, 'done', '', 'interactive')
     elseif a:action == 'delete'
         call taskwarrior#system_call(filter, 'delete', '', 'interactive')
     elseif a:action == 'info'
         call taskinfo#init('information', filter, split(system('task information '.filter), '\n'))
+    elseif a:action == 'select'
+        for var in fil
+            if index(b:selected, var) == -1
+                let b:selected += [var]
+            else
+                call remove(b:selected, index(b:selected, var))
+            endif
+        endfor
+        let b:sstring = join(b:selected, ' ')
     endif
 endfunction
 
@@ -571,5 +615,9 @@ endfunction
 
 function! taskwarrior#command_complete(A, L, P)
     return filter(deepcopy(g:task_all_commands), 'match(v:val, a:A) != -1')
+endfunction
+
+function! taskwarrior#report_complete(A, L, P)
+    return filter(deepcopy(g:task_report_command), 'match(v:val, a:A) != -1')
 endfunction
 " vim:ts=4:sw=4:tw=78:ft=vim:fdm=indent

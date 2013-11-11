@@ -7,12 +7,12 @@ Taskwarrior is a command-line todo list manager. It helps you manage task lists
 with projects, tags, dates, dependencies, annotations, recurrences and apply
 complex (or simple) queries with attribute modifiers, boolean, regex filters
 and produce any number of reports, built-in or customizable reports, attributes
-and color themes. Task keeps data in JSON text files and it's always improving. 
+and color themes. Task keeps data in JSON text files and it's always improving.
 Find out more at http://taskwarrior.org and read man task and man taskrc.
 
 vim-taskwarrior is a vim plugin that extends taskwarrior with an interactive
 interface. It features a rich set of mappings and commands, is easy to customize,
-and makes adding, modifying, sorting, reporting and marking done, fast, easy and fun!  
+and makes adding, modifying, sorting, reporting and marking done, fast, easy and fun!
 Homepage: https://github.com/farseer90718/vim-taskwarrior, patches welcome!
 
 ----
@@ -20,19 +20,19 @@ Homepage: https://github.com/farseer90718/vim-taskwarrior, patches welcome!
 ### Prerequisites:
 
 This plugin requires Taskwarrior 2.2.0 or higher, although >2.3.x is required
-for taskd sync functions, and recommended in general, and well worth the price; 
-free :)  
+for taskd sync functions, and recommended in general, and well worth the price;
+free :)
 see: http://taskwarrior.org/projects/taskwarrior/wiki/Download
 
 Vim version 7.x is required.
 
 the vim-airline plugin (https://github.com/bling/vim-airline) is not required
-but it greatly enhances the status-bar and takes the guess-work out of reports. 
+but it greatly enhances the status-bar and takes the guess-work out of reports.
 
 If you experience line-wrapping issues, add the following line to your .vimrc
 
 ```
-let g:task_rc_override = 'defaultwidth=999' 
+let g:task_rc_override = 'defaultwidth=999'
 ```
 
 ----
@@ -55,32 +55,42 @@ Then launch vim and run `:Helptags` then `:help vim-tw` to verify it was install
 ### Default map:
 
 ```vim
-nnoremap <buffer> A       ...  " add annotation
-nnoremap <buffer> D       ...  " delete task
-nnoremap <buffer> a       ...  " create new task.
-nnoremap <buffer> d       ...  " set the task in current line done.
-nnoremap <buffer> f       ...  " change filter
-nnoremap <buffer> c       ...  " new command
-nnoremap <buffer> m       ...  " modify current field.
-nnoremap <buffer> M       ...  " modify current task.
-nnoremap <buffer> q       ...  " quit buffer.
-nnoremap <buffer> r       ...  " clear all completed task.
-nnoremap <buffer> u       ...  " undo last change.
-nnoremap <buffer> x       ...  " delete annotation.
-nnoremap <buffer> +       ...  " start task
-nnoremap <buffer> -       ...  " stop task
-nnoremap <buffer> S       ...  " sync with taskd server.
-nnoremap <buffer> s       ...  " sort by this column primarily.(if already of the highest priority then switch the polarity)
-nnoremap <buffer> <       ...  " sort by this column increasingly.(if already increasingly then increase its priority)
-nnoremap <buffer> >       ...  " sort by this column decreasingly.(if already decreasingly then decrease its priority)
-nnoremap <buffer> H       ...  " cycle column format left
-nnoremap <buffer> L       ...  " cycle column format right
-nnoremap <buffer> <F1>    ...  " view the documents
-nnoremap <buffer> <CR>    ...  " show task info.
-nnoremap <buffer> <TAB>   ...  " jump to the next column
-nnoremap <buffer> <S-TAB> ...  " jump to the previous column
-nnoremap <buffer> <right> ...  " jump to the next non-empty column
-nnoremap <buffer> <left>  ...  " jump to the previous non-empty column
+nnoremap <buffer> A       ... " add annotation
+nnoremap <buffer> x       ... " delete annotation.
+nnoremap <buffer> a       ... " create new task.
+nnoremap <buffer> d       ... " set the task in current line done.
+nnoremap <buffer> D       ... " delete task/annotation
+nnoremap <buffer> m       ... " modify current field.
+nnoremap <buffer> M       ... " modify current task.
+nnoremap <buffer> <Del>   ... " delete task/annotation
+nnoremap <buffer> f       ... " change filter
+nnoremap <buffer> r       ... " change report type
+nnoremap <buffer> c       ... " execute a command for selected tasks/current task
+nnoremap <buffer> R       ... " refresh the report/clear selected list
+nnoremap <buffer> q       ... " quit buffer.
+nnoremap <buffer> X       ... " clear all completed task.
+nnoremap <buffer> Y       ... " select/remove current task to selected list
+nnoremap <buffer> yy      ... " select/remove current task to selected list
+nnoremap <buffer> p       ... " duplicate selected tasks
+nnoremap <buffer> u       ... " undo last change.
+nnoremap <buffer> +       ... " start task
+nnoremap <buffer> -       ... " stop task
+nnoremap <buffer> S       ... " sync with taskd server.
+nnoremap <buffer> s       ... " sort by this column primarily.(if already of the highest priority then switch the polarity)
+nnoremap <buffer> <       ... " sort by this column increasingly.(if already increasingly then increase its priority)
+nnoremap <buffer> >       ... " sort by this column decreasingly.(if already decreasingly then decrease its priority)
+nnoremap <buffer> H       ... " cycle column format left
+nnoremap <buffer> L       ... " cycle column format right
+nnoremap <buffer> <F1>    ... " view the documents
+nnoremap <buffer> <CR>    ... " show task info.
+nnoremap <buffer> <TAB>   ... " jump to the next column
+nnoremap <buffer> <S-TAB> ... " jump to the previous column
+nnoremap <buffer> <right> ... " jump to the next non-empty column
+nnoremap <buffer> <left>  ... " jump to the previous non-empty column
+vnoremap <buffer> d       ... " set done to all visual selected tasks
+vnoremap <buffer> y       ... " add visual selected tasks to selected list
+vnoremap <buffer> D       ... " delete all visual selected tasks
+vnoremap <buffer> <CR>    ... " show information about visual selected tasks
 
 ```
 ----
