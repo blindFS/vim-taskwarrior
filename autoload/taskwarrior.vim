@@ -58,6 +58,7 @@ function! taskwarrior#list(...) abort
     let b:now           = system('task active limit:1 rc.verbose:nothing rc.report.active.sort=start- rc.report.active.columns=start.active,start.age,id,description.desc rc.report.active.labels=A,Age,ID,Description')[0:-2]
     let b:active        = split(system('task start.any: count'), '\n')[0]
     let b:selected      = []
+    let b:sline         = []
     let b:sstring       = ''
 
     setlocal filetype=taskreport
@@ -214,7 +215,7 @@ function! taskwarrior#sort_by_column(polarity, column)
     let fromrc   = matchstr(b:rc, 'rc\.report\.'.b:command.'\.sort.\zs\S*')
     " let default  = system('task _get -- rc.report.'.b:command.'.sort')[0:-2]
     let default  = matchstr(system('task show | grep report.'.b:command.'.sort')[0:-2], '\S*$')
-    let colshort = map(deepcopy(b:task_report_columns), 'matchstr(v:val, "^\\w*")')
+    let colshort = map(copy(b:task_report_columns), 'matchstr(v:val, "^\\w*")')
     let ccol     = index(colshort, a:column) == -1 ? taskwarrior#current_column() : a:column
     let list     = split(fromrc, ',')
     let ind      = index(split(fromrc, '[-+],\='), ccol)
@@ -535,12 +536,16 @@ function! taskwarrior#select()
     if uuid =~ '^\s*$'
         return
     endif
-    if index(b:selected, uuid) == -1
+    let index = index(b:selected, uuid)
+    if index == -1
         let b:selected += [uuid]
+        let b:sline += [line('.')]
     else
-        call remove(b:selected, index(b:selected, uuid))
+        call remove(b:selected, index)
+        call remove(b:sline, index)
     endif
     let b:sstring = join(b:selected, ' ')
+    setlocal syntax=taskreport
 endfunction
 
 function! taskwarrior#paste()
@@ -557,10 +562,12 @@ function! taskwarrior#visual_action(action) range
     let line1 = getpos("'<")[1]
     let line2 = getpos("'>")[1]
     let fil = []
+    let lin = []
     for l in range(line1, line2)
         let uuid = taskwarrior#get_uuid(l)
         if uuid !~ '^\s*$'
             let fil += [uuid]
+            let lin += [l]
         endif
     endfor
     let filter = join(fil, ',')
@@ -572,20 +579,24 @@ function! taskwarrior#visual_action(action) range
         call taskinfo#init('information', filter, split(system('task information '.filter), '\n'))
     elseif a:action == 'select'
         for var in fil
-            if index(b:selected, var) == -1
+            let index = index(b:selected, var)
+            if index == -1
                 let b:selected += [var]
+                let b:sline += [lin[index(fil, var)]]
             else
-                call remove(b:selected, index(b:selected, var))
+                call remove(b:selected, index)
+                call remove(b:sline, index)
             endif
         endfor
         let b:sstring = join(b:selected, ' ')
+        setlocal syntax=taskreport
     endif
 endfunction
 
 function! taskwarrior#TW_complete(A, L, P)
-    let command = deepcopy(g:task_all_commands)
-    let filter  = deepcopy(g:task_filter)
-    let config  = deepcopy(g:task_all_configurations)
+    let command = copy(g:task_all_commands)
+    let filter  = copy(g:task_filter)
+    let config  = copy(g:task_all_configurations)
     for ph in split(a:L, ' ')
         if ph == 'config' || ph == 'show'
             return filter(config, 'match(v:val, a:A) != -1')
@@ -606,7 +617,7 @@ endfunction
 function! taskwarrior#filter_complete(A, L, P)
     let lead = matchstr(a:A, '\S*$')
     let lead = lead == '' ? '.*' : lead
-    let dict = deepcopy(g:task_filter)
+    let dict = copy(g:task_filter)
     for ph in split(a:L, ' ')
         call remove(dict, index(dict, matchstr(ph, '.*:\ze')))
     endfor
@@ -614,10 +625,10 @@ function! taskwarrior#filter_complete(A, L, P)
 endfunction
 
 function! taskwarrior#command_complete(A, L, P)
-    return filter(deepcopy(g:task_all_commands), 'match(v:val, a:A) != -1')
+    return filter(copy(g:task_all_commands), 'match(v:val, a:A) != -1')
 endfunction
 
 function! taskwarrior#report_complete(A, L, P)
-    return filter(deepcopy(g:task_report_command), 'match(v:val, a:A) != -1')
+    return filter(copy(g:task_report_command), 'match(v:val, a:A) != -1')
 endfunction
 " vim:ts=4:sw=4:tw=78:ft=vim:fdm=indent

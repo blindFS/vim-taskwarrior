@@ -2,6 +2,10 @@ if exists('b:task_report_labels')
     syntax match taskwarrior_tablehead /.*\%1l/
 endif
 
+for n in b:sline
+    execute 'syntax match taskwarrior_selected /.*\%'.n.'l/ contains=ALL'
+endfor
+
 if search('[^\x00-\xff]') == 0
     let exp = 'syntax match taskwarrior_%s /\%%>1l\%%%dc.*\%%<%dc/'
 else
@@ -17,6 +21,8 @@ if exists('b:task_columns') && exists('b:task_report_columns')
 endif
 
 highlight default link taskwarrior_tablehead   Tabline
+highlight default link taskwarrior_field       IncSearch
+highlight default link taskwarrior_selected    Visual
 highlight default link taskwarrior_id          VarId
 highlight default link taskwarrior_project     String
 highlight default link taskwarrior_Status      Include
@@ -29,9 +35,3 @@ highlight default link taskwarrior_depends     Todo
 highlight default link taskwarrior_tags        Keyword
 highlight default link taskwarrior_uuid        VarId
 highlight default link taskwarrior_urgency     Todo
-
-if g:task_field_highlight_advanced != ''
-    execute 'highlight taskwarrior_field '.g:task_field_highlight_advanced
-else
-    execute 'highlight default link taskwarrior_field '.g:task_field_highlight_link
-endif
