@@ -40,6 +40,7 @@ let g:task_rc_override = 'defaultwidth=999'
 ### Screenshot:
 
 ![screenshot](https://raw.github.com/farseer90718/vim-taskwarrior/master/screenshot.png)
+![vim-taskwarrior animated gif](http://taskwarrior.org/attachments/download/655/20131110_002753.gif)
 
 ### Installing:
 
