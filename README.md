@@ -37,18 +37,23 @@ let g:task_rc_override = 'defaultwidth=999'
 
 ----
 
+### Screenshot:
+
+![screenshot](https://raw.github.com/farseer90718/vim-taskwarrior/master/screenshot.png)
+
 ### Installing:
 
-You can install this [the hard way](http://vimdoc.sourceforge.net/htmldoc/usr_05.html#05.4) like any vim plugin, or the easy way;
+Either [download zip file](https://github.com/farseer90718/vim-taskwarrior/archive/master.zip)
+and extract in ~/.vim or use your favorite plugin manager.
 
-Using pathogen (http://www.vim.org/scripts/script.php?script_id=2332)
-
-    cd ~/.vim
-    mkdir bundle
-    cd bundle
-    git clone https://github.com/farseer90718/vim-taskwarrior
-
-Then launch vim and run `:Helptags` then `:help vim-tw` to verify it was installed.
+- [Pathogen](https://github.com/tpope/vim-pathogen)
+- `git clone https://github.com/farseer90718/vim-taskwarrior ~/.vim/bundle/vim-taskwarrior
+- [Vundle](https://github.com/gmarik/vundle)
+1. Add `Bundle 'farseer90718/vim-taskwarrior'` to .vimrc
+2. Run `:BundleInstall`
+- [NeoBundle](https://github.com/Shougo/neobundle.vim)
+1. Add `NeoBundle 'farseer90718/vim-taskwarrior'` to .vimrc
+2. Run `:NeoBundleInstall`
 
 ----
 
@@ -118,7 +123,7 @@ vnoremap <buffer> <CR>    ... " show information about visual selected tasks
 ```
 ----
 
-### Options
+### Options:
 
 ```vim
 " default task report type
@@ -140,7 +145,7 @@ let g:task_info_position   = 'belowright'
 ```
 ----
 
-### Syntax highlightling
+### Syntax highlightling:
 
 Default scheme:
 
@@ -170,6 +175,6 @@ hi taskwarrior_xxx  guibg = xxx guifg = xxx ctermbg = xxx ctermfg = xxx
 
 in your vimrc.
 
-### License
+### License:
 
 [MIT](https://raw.github.com/farseer90718/vim-taskwarrior/master/LICENSE.txt)

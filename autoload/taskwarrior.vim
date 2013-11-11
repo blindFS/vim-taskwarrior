@@ -30,9 +30,8 @@ function! taskwarrior#list(...) abort
     let b:task_report_columns = rcc == '' ? split(matchstr(system("task show |grep report.".b:command.".columns")[0:-2], '\S*$'), ',') : split(rcc, ',')
     let b:task_report_labels  = rcl == '' ? split(matchstr(system("task show |grep report.".b:command.".labels")[0:-2], '\S*$'), ',') : split(rcl, ',')
     let line1                 = join(b:task_report_labels, ' ')
-    let tcount                = split(system("task ".b:rc.' '.b:filter.' count'), '\n')[0]
 
-    if tcount == '0'
+    if index(split(system('task '.b:rc.' '.b:filter.' '.b:command), '\n'), 'No matches.') != -1
         call append(0, line1)
     else
         let context = split((system("task ".b:rc.' '.b:filter.' '.b:command)), '\n')
