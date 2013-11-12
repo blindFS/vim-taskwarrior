@@ -516,7 +516,7 @@ function! taskwarrior#command()
     else
         let filter = join(b:selected, ',')
     endif
-    let command = input('command:', '', 'customlist,taskwarrior#command_complete')
+    let command = input('task '.filter.':', '', 'customlist,taskwarrior#command_complete')
     if index(g:task_all_commands, b:command) == -1
         return
     endif
