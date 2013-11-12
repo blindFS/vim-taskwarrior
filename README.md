@@ -65,18 +65,17 @@ nnoremap <buffer> A       ... " add annotation
 nnoremap <buffer> x       ... " delete annotation.
 nnoremap <buffer> a       ... " create new task.
 nnoremap <buffer> d       ... " set the task in current line done.
-nnoremap <buffer> D       ... " delete task/annotation
+nnoremap <buffer> D       ... " delete task
+nnoremap <buffer> <Del>   ... " delete field/annotation/task
+nnoremap <buffer> <Space> ... " select/remove current task to selected list
 nnoremap <buffer> m       ... " modify current field.
 nnoremap <buffer> M       ... " modify current task.
-nnoremap <buffer> <Del>   ... " delete task/annotation
 nnoremap <buffer> f       ... " change filter
 nnoremap <buffer> r       ... " change report type
 nnoremap <buffer> c       ... " execute a command for selected tasks/current task
 nnoremap <buffer> R       ... " refresh the report/clear selected list
 nnoremap <buffer> q       ... " quit buffer.
 nnoremap <buffer> X       ... " clear all completed task.
-nnoremap <buffer> Y       ... " select/remove current task to selected list
-nnoremap <buffer> yy      ... " select/remove current task to selected list
 nnoremap <buffer> p       ... " duplicate selected tasks
 nnoremap <buffer> u       ... " undo last change.
 nnoremap <buffer> +       ... " start task
@@ -94,9 +93,9 @@ nnoremap <buffer> <S-TAB> ... " jump to the previous column
 nnoremap <buffer> <right> ... " jump to the next non-empty column
 nnoremap <buffer> <left>  ... " jump to the previous non-empty column
 vnoremap <buffer> d       ... " set done to all visual selected tasks
-vnoremap <buffer> y       ... " add visual selected tasks to selected list
 vnoremap <buffer> D       ... " delete all visual selected tasks
 vnoremap <buffer> <CR>    ... " show information about visual selected tasks
+vnoremap <buffer> <Space> ... " add visual selected tasks to selected list
 
 ```
 ----

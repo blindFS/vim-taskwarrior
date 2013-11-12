@@ -28,7 +28,7 @@ if g:task_readonly
     setlocal readonly
 else
     nnoremap <silent> <buffer> A         :call taskwarrior#annotate('add')<CR>
-    nnoremap <silent> <buffer> D         :call taskwarrior#delete()<CR>
+    nnoremap <silent> <buffer> D         :call taskwarrior#remove()<CR>
     nnoremap <silent> <buffer> <Del>     :call taskwarrior#delete()<CR>
     nnoremap <silent> <buffer> a         :call taskwarrior#system_call('', 'add', taskwarrior#get_args(), 'echo')<CR>
     nnoremap <silent> <buffer> c         :call taskwarrior#command()<CR>
@@ -42,14 +42,13 @@ else
     nnoremap <silent> <buffer> m         :call taskwarrior#modify('current')<CR>
     nnoremap <silent> <buffer> M         :call taskwarrior#modify('')<CR>
     nnoremap <silent> <buffer> p         :call taskwarrior#paste()<CR>
-    nnoremap <silent> <buffer> yy        :call taskwarrior#select()<CR>
-    nnoremap <silent> <buffer> Y         :call taskwarrior#select()<CR>
     nnoremap <silent> <buffer> +         :call taskwarrior#system_call(taskwarrior#get_uuid(), 'start', '', 'silent')<CR>
     nnoremap <silent> <buffer> -         :call taskwarrior#system_call(taskwarrior#get_uuid(), 'stop', '', 'silent')<CR>
+    nnoremap <silent> <buffer> <Space>   :call taskwarrior#select()<CR>
     vnoremap <silent> <buffer> d         :call taskwarrior#visual_action('done')<CR>
-    vnoremap <silent> <buffer> y         :call taskwarrior#visual_action('select')<CR>
     vnoremap <silent> <buffer> D         :call taskwarrior#visual_action('delete')<CR>
     vnoremap <silent> <buffer> <Del>     :call taskwarrior#visual_action('delete')<CR>
+    vnoremap <silent> <buffer> <Space>   :call taskwarrior#visual_action('select')<CR>
     command! -buffer TWAdd               :call taskwarrior#system_call('', 'add', taskwarrior#get_args(), 'interactive')
     command! -buffer TWAnnotate          :call taskwarrior#annotate('add')
     command! -buffer TWComplete          :call taskwarrior#set_done()

@@ -151,9 +151,18 @@ function! taskwarrior#delete()
     if uuid =~ '^\s*$'
         call taskwarrior#annotate('del')
     else
-        execute '!task '.taskwarrior#get_uuid().' delete'
+        let ccol = taskwarrior#current_column()
+        if index(['project', 'tags', 'due', 'priority', 'start', 'depends'], ccol) != -1
+            call taskwarrior#system_call(uuid, 'modify', ccol.':', 'silent')
+        else
+            execute '!task '.uuid.' delete'
+        endif
     endif
     call taskwarrior#refresh()
+endfunction
+
+function! taskwarrior#remove()
+    execute '!task '.taskwarrior#get_uuid().' delete'
 endfunction
 
 function! taskwarrior#annotate(op)
