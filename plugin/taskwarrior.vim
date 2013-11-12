@@ -1,3 +1,8 @@
+if !executable('task')
+    echoerr "This plugin depends on taskwarrior(http://taskwarrior.org)."
+    finish
+endif
+
 let g:task_report_command           = ['active', 'all', 'blocked', 'blocking', 'completed', 'list', 'long', 'ls', 'minimal', 'newest', 'next', 'oldest', 'overdue', 'ready', 'recurring', 'unblocked', 'waiting']
 let g:task_interactive_command      = ['annotate', 'denotate', 'execute', 'duplicate', 'append', 'prepend', 'stop', 'delete', 'done', 'undo', 'config', 'edit', 'start', 'sync', 'synchronize', 'add', 'modify', 'import', 'colors', 'color', 'logo']
 let g:task_filter                   = ['description:', 'proj:', 'pri:', 'status:', 'tag:', 'due.before:', 'due.after:', 'entry.before', 'entry.after', 'end.before', 'end.after', '+']
@@ -11,6 +16,9 @@ let g:task_default_prompt           = get(g:, 'task_default_prompt', ['due', 'pr
 let g:task_info_vsplit              = get(g:, 'task_info_vsplit', 0)
 let g:task_info_size                = get(g:, 'task_info_size', g:task_info_vsplit? 50 : 15)
 let g:task_info_position            = get(g:, 'task_info_position', 'belowright')
+" let g:task_log_file                 = get(g:, 'task_log_file', system('task show | grep data.location')[0:-2].'/vim-tw.log')
+let g:task_log_file                 = get(g:, 'task_log_file', matchstr(system('task show | grep data.location')[0:-2], '\S*$').'/vim-tw.log')
+let g:task_log_max                  = get(g:, 'task_log_max', 100)
 let g:airline_readonly_symbol       = get(g:, 'airline_readonly_symbol', '  ')
 let g:task_columns_format           = {
             \ 'depends':     ['list', 'count', 'indicator'],
