@@ -497,7 +497,7 @@ function! taskwarrior#filter(filter)
     else
         let column = taskwarrior#current_column()
         if index(['project', 'tags', 'status', 'priority'], column) != -1 && line('.') > 1
-            let b:filter = substitute(taskwarrior#get_args([column]), 'tags:', '+', '')
+            let b:filter = substitute(substitute(taskwarrior#get_args([column]), 'tags:', '+', ''), '\v\+(\s|$)', '', '')
         elseif column =~ '\v^(entry|end|due)$'
             let b:filter = column.'.before:'.input(column.'.before:', taskwarrior#get_value_by_column('.', column))
         elseif column == 'description'
