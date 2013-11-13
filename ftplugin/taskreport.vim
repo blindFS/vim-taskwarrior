@@ -13,7 +13,7 @@ nnoremap <silent> <buffer> <       :call taskwarrior#sort#by_column('+', '')<CR>
 nnoremap <silent> <buffer> >       :call taskwarrior#sort#by_column('-', '')<CR>
 nnoremap <silent> <buffer> s       :call taskwarrior#sort#by_column('m', '')<CR>
 nnoremap <silent> <buffer> <CR>    :call taskwarrior#action#show_info()<CR>
-nnoremap <silent> <buffer> f       :call taskwarrior#action#filter('')<CR>
+nnoremap <silent> <buffer> f       :call taskwarrior#action#filter()<CR>
 nnoremap <silent> <buffer> H       :call taskwarrior#action#columns_format_change('left')<CR>
 nnoremap <silent> <buffer> L       :call taskwarrior#action#columns_format_change('right')<CR>
 nnoremap <silent> <buffer> J       :call taskwarrior#log#history('next')<CR>

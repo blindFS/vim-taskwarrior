@@ -62,23 +62,23 @@ function! taskwarrior#action#annotate(op)
     endif
 endfunction
 
-function! taskwarrior#action#filter(filter)
-    if a:filter != ''
-        let b:filter = a:filter
+function! taskwarrior#action#filter()
+    let column = taskwarrior#data#current_column()
+    if index(['project', 'tags', 'status', 'priority'], column) != -1 && line('.') > 1
+        let filter = substitute(substitute(taskwarrior#data#get_args([column]), 'tags:', '+', ''), '\v^\s*\+(\s|$)', '', '')
+    elseif column =~ '\v^(entry|end|due)$'
+        let filter = column.'.before:'.input(column.'.before:', taskwarrior#data#get_value_by_column('.', column))
+    elseif column == 'description'
+        let filter = 'description:'.input('description:', taskwarrior#data#get_value_by_column('.', column) )
     else
-        let column = taskwarrior#data#current_column()
-        if index(['project', 'tags', 'status', 'priority'], column) != -1 && line('.') > 1
-            let b:filter = substitute(substitute(taskwarrior#data#get_args([column]), 'tags:', '+', ''), '\v^\s*\+(\s|$)', '', '')
-        elseif column =~ '\v^(entry|end|due)$'
-            let b:filter = column.'.before:'.input(column.'.before:', taskwarrior#data#get_value_by_column('.', column))
-        elseif column == 'description'
-            let b:filter = 'description:'.input('description:', taskwarrior#data#get_value_by_column('.', column) )
-        else
-            let b:filter = input('new filter:', b:filter, 'customlist,taskwarrior#complete#filter')
-        endif
-        let b:filter = substitute(b:filter, 'status:\(\s\|$\)', 'status.any: ', 'g')
+        let filter = input('new filter:', b:filter, 'customlist,taskwarrior#complete#filter')
     endif
-    call taskwarrior#list()
+    let filter = substitute(filter, 'status:\(\s\|$\)', 'status.any: ', 'g')
+    if filter != b:filter
+        let b:filter = filter
+        let b:hist = 1
+        call taskwarrior#list()
+    endif
 endfunction
 
 function! taskwarrior#action#command()
@@ -96,8 +96,9 @@ endfunction
 
 function! taskwarrior#action#report()
     let command = input('new report:', g:task_report_name, 'customlist,taskwarrior#complete#report')
-    if index(g:task_report_command, command) != -1
+    if index(g:task_report_command, command) != -1 && command != b:command
         let b:command = command
+        let b:hist = 1
         call taskwarrior#list()
     endif
 endfunction
@@ -142,6 +143,7 @@ function! taskwarrior#action#columns_format_change(direction)
     else
         let b:rc .= ' rc.report.'.b:command.'.columns:'.substitute(dfl, '[=:,]\zs'.ccol_ful, ccol.newsub, 'g')
     endif
+    let b:hist = 1
     call taskwarrior#list()
 endfunction
 

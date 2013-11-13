@@ -7,6 +7,7 @@ function! taskwarrior#sort#by_arg(...)
     else
         let b:rc .= args == '' ? '' : ' rc.report.'.b:command.'.sort:'.args
     endif
+    let b:hist = 1
     call taskwarrior#list()
 endfunction
 
@@ -63,6 +64,7 @@ function! taskwarrior#sort#by_column(polarity, column)
         let polarity = a:polarity == 'm' ? '-' : a:polarity
         let b:rc = substitute(b:rc, 'report\.'.b:command.'\.sort.', 'report.'.b:command.'.sort:'.ccol.polarity.',', '')
     endif
+    let b:hist = 1
     call taskwarrior#list()
 endfunction
 
