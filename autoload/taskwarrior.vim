@@ -23,6 +23,9 @@ function! taskwarrior#list(...) abort
         return
     endif
 
+    let b:hist = exists('b:hist') ? b:hist : 1
+    call taskwarrior#history('write')
+
     let rcc                   = matchstr(b:rc, 'rc\.report\.'.b:command.'\.columns.\zs\S*')
     let rcl                   = matchstr(b:rc, 'rc\.report\.'.b:command.'\.labels.\zs\S*')
     " let b:task_report_columns = rcc == '' ? split(system("task _get -- rc.report.".b:command.".columns")[0:-2], ',') : split(rcc, ',')
@@ -63,6 +66,39 @@ function! taskwarrior#list(...) abort
     setlocal filetype=taskreport
     call setpos('.', pos)
 
+endfunction
+
+function! taskwarrior#history(action)
+    if findfile(g:task_log_file) == ''
+        call system('touch '.g:task_log_file)
+    endif
+    if a:action == 'write' && filewritable(g:task_log_file) && b:hist == 1
+        let last = system('tail -n 1 '.g:task_log_file)
+        let numb = str2nr(system('wc -l '.g:task_log_file))
+        if last == b:command.'|||'.b:filter.'|||'.b:rc
+            return
+        endif
+        if numb > g:task_log_max
+            call system('sed -i -e "1d" '.g:task_log_file)
+        endif
+        execute 'redir >> '.g:task_log_file
+            silent! echo b:command.'|||'.b:filter.'|||'.b:rc
+        redir END
+    elseif a:action == 'read' && filereadable(g:task_log_file)
+        return = split(system('tail -n '.b:hist.' '.g:task_log_file.' | head -n 1'), '|||')
+    elseif a:action == 'previous'
+        let hlist = split(substitute(system('tail -n '.(b:hist+1).' '.g:task_log_file.' | head -n 1'), '\v($|\n)', ' ', ''), '|||')
+        if len(hlist) != 3
+            return
+        endif
+        let b:hist    += 1
+        let [b:command, b:filter, b:rc] = hlist
+        call taskwarrior#list()
+    elseif a:action == 'next'
+        let b:hist     = b:hist > 1 ? b:hist-1 : 1
+        let [b:command, b:filter, b:rc] = split(substitute(system('tail -n '.b:hist.' '.g:task_log_file.' | head -n 1'), '\v($|\n)', ' ', ''), '|||')
+        call taskwarrior#list()
+    endif
 endfunction
 
 function! taskwarrior#buffer_var_init()
