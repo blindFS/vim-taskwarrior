@@ -329,11 +329,16 @@ function! taskwarrior#get_value_by_column(line, column)
     if line('.') == 1
         return ''
     endif
-    let index = match(b:task_report_columns, '^'.a:column.'.*')
-    if index != -1
-        return taskwarrior#get_value_by_index(a:line, index)
+    if a:column == 'id' || a:column == 'uuid'
+        let index = match(b:task_report_columns, '^'.a:column.'.*')
+        return taskwarrior#get_value_by_index(a:line, index(b:task_report_columns, a:column))
+    else
+        let ilist = split(system('task all '.taskwarrior#get_uuid().' rc.report.all.columns='.a:column.' rc.report.all.labels=cc'), '\n')
+        if len(ilist) > 2 && ilist[1] =~ '^[ -]\+$'
+            return substitute(ilist[2],  '\(\s*$\|^\s*\)', '',  'g')
+        endif
+        return ''
     endif
-    return ''
 endfunction
 
 function! taskwarrior#get_value_by_index(line, index)
