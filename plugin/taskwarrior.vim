@@ -16,10 +16,12 @@ let g:task_default_prompt           = get(g:, 'task_default_prompt', ['due', 'pr
 let g:task_info_vsplit              = get(g:, 'task_info_vsplit', 0)
 let g:task_info_size                = get(g:, 'task_info_size', g:task_info_vsplit? 50 : 15)
 let g:task_info_position            = get(g:, 'task_info_position', 'belowright')
-" let g:task_log_file                 = get(g:, 'task_log_file', system('task show | grep data.location')[0:-2].'/vim-tw.log')
-let g:task_log_file                 = get(g:, 'task_log_file', matchstr(system('task show | grep data.location')[0:-2], '\S*$').'/vim-tw.log')
+" let g:task_log_directory = get(g:, 'task_log_file', system('task _get -- rc.data.location')[0:-2])
+let g:task_log_directory            = get(g:, 'task_log_file', matchstr(system('task show | grep data.location')[0:-2], '\S*$'))
 let g:task_log_max                  = get(g:, 'task_log_max', 100)
-let g:airline_readonly_symbol       = get(g:, 'airline_readonly_symbol', '  ')
+let g:task_left_arrow               = get(g:, 'task_left_arrow', ' <<')
+let g:task_right_arrow              = get(g:, 'task_right_arrow', '>> ')
+let g:task_readonly_symbol          = get(g:, 'task_readonly_symbol', '  ')
 let g:task_columns_format           = {
             \ 'depends':     ['list', 'count', 'indicator'],
             \ 'description': ['combined', 'desc', 'oneline', 'truncated', 'count'],
@@ -50,9 +52,9 @@ let g:task_columns_format           = {
 "
 "commands;
 "
-command! -nargs=? -complete=customlist,taskwarrior#TW_complete TW :call taskwarrior#init(<q-args>)
+command! -nargs=? -complete=customlist,taskwarrior#complete#TW TW :call taskwarrior#init(<q-args>)
 "command! TWConfigColor
-command! TWDeleteCompleted :call taskwarrior#clear_completed()
+command! TWDeleteCompleted :call taskwarrior#action#clear_completed()
 "command! TWDeleteNote
 "command! TWEdit
 "command! TWEditAnnotation
@@ -62,6 +64,7 @@ command! TWEditVitrc :execute "e ".$HOME."/.vitrc"
 "command! TWExport
 "command! TWHelp
 "command! TWHistory
+command! TWHistoryClear :call taskwarrior#log#history('clear')
 "command! TWInsert
 "command! TWImport
 "command! TWNote
@@ -81,7 +84,7 @@ command! TWEditVitrc :execute "e ".$HOME."/.vitrc"
 "command! TWTheme
 "command! TWThemeEdit
 "command! TWThemeShow
-command! TWUndo :call taskwarrior#undo()
+command! TWUndo :call taskwarrior#action#undo()
 "command! TWWiki
 "command! TWWikiDiary
 "command! TWWikiDiaryAdd
