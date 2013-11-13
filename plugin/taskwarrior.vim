@@ -63,7 +63,7 @@ command! TWEditTaskrc :execute "e ".$HOME."/.taskrc"
 command! TWEditVitrc :execute "e ".$HOME."/.vitrc"
 "command! TWExport
 "command! TWHelp
-"command! TWHistory
+command! TWHistory :call taskwarrior#log#history('read')
 command! TWHistoryClear :call taskwarrior#log#history('clear')
 "command! TWInsert
 "command! TWImport
