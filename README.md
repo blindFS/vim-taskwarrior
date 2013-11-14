@@ -26,8 +26,10 @@ see: http://taskwarrior.org/projects/taskwarrior/wiki/Download
 
 Vim version 7.x is required.
 
-the vim-airline plugin (https://github.com/bling/vim-airline) is not required
-but it greatly enhances the status-bar and takes the guess-work out of reports.
+Suggested plugins
+
+* [vim-airline](https://github.com/bling/vim-airline) for [better statusline information](https://github.com/farseer90718/vim-taskwarrior#screenshot).
+* [unite.vim](https://github.com/Shougo/unite.vim) for easier bookmark/history operations.
 
 If you experience line-wrapping issues, add the following line to your .vimrc
 
@@ -86,6 +88,9 @@ nnoremap <buffer> <       ... " sort by this column increasingly.(if already inc
 nnoremap <buffer> >       ... " sort by this column decreasingly.(if already decreasingly then decrease its priority)
 nnoremap <buffer> H       ... " cycle column format left
 nnoremap <buffer> L       ... " cycle column format right
+nnoremap <buffer> J       ... " next historical entry
+nnoremap <buffer> K       ... " previous historical entry
+nnoremap <buffer> B       ... " bookmark for current combination
 nnoremap <buffer> <F1>    ... " view the documents
 nnoremap <buffer> <CR>    ... " show task info.
 nnoremap <buffer> <TAB>   ... " jump to the next column
@@ -119,6 +124,10 @@ vnoremap <buffer> <Space> ... " add visual selected tasks to selected list
 :TWSync               " synchronise with taskd server
 :TWToggleReadonly     " toggle readonly option
 :TWToggleHLField      " toggle highlight field option
+:TWHistory            " list history records using unite.vim
+:TWHistoryClear       " clear history
+:TWBookmark           " list bookmarks using unite.vim
+:TWBookmarkClear      " clear bookmarks
 
 ```
 ----
@@ -142,6 +151,15 @@ let g:task_info_vsplit     = 0
 let g:task_info_size       = 15
 " info window position
 let g:task_info_position   = 'belowright'
+" directory to store log files defaults to taskwarrior data.location
+let g:task_log_directory   = '~/.task'
+" max number of historical entries
+let g:task_log_max         = '20'
+" forward arrow shown on statusline
+let g:task_left_arrow      = ' <<'
+" backward arrow ...
+let g:task_left_arrow      = '>> '
+
 ```
 ----
 
