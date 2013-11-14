@@ -18,7 +18,7 @@ let g:task_info_size                = get(g:, 'task_info_size', g:task_info_vspl
 let g:task_info_position            = get(g:, 'task_info_position', 'belowright')
 " let g:task_log_directory = get(g:, 'task_log_file', system('task _get -- rc.data.location')[0:-2])
 let g:task_log_directory            = get(g:, 'task_log_file', matchstr(system('task show | grep data.location')[0:-2], '\S*$'))
-let g:task_log_max                  = get(g:, 'task_log_max', 100)
+let g:task_log_max                  = get(g:, 'task_log_max', 10)
 let g:task_left_arrow               = get(g:, 'task_left_arrow', ' <<')
 let g:task_right_arrow              = get(g:, 'task_right_arrow', '>> ')
 let g:task_readonly_symbol          = get(g:, 'task_readonly_symbol', '  ')
@@ -63,8 +63,10 @@ command! TWEditTaskrc :execute "e ".$HOME."/.taskrc"
 command! TWEditVitrc :execute "e ".$HOME."/.vitrc"
 "command! TWExport
 "command! TWHelp
-command! TWHistory :call taskwarrior#log#history('read')
+command! TWHistory :Unite task/history
 command! TWHistoryClear :call taskwarrior#log#history('clear')
+command! TWBookmark :Unite task/bookmark
+command! TWBookmarkClear :call taskwarrior#log#bookmark('clear')
 "command! TWInsert
 "command! TWImport
 "command! TWNote

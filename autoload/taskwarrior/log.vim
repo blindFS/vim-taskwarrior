@@ -15,7 +15,7 @@ function! taskwarrior#log#history(action)
             call system('sed -i -e "1d" '.s:history_file)
         endif
         execute 'redir >> '.s:history_file
-            silent! echo b:command.'	'.b:filter.'	'.b:rc
+        silent! echo b:command.'	'.b:filter.'	'.b:rc
         redir END
     elseif a:action == 'read' && filereadable(s:history_file)
         call taskwarrior#init(join(split(system('tail -n 1 '.s:history_file), '	'), ' '))
@@ -37,5 +37,23 @@ function! taskwarrior#log#history(action)
         endif
         let [b:command, b:filter, b:rc] = hlist
         call taskwarrior#list()
+    endif
+endfunction
+
+function! taskwarrior#log#bookmark(action)
+    if findfile(s:bookmark_file) == ''
+        call system('touch '.s:bookmark_file)
+    endif
+    if a:action == 'new' && filewritable(s:bookmark_file)
+        let now = b:command.'	'.b:filter.'	'.b:rc
+        let ext = split(system('cat '.s:bookmark_file), '\n')
+        if index(ext, now) == -1
+            execute 'redir >> '.s:bookmark_file
+            silent! echo now
+            redir END
+            echomsg 'New bookmark added.'
+        endif
+    elseif a:action == 'clear'
+        call system('> '.s:bookmark_file)
     endif
 endfunction

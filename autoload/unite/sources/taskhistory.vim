@@ -17,6 +17,9 @@ function! s:unite_source.hooks.on_syntax(args, context)
 endfunction
 
 function! s:unite_source.gather_candidates(args, context)
+    if findfile(g:task_log_directory.'/.vim_tw.history') == ''
+        call system('touch '.g:task_log_directory.'/.vim_tw.history')
+    endif
     return map(
                 \ reverse(split(unite#util#system('cat '.g:task_log_directory.'/.vim_tw.history'), "\n")),
                 \ '{"word": v:val,

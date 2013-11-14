@@ -18,6 +18,7 @@ nnoremap <silent> <buffer> H       :call taskwarrior#action#columns_format_chang
 nnoremap <silent> <buffer> L       :call taskwarrior#action#columns_format_change('right')<CR>
 nnoremap <silent> <buffer> J       :call taskwarrior#log#history('next')<CR>
 nnoremap <silent> <buffer> K       :call taskwarrior#log#history('previous')<CR>
+nnoremap <silent> <buffer> B       :call taskwarrior#log#bookmark('new')<CR>
 vnoremap <silent> <buffer> <CR>    :call taskwarrior#action#visual('info')<CR>
 
 if g:task_highlight_field
