@@ -22,11 +22,11 @@ function! taskwarrior#data#get_args(...)
     endif
 endfunction
 
-function! taskwarrior#data#get_value_by_column(line, column)
+function! taskwarrior#data#get_value_by_column(line, column, ...)
     if line('.') == 1
         return ''
     endif
-    if a:column == 'id' || a:column == 'uuid'
+    if a:column == 'id' || a:column == 'uuid' || exists('a:1')
         let index = match(b:task_report_columns, '^'.a:column.'.*')
         return taskwarrior#data#get_value_by_index(a:line, index(b:task_report_columns, a:column))
     else

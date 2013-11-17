@@ -48,6 +48,8 @@ else
     nnoremap <silent> <buffer> +         :call taskwarrior#system_call(taskwarrior#data#get_uuid(), 'start', '', 'silent')<CR>
     nnoremap <silent> <buffer> -         :call taskwarrior#system_call(taskwarrior#data#get_uuid(), 'stop', '', 'silent')<CR>
     nnoremap <silent> <buffer> <Space>   :call taskwarrior#action#select()<CR>
+    nnoremap <silent> <buffer> <C-A>     :call taskwarrior#action#date('inc', v:count1)<CR>
+    nnoremap <silent> <buffer> <C-X>     :call taskwarrior#action#date('dec', v:count1)<CR>
     vnoremap <silent> <buffer> d         :call taskwarrior#action#visual('done')<CR>
     vnoremap <silent> <buffer> D         :call taskwarrior#action#visual('delete')<CR>
     vnoremap <silent> <buffer> <Del>     :call taskwarrior#action#visual('delete')<CR>

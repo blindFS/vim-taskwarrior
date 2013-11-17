@@ -34,10 +34,10 @@ function! taskwarrior#list(...) abort
     let b:task_report_labels  = rcl == '' ? split(matchstr(system("task show |grep report.".b:command.".labels")[0:-2], '\S*$'), ',') : split(rcl, ',')
     let line1                 = join(b:task_report_labels, ' ')
 
-    if split(system('task '.b:rc.' '.b:filter.' '.b:command), '\n')[1] !~ '^[ -]\+$'
+    let context = split(system("task ".b:rc.' '.b:filter.' '.b:command), '\n')
+    if len(context) < 2 || context[1] !~ '^[ -]\+$'
         call append(0, line1)
     else
-        let context = split((system("task ".b:rc.' '.b:filter.' '.b:command)), '\n')
         let index = match(context, '^$')
         call append(0, context[0:index])
         global/^\s*$/delete
@@ -128,10 +128,10 @@ endfunction
 
 function! taskwarrior#system_call(filter, command, args, mode)
     if a:mode == 'silent'
-        call system("task ".a:filter.' '.a:command.' '.a:args)
+        call system('task '.a:filter.' '.a:command.' '.a:args)
     elseif a:mode == 'echo'
         echo "\n----------------\n"
-        echo system("task ".a:filter.' '.a:command.' '.a:args)
+        echo system('task '.a:filter.' '.a:command.' '.a:args)
     else
         execute '!task '.a:filter.' '.a:command.' '.a:args
     endif
