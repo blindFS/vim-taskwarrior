@@ -31,10 +31,10 @@ function! taskwarrior#list(...) abort
     let b:task_report_labels  = rcl == '' ? split(matchstr(system("task show |grep report.".b:command.".labels")[0:-2], '\S*$'), ',') : split(rcl, ',')
     let line1                 = join(b:task_report_labels, ' ')
 
-    if index(split(system('task '.b:rc.' '.b:filter.' '.b:command), '\n'), 'No matches.') != -1
+    let context = split(system("task ".b:rc.' '.b:filter.' '.b:command), '\n')
+    if len(context) < 2 || context[1] !~ '^[ -]\+$'
         call append(0, line1)
     else
-        let context = split((system("task ".b:rc.' '.b:filter.' '.b:command)), '\n')
         let index = match(context, '^$')
         call append(0, context[0:index])
         global/^\s*$/delete
@@ -46,9 +46,11 @@ function! taskwarrior#list(...) abort
 
     let b:task_columns = []
     let ci = 0
+    1
     while ci != -1
         let b:task_columns += [ci]
-        let ci = match(getline(1), '\s\zs\S', ci)
+        let ci = search('\s\S', 'W', 1)
+        let ci = ci > 0 ? virtcol('.') : -1
     endwhile
 
     let b:task_columns += [999]
