@@ -36,4 +36,3 @@ endfunction
 function! taskwarrior#complete#report(A, L, P)
     return filter(copy(g:task_report_command), 'match(v:val, a:A) != -1')
 endfunction
-" vim:ts=4:sw=4:tw=78:ft=vim:fdm=indent

@@ -172,7 +172,7 @@ Default value is 10.
                                                              *g:task_left_arrow*
 Forward arrow shown on statusline.
 Default value is ' <<'
-                                                             *g:task_left_arrow*
+                                                            *g:task_right_arrow*
 Backward arrow shown on statusline.
 Default value is '>> '
 
