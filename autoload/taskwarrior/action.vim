@@ -147,16 +147,18 @@ function! taskwarrior#action#columns_format_change(direction)
     call taskwarrior#list()
 endfunction
 
-function! taskwarrior#action#date(action, count)
+function! taskwarrior#action#date(count)
     let ccol = taskwarrior#data#current_column()
     if index(['due', 'end', 'entry'], ccol) == -1
         return
     endif
     setlocal modifiable
-    if a:action == 'inc'
+    if exists('g:loaded_speeddating')
+        call speeddating#increment(a:count)
+    elseif a:count > 0
         execute 'normal! '.a:count.''
     else
-        execute 'normal! '.a:count.''
+        execute 'normal! '.-a:count.''
     endif
     call taskwarrior#system_call(taskwarrior#data#get_uuid(), 'modify', ccol.':'.taskwarrior#data#get_value_by_column('.', ccol, 'temp'), 'silent')
 endfunction
