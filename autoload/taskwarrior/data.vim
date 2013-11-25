@@ -23,7 +23,7 @@ function! taskwarrior#data#get_args(...)
 endfunction
 
 function! taskwarrior#data#get_value_by_column(line, column, ...)
-    if line('.') == 1
+    if a:line == 1 || (a:line == '.' && line('.') == 1)
         return ''
     endif
     if a:column == 'id' || a:column == 'uuid' || exists('a:1')

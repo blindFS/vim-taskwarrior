@@ -160,7 +160,8 @@ function! taskwarrior#action#date(count)
     else
         execute 'normal! '.-a:count.''
     endif
-    call taskwarrior#system_call(taskwarrior#data#get_uuid(), 'modify', ccol.':'.taskwarrior#data#get_value_by_column('.', ccol, 'temp'), 'silent')
+    let b:ct = taskwarrior#data#get_uuid()
+    call taskwarrior#system_call(b:ct, 'modify', ccol.':'.taskwarrior#data#get_value_by_column('.', ccol, 'temp'), 'silent')
 endfunction
 
 function! taskwarrior#action#visual(action) range

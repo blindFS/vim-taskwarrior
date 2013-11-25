@@ -66,6 +66,14 @@ function! taskwarrior#list(...) abort
     let b:sstring       = ''
 
     setlocal filetype=taskreport
+    if exists('b:ct')
+        for l in range(line('$'))
+            if taskwarrior#data#get_uuid(l) == b:ct
+                let pos[1] = l
+                break
+            endif
+        endfor
+    endif
     call setpos('.', pos)
 endfunction
 
