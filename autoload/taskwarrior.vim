@@ -4,10 +4,10 @@ function! taskwarrior#list(...) abort
     let pos = getpos('.')
     %delete
     call taskwarrior#buffer_var_init()
-    let b:filter  = exists('a:1') ? a:1 : b:filter
-    let b:command = exists('a:2') ? a:2 : b:command
-    let b:type    = exists('a:3') ? a:3 : b:type
-    let b:rc      = exists('a:4') ? a:4 : b:rc
+    let b:command = get(a:, 1, b:command)
+    let b:filter  = get(a:, 2, b:filter)
+    let b:type    = get(a:, 3, b:type)
+    let b:rc      = get(a:, 4, b:rc)
 
     let b:rc     .= ' '.join(filter(split(b:filter, ' '), "v:val =~ '^rc\..*'"))
     let b:filter  = join(filter(split(b:filter, ' '), "v:val !~ '^rc\..*'"))
@@ -78,10 +78,10 @@ function! taskwarrior#list(...) abort
 endfunction
 
 function! taskwarrior#buffer_var_init()
-    let b:command = exists('b:command') ? b:command : g:task_report_name
-    let b:filter  = exists('b:filter')  ? b:filter  : ''
-    let b:type    = exists('b:type')    ? b:type    : 'report'
-    let b:rc      = exists('b:rc')      ? b:rc      : g:task_rc_override
+    let b:command = get(b:, 'command', g:task_report_name)
+    let b:filter  = get(b:, 'filter', '')
+    let b:type    = get(b:, 'type', 'report')
+    let b:rc      = get(b:, 'rc', g:task_rc_override)
 endfunction
 
 function! taskwarrior#init(...)
@@ -99,10 +99,10 @@ function! taskwarrior#init(...)
     if exists('g:task_view')
         if a:0 == 0
             execute g:task_view.'buffer'
-            let command = exists('b:command')? b:command : g:task_report_name
-            let filter  = exists('b:filter')? b:filter : ''
-            let type    = exists('b:type')? b:type : 'report'
-            let rc      = exists('b:rc')? b:rc : g:task_rc_override
+            let command = get(b:, 'command', g:task_report_name)
+            let filter  = get(b:, 'filter', '')
+            let type    = get(b:, 'type', 'report')
+            let rc      = get(b:, 'rc', g:task_rc_override)
         endif
         call taskwarrior#quit()
     endif
@@ -110,7 +110,7 @@ function! taskwarrior#init(...)
     execute 'edit task\ '.command
     let g:task_view = bufnr('%')
     setlocal noswapfile
-    call taskwarrior#list(filter, command, type, rc)
+    call taskwarrior#list(command, filter, type, rc)
 
 endfunction
 
