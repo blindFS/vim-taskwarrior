@@ -1,4 +1,4 @@
-*vim-tw.txt*          a vim interface for |Taskwarrior|          version 1.0 ~
+*vim-tw.txt*          a vim interface for |Taskwarrior|          version 1.1 ~
          _               _           _                        _              ~
     __ _(_)_ __    ___  | |_ __ _ __| |____ __ ____ _ _ _ _ _(_)___ _ _      ~
     \ V / | '  \  |___| |  _/ _` (_-< / /\ V  V / _` | '_| '_| / _ \ '_|     ~
@@ -16,6 +16,7 @@ QUICK-REFERENCE                                                    *tw-quickref*
 | f = add filter  | x = del annot   | <S-TAB>= prev col | p  = dupe select     |
 | H = cycle fmt l | + = start task  | <right>= r field  | R  = refresh         |
 | L = cycle fmt r | - = stop task   | <left> = l field  | X  = clear done      |
+| J = next entry  | H = prev entry  | B = new bookmark  |                      |
 
 ==============================================================================
 CONTENTS                                                           *tw-contents*
@@ -90,6 +91,9 @@ nnoremap <buffer> <       " sort by this column increasingly.(if already increas
 nnoremap <buffer> >       " sort by this column decreasingly.(if already decreasingly then decrease its priority)
 nnoremap <buffer> H       " cycle column format left
 nnoremap <buffer> L       " cycle column format right
+nnoremap <buffer> J       " next historical entry
+nnoremap <buffer> K       " previous historical entry
+nnoremap <buffer> B       " bookmark for current combination
 nnoremap <buffer> <F1>    " view the documents
 nnoremap <buffer> <CR>    " show task info.
 nnoremap <buffer> <TAB>   " jump to the next column
@@ -112,6 +116,10 @@ Undo last move                                                         *:TWUndo*
 Edit taskrc right away                                           *:TWEditTaskrc*
 Edit vitrc                                                        *:TWEditVitrc*
 Delete completed tasks                                      *:TWDeleteCompleted*
+list history records using |unite.vim|                                *:TWHistory*
+clear history                                                  *:TWHistoryClear*
+list bookmarks using |unite.vim|                                     *:TWBookmark*
+clear bookmarks                                               *:TWBookmarkClear*
 
 4.2 Local Commands                                              *tw-lc-commands*
 ------------------------------------------------------------------------------
@@ -155,6 +163,18 @@ Default value is 15 for horizontal and 50 for vertical.
                                                           *g:task_info_position*
 Info window position.
 Default value is 'belowright'.
+                                                          *g:task_log_directory*
+Directory to store log files defaults to taskwarrior data.location.
+Default value is taskwarrior data.location.
+                                                                *g:task_log_max*
+Max number of historical entries.
+Default value is 10.
+                                                             *g:task_left_arrow*
+Forward arrow shown on statusline.
+Default value is ' <<'
+                                                            *g:task_right_arrow*
+Backward arrow shown on statusline.
+Default value is '>> '
 
 ==============================================================================
 6. TROUBLESHOOTING                                          *tw-troubleshooting*
