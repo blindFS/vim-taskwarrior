@@ -51,7 +51,9 @@ function! taskwarrior#log#bookmark(action)
             execute 'redir >> '.s:bookmark_file
             silent! echo now
             redir END
+            echohl String
             echomsg 'New bookmark added.'
+            echohl None
         endif
     elseif a:action == 'clear'
         call system('> '.s:bookmark_file)

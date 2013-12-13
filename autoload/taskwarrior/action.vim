@@ -54,11 +54,14 @@ function! taskwarrior#action#annotate(op)
     if uuid =~ '^\s*$'
         return
     endif
-    let annotation = input('annotation:')
     if a:op == 'add'
+        let annotation = input('new annotation:')
         call taskwarrior#system_call(uuid, ' annotate ', annotation, 'silent')
-    else
+    elseif a:op == 'del'
+        let annotation = input('annotation pattern to delete:')
         call taskwarrior#system_call(uuid, ' denotate ', annotation, 'silent')
+    elseif executable('taskopen')
+        execute '!taskopen '.uuid
     endif
 endfunction
 
@@ -268,7 +271,7 @@ function! taskwarrior#action#show_info()
                 \ 'urgency': 'ready',
                 \ 'entry': 'history.monthly',
                 \ 'end': 'history.monthly'}
-    let command = exists('dict[ccol]')? dict[ccol] : 'summary'
+    let command = get(dict, ccol, 'summary')
     let uuid = taskwarrior#data#get_uuid()
     if uuid !~ '^\s*$'
         let command = substitute(command, '\v(summary|stats)', 'information', '')

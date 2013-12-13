@@ -44,6 +44,7 @@ else
     nnoremap <silent> <buffer> S         :call taskwarrior#action#sync('sync')<CR>
     nnoremap <silent> <buffer> m         :call taskwarrior#action#modify('current')<CR>
     nnoremap <silent> <buffer> M         :call taskwarrior#action#modify('')<CR>
+    nnoremap <silent> <buffer> o         :call taskwarrior#action#annotate('open')<CR>
     nnoremap <silent> <buffer> p         :call taskwarrior#action#paste()<CR>
     nnoremap <silent> <buffer> +         :call taskwarrior#system_call(taskwarrior#data#get_uuid(), 'start', '', 'silent')<CR>
     nnoremap <silent> <buffer> -         :call taskwarrior#system_call(taskwarrior#data#get_uuid(), 'stop', '', 'silent')<CR>

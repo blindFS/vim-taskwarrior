@@ -61,6 +61,7 @@ command! TWDeleteCompleted :call taskwarrior#action#clear_completed()
 "command! TWEditDescription
 command! TWEditTaskrc :execute "e ".$HOME."/.taskrc"
 command! TWEditVitrc :execute "e ".$HOME."/.vitrc"
+command! TWEditTaskopenrc :execute "e ".$HOME."/.taskopenrc"
 "command! TWExport
 "command! TWHelp
 command! TWHistory :Unite task/history
