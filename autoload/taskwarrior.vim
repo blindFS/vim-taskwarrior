@@ -23,7 +23,7 @@ function! taskwarrior#list(...) abort
         return
     endif
 
-    let b:hist = exists('b:hist') ? b:hist : 1
+    let b:hist = get(b:, 'hist', 1)
     call taskwarrior#log#history('write')
 
     let rcc                   = matchstr(b:rc, 'rc\.report\.'.b:command.'\.columns.\zs\S*')

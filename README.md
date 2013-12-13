@@ -90,7 +90,8 @@ nnoremap <buffer> H       ... " cycle column format left
 nnoremap <buffer> L       ... " cycle column format right
 nnoremap <buffer> J       ... " next historical entry
 nnoremap <buffer> K       ... " previous historical entry
-nnoremap <buffer> B       ... " bookmark for current combination
+nnoremap <buffer> B       ... " create a bookmark for current combination
+nnoremap <buffer> o       ... " taskopen(https://github.com/ValiValpas/taskopen) if installed
 nnoremap <buffer> <F1>    ... " view the documents
 nnoremap <buffer> <CR>    ... " show task info.
 nnoremap <buffer> <TAB>   ... " jump to the next column
