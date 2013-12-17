@@ -6,20 +6,27 @@ function! taskwarrior#data#get_uuid(...)
 endfunction
 
 function! taskwarrior#data#get_args(...)
-    if a:0 != 0
-        let arg = ' '
-        for key in a:1
-            execute 'let this_'.key.'=input("'.key.':", "'.taskwarrior#data#get_value_by_column('.', key).'")'
-            if key == 'description'
-                execute "let arg = arg.' '.this_".key
-            else
-                execute "let arg = arg.' '.key.':'.this_".key
-            endif
-        endfor
-        return arg
-    else
-        return taskwarrior#data#get_args(g:task_default_prompt)
+    if a:0 == 0
+        return
+    elseif a:0 == 1
+        call taskwarrior#data#get_args(a:1, g:task_default_prompt)
+        return
     endif
+    let arg = ' '
+    let default = ''
+    let command = 'let this_%s = input("%s:", "%s")'
+    for key in a:2
+        if a:1 == 'modify'
+            let default = taskwarrior#data#get_value_by_column('.', key)
+        endif
+        execute printf(command, key, key, default)
+        if key == 'description'
+            execute "let arg = arg.' '.this_".key
+        else
+            execute "let arg = arg.' '.key.':'.this_".key
+        endif
+    endfor
+    return arg
 endfunction
 
 function! taskwarrior#data#get_value_by_column(line, column, ...)

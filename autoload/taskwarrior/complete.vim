@@ -36,3 +36,17 @@ endfunction
 function! taskwarrior#complete#report(A, L, P)
     return filter(copy(g:task_report_command), 'match(v:val, a:A) != -1')
 endfunction
+
+function! taskwarrior#complete#annotation(A, L, P)
+    if a:L !~ '^\s*--\s*'
+        return []
+    endif
+    let start = match(a:A, '[~/]')
+    let stop = match(a:A, '[~/][^~/]*$')
+    let path = a:A[(start):(stop)]
+    let filepre = a:A[(stop+1):]
+    let candidates = split(system('ls '.path), '\n')
+    call filter(candidates, 'match(v:val, filepre) != -1')
+    call map(candidates, 'a:A[:(stop)].v:val')
+    return candidates
+endfunction

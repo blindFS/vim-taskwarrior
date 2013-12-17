@@ -1,5 +1,5 @@
 function! taskwarrior#action#new()
-    call taskwarrior#system_call('', 'add', taskwarrior#data#get_args(), 'echo')
+    call taskwarrior#system_call('', 'add', taskwarrior#data#get_args('add'), 'echo')
 endfunction
 
 function! taskwarrior#action#set_done()
@@ -16,12 +16,12 @@ function! taskwarrior#action#modify(mode)
         if index(['id', 'uuid', 'status', 'urgency'], field) != -1
             return
         elseif field == 'description'
-            call taskwarrior#system_call(uuid, 'modify', taskwarrior#data#get_args([field]), 'external')
+            call taskwarrior#system_call(uuid, 'modify', taskwarrior#data#get_args('modify', [field]), 'external')
         else
-            call taskwarrior#system_call(uuid, 'modify', taskwarrior#data#get_args([field]), 'silent')
+            call taskwarrior#system_call(uuid, 'modify', taskwarrior#data#get_args('modify', [field]), 'silent')
         endif
     else
-        call taskwarrior#system_call(uuid, 'modify', taskwarrior#data#get_args(), 'external')
+        call taskwarrior#system_call(uuid, 'modify', taskwarrior#data#get_args('modify'), 'external')
     endif
 endfunction
 
@@ -55,7 +55,7 @@ function! taskwarrior#action#annotate(op)
         return
     endif
     if a:op == 'add'
-        let annotation = input('new annotation:')
+        let annotation = input('new annotation:', '', 'customlist,taskwarrior#complete#annotation')
         call taskwarrior#system_call(uuid, ' annotate ', annotation, 'silent')
     elseif a:op == 'del'
         let annotation = input('annotation pattern to delete:')
@@ -68,7 +68,7 @@ endfunction
 function! taskwarrior#action#filter()
     let column = taskwarrior#data#current_column()
     if index(['project', 'tags', 'status', 'priority'], column) != -1 && line('.') > 1
-        let filter = substitute(substitute(taskwarrior#data#get_args([column]), 'tags:', '+', ''), '\v^\s*\+(\s|$)', '', '')
+        let filter = substitute(substitute(taskwarrior#data#get_args('modify', [column]), 'tags:', '+', ''), '\v^\s*\+(\s|$)', '', '')
     elseif column =~ '\v^(entry|end|due)$'
         let filter = column.'.before:'.input(column.'.before:', taskwarrior#data#get_value_by_column('.', column))
     elseif column == 'description'
