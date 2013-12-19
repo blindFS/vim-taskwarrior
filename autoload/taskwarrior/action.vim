@@ -8,7 +8,7 @@ endfunction
 
 function! taskwarrior#action#modify(mode)
     let uuid = taskwarrior#data#get_uuid()
-    if uuid =~ '^\s*$'
+    if uuid == ''
         return
     endif
     if a:mode == 'current'
@@ -27,7 +27,7 @@ endfunction
 
 function! taskwarrior#action#delete()
     let uuid = taskwarrior#data#get_uuid()
-    if uuid =~ '^\s*$'
+    if uuid == ''
         call taskwarrior#action#annotate('del')
     else
         let ccol = taskwarrior#data#current_column()
@@ -47,21 +47,32 @@ endfunction
 
 function! taskwarrior#action#annotate(op)
     let ln = line('.')
-    while ln > 1 && taskwarrior#data#get_uuid(ln) =~ '^\s*$'
+    let offset = -1
+    while ln > 1 && taskwarrior#data#get_uuid(ln) == ''
         let ln -= 1
+        let offset += 1
     endwhile
     let uuid = taskwarrior#data#get_uuid(ln)
-    if uuid =~ '^\s*$'
+    if uuid == ''
         return
     endif
     if a:op == 'add'
-        let annotation = input('new annotation:', '', 'customlist,taskwarrior#complete#annotation')
+        let annotation = input('new annotation:', '', 'file')
         call taskwarrior#system_call(uuid, ' annotate ', annotation, 'silent')
     elseif a:op == 'del'
         let annotation = input('annotation pattern to delete:')
         call taskwarrior#system_call(uuid, ' denotate ', annotation, 'silent')
-    elseif executable('taskopen')
-        execute '!taskopen '.uuid
+    elseif offset >= 0 && executable('xdg-open')
+        let taskobj = taskwarrior#data#get_query(uuid)
+        if exists('taskobj.annotations[offset].description')
+            let file = substitute(taskobj.annotations[offset].description, ' ', '', 'g')
+            let ft = system('xdg-mime query filetype '.file)
+            if ft =~ '^text.*$'
+                execute 'e '.file
+            elseif ft !~ 'does not exist'
+                execute '!xdg-open '.file.(has('gui_running') ? '&' : '')
+            endif
+        endif
     endif
 endfunction
 
@@ -244,7 +255,7 @@ endfunction
 
 function! taskwarrior#action#select()
     let uuid = taskwarrior#data#get_uuid()
-    if uuid =~ '^\s*$'
+    if uuid == ''
         return
     endif
     let index = index(b:selected, uuid)

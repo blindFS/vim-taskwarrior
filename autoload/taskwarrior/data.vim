@@ -2,7 +2,7 @@ function! taskwarrior#data#get_uuid(...)
     let line = a:0 == 0 ? '.' : a:1
     let vol = taskwarrior#data#get_value_by_column(line, 'uuid')
     let vol = vol =~ '[0-9a-f]\{8}\(-[0-9a-f]\{4}\)\{3}-[0-9a-f]\{12}' ? vol : taskwarrior#data#get_value_by_column(line, 'id')
-    return vol =~ '^\s*-\s*$' ? '' : vol
+    return vol =~ '^\s*-*\s*$' ? '' : vol
 endfunction
 
 function! taskwarrior#data#get_args(...)
@@ -71,7 +71,7 @@ function! taskwarrior#data#get_stats(method)
     else
         let uuid = taskwarrior#data#get_uuid()
         let stat = split(system('task '.taskwarrior#data#get_uuid().' stats'), '\n')
-        if uuid =~ '^\s*$' || len(stat) < 5
+        if uuid == '' || len(stat) < 5
             return {}
         endif
     endif
@@ -81,6 +81,14 @@ function! taskwarrior#data#get_stats(method)
         endif
     endfor
     return dict
+endfunction
+
+function! taskwarrior#data#get_query(...)
+    let uuid = get(a:, 1, taskwarrior#data#get_uuid())
+    if uuid == ''
+        return {}
+    endif
+    return webapi#json#decode(system('task rc.verbose=off '.uuid.' _query'))
 endfunction
 
 function! taskwarrior#data#global_stats()
@@ -99,7 +107,7 @@ function! taskwarrior#data#category()
     let dict['Completed'] = []
     for i in range(2, line('$'))
         let uuid = taskwarrior#data#get_uuid(i)
-        if uuid =~ '^\s*$'
+        if uuid == ''
             continue
         endif
         let subdict = taskwarrior#data#get_stats(uuid)

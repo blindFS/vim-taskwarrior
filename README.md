@@ -65,6 +65,7 @@ and extract in ~/.vim or use your favorite plugin manager.
 ```vim
 nnoremap <buffer> A       ... " add annotation
 nnoremap <buffer> x       ... " delete annotation.
+nnoremap <buffer> o       ... " open the annotation as a file.
 nnoremap <buffer> a       ... " create new task.
 nnoremap <buffer> d       ... " set the task in current line done.
 nnoremap <buffer> D       ... " delete task
@@ -91,7 +92,6 @@ nnoremap <buffer> L       ... " cycle column format right
 nnoremap <buffer> J       ... " next historical entry
 nnoremap <buffer> K       ... " previous historical entry
 nnoremap <buffer> B       ... " create a bookmark for current combination
-nnoremap <buffer> o       ... " taskopen(https://github.com/ValiValpas/taskopen) if installed
 nnoremap <buffer> <F1>    ... " view the documents
 nnoremap <buffer> <CR>    ... " show task info.
 nnoremap <buffer> <TAB>   ... " jump to the next column
@@ -193,6 +193,12 @@ hi taskwarrior_xxx  guibg = xxx guifg = xxx ctermbg = xxx ctermfg = xxx
 ```
 
 in your vimrc.
+
+### Acknowledgement:
+
+[vim-airling](https://github.com/bling/vim-airline) by bling
+[unite.vim](https://github.com/Shougo/unite.vim) by Shougo
+[webapi-vim](https://github.com/mattn/webapi-vim) by mattn
 
 ### License:
 

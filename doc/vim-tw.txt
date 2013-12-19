@@ -16,7 +16,7 @@ QUICK-REFERENCE                                                    *tw-quickref*
 | f = add filter  | x = del annot   | <S-TAB>= prev col | p  = dupe select     |
 | H = cycle fmt l | + = start task  | <right>= r field  | R  = refresh         |
 | L = cycle fmt r | - = stop task   | <left> = l field  | X  = clear done      |
-| J = next entry  | H = prev entry  | B = new bookmark  | o  = taskopen        |
+| J = next entry  | H = prev entry  | B = new bookmark  | o  = open annotation |
 
 ==============================================================================
 CONTENTS                                                           *tw-contents*
@@ -68,6 +68,7 @@ let g:task_rc_override = 'defaultwidth=999'
 
 nnoremap <buffer> A       " add annotation
 nnoremap <buffer> x       " delete annotation.
+nnoremap <buffer> o       " open the annotation as a file
 nnoremap <buffer> a       " create new task.
 nnoremap <buffer> d       " set the task in current line done.
 nnoremap <buffer> D       " delete task
@@ -94,7 +95,6 @@ nnoremap <buffer> L       " cycle column format right
 nnoremap <buffer> J       " next historical entry
 nnoremap <buffer> K       " previous historical entry
 nnoremap <buffer> B       " create a bookmark for current combination
-nnoremap <buffer> o       " taskopen(https://github.com/ValiValpas/taskopen) if installed
 nnoremap <buffer> <F1>    " view the documents
 nnoremap <buffer> <CR>    " show task info.
 nnoremap <buffer> <TAB>   " jump to the next column
