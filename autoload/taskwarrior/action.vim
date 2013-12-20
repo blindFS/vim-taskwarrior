@@ -229,7 +229,8 @@ function! taskwarrior#action#move_cursor(direction, mode)
 endfunction
 
 function! taskwarrior#action#undo()
-  if exists('g:task_gui_term')
+  if exists('g:task_gui_term') && g:task_gui_term == 1
+    !task rc.color=off undo
   else
     if has("gui_running")
         if executable('xterm')
