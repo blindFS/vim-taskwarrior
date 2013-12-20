@@ -240,7 +240,7 @@ function! taskwarrior#action#undo()
     else
         !task undo
     endif
-    call taskwarrior#refresh()
+  call taskwarrior#refresh()
 endfunction
 
 function! taskwarrior#action#clear_completed()
