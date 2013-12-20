@@ -229,22 +229,22 @@ function! taskwarrior#action#move_cursor(direction, mode)
 endfunction
 
 function! taskwarrior#action#undo()
-  if has("gui_running")
-    if exists('g:task_gui_term') && g:task_gui_term == 1
-      !task rc.color=off undo
-    else
-      if executable('xterm')
-        silent !xterm -e 'task undo'
-      elseif executable('urxvt')
-        silent !urxvt -e task undo
-      elseif executable('gnome-terminal')
-        silent !gnome-terminal -e 'task undo'
+    if has("gui_running")
+      if exists('g:task_gui_term') && g:task_gui_term == 1
+        !task rc.color=off undo
+      else
+        if executable('xterm')
+          silent !xterm -e 'task undo'
+        elseif executable('urxvt')
+          silent !urxvt -e task undo
+        elseif executable('gnome-terminal')
+          silent !gnome-terminal -e 'task undo'
+        endif
       endif
+    else
+      !task undo
     endif
-  else
-    !task undo
-  endif
-  call taskwarrior#refresh()
+    call taskwarrior#refresh()
 endfunction
 
 function! taskwarrior#action#clear_completed()
