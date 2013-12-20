@@ -229,6 +229,8 @@ function! taskwarrior#action#move_cursor(direction, mode)
 endfunction
 
 function! taskwarrior#action#undo()
+  if exists('g:task_gui_term')
+  else
     if has("gui_running")
         if executable('xterm')
             silent !xterm -e 'task undo'
@@ -240,6 +242,7 @@ function! taskwarrior#action#undo()
     else
         !task undo
     endif
+  endif
   call taskwarrior#refresh()
 endfunction
 
