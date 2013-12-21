@@ -62,15 +62,22 @@ function! taskwarrior#action#annotate(op)
     elseif a:op == 'del'
         let annotation = input('annotation pattern to delete:')
         call taskwarrior#system_call(uuid, ' denotate ', annotation, 'silent')
-    elseif offset >= 0 && executable('xdg-open')
+    elseif offset >= 0
         let taskobj = taskwarrior#data#get_query(uuid)
         if exists('taskobj.annotations[offset].description')
             let file = substitute(taskobj.annotations[offset].description, ' ', '', 'g')
-            let ft = system('xdg-mime query filetype '.file)
-            if ft =~ '^text.*$'
+            let ft = 'text'
+            if executable('file')
+                let ft = system('file '.file)[:-2]
+            endif
+            if ft =~ 'text$'
                 execute 'e '.file
-            elseif ft !~ 'does not exist'
-                execute '!xdg-open '.file.(has('gui_running') ? '&' : '')
+            elseif ft !~ '(No such file or directory)'
+                if executable('xdg-open')
+                    execute '!xdg-open '.file.'&'
+                elseif executable('open')
+                    execute '!open '.file.'&'
+                endif
             endif
         endif
     endif
@@ -230,17 +237,15 @@ endfunction
 
 function! taskwarrior#action#undo()
     if has("gui_running")
-      if exists('g:task_gui_term') && g:task_gui_term == 1
-        !task rc.color=off undo
-      else
-        if executable('xterm')
+        if exists('g:task_gui_term') && g:task_gui_term == 1
+            !task rc.color=off undo
+        elseif executable('xterm')
           silent !xterm -e 'task undo'
         elseif executable('urxvt')
           silent !urxvt -e task undo
         elseif executable('gnome-terminal')
           silent !gnome-terminal -e 'task undo'
         endif
-      endif
     else
       !task undo
     endif

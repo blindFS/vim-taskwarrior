@@ -22,6 +22,7 @@ let g:task_log_max                  = get(g:, 'task_log_max', 10)
 let g:task_left_arrow               = get(g:, 'task_left_arrow', ' <<')
 let g:task_right_arrow              = get(g:, 'task_right_arrow', '>> ')
 let g:task_readonly_symbol          = get(g:, 'task_readonly_symbol', '  ')
+let g:task_gui_term                 = get(g:, 'task_gui_term', 1)
 let g:task_columns_format           = {
             \ 'depends':     ['list', 'count', 'indicator'],
             \ 'description': ['combined', 'desc', 'oneline', 'truncated', 'count'],
