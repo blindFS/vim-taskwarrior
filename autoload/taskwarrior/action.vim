@@ -230,15 +230,19 @@ endfunction
 
 function! taskwarrior#action#undo()
     if has("gui_running")
+      if exists('g:task_gui_term') && g:task_gui_term == 1
+        !task rc.color=off undo
+      else
         if executable('xterm')
-            silent !xterm -e 'task undo'
+          silent !xterm -e 'task undo'
         elseif executable('urxvt')
-            silent !urxvt -e task undo
+          silent !urxvt -e task undo
         elseif executable('gnome-terminal')
-            silent !gnome-terminal -e 'task undo'
+          silent !gnome-terminal -e 'task undo'
         endif
+      endif
     else
-        !task undo
+      !task undo
     endif
     call taskwarrior#refresh()
 endfunction

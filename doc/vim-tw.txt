@@ -176,6 +176,9 @@ Default value is ' <<'
                                                             *g:task_right_arrow*
 Backward arrow shown on statusline.
 Default value is '>> '
+                                                               *g:task_gui_term*
+Uses gvim's dumb terminal for undo commands when set to 1.
+Default value is *not set*
 
 ==============================================================================
 6. TROUBLESHOOTING                                          *tw-troubleshooting*
