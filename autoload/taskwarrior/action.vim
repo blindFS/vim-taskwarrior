@@ -72,7 +72,7 @@ function! taskwarrior#action#annotate(op)
             endif
             if ft =~ 'text$'
                 execute 'e '.file
-            elseif ft !~ '(No such file or directory)'
+            elseif ft !~ '(No such file or directory)' || ft =~ '[a-z]*:\/\/[^ >,;]*'
                 if executable('xdg-open')
                     execute '!xdg-open '.file.'&'
                 elseif executable('open')

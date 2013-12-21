@@ -142,6 +142,8 @@ let g:task_report_name     = 'next'
 let g:task_highlight_field = 1
 " can not make change to task data when set to 1
 let g:task_readonly        = 0
+" vim built-in term for task undo in gvim
+let g:task_gui_term        = 1
 " allows user to override task configurations. Seperated by space. Defaults to ''
 let g:task_rc_override     = 'rc.defaultwidth=999'
 " default fields to ask when adding a new task
