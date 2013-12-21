@@ -198,7 +198,7 @@ in your vimrc.
 
 ### Acknowledgement:
 
-* [vim-airling](https://github.com/bling/vim-airline) by bling
+* [vim-airline](https://github.com/bling/vim-airline) by bling
 * [unite.vim](https://github.com/Shougo/unite.vim)   by Shougo
 * [webapi-vim](https://github.com/mattn/webapi-vim)  by mattn
 
