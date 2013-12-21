@@ -1,4 +1,4 @@
-if !executable('task')
+if !(executable('task') || exists("task_quiet"))
     echoerr "This plugin depends on taskwarrior(http://taskwarrior.org)."
     finish
 endif
