@@ -231,7 +231,6 @@ endfunction
 function! taskwarrior#action#undo()
     if has("gui_running")
       if exists('g:task_gui_term') && g:task_gui_term == 1
-        !clear
         !task rc.color=off undo
       else
         if executable('xterm')
@@ -243,7 +242,7 @@ function! taskwarrior#action#undo()
         endif
       endif
     else
-      !clear
+      sil !clear
       !task undo
     endif
     call taskwarrior#refresh()
