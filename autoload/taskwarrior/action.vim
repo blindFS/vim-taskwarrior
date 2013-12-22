@@ -247,6 +247,7 @@ function! taskwarrior#action#undo()
           silent !gnome-terminal -e 'task undo'
         endif
     else
+      sil !clear
       !task undo
     endif
     call taskwarrior#refresh()
