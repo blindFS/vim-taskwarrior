@@ -72,7 +72,7 @@ function! taskwarrior#action#annotate(op)
             endif
             if ft =~ 'text$'
                 execute 'e '.file
-            elseif ft !~ '(No such file or directory)' || ft =~ '[a-z]*:\/\/[^ >,;]*'
+            elseif ft !~ '(No such file or directory)' || file =~ '[a-z]*:\/\/[^ >,;]*'
                 if executable('xdg-open')
                     execute '!xdg-open '.file.'&'
                 elseif executable('open')
@@ -240,15 +240,15 @@ function! taskwarrior#action#undo()
         if exists('g:task_gui_term') && g:task_gui_term == 1
             !task rc.color=off undo
         elseif executable('xterm')
-          silent !xterm -e 'task undo'
+            silent !xterm -e 'task undo'
         elseif executable('urxvt')
-          silent !urxvt -e task undo
+            silent !urxvt -e task undo
         elseif executable('gnome-terminal')
-          silent !gnome-terminal -e 'task undo'
+            silent !gnome-terminal -e 'task undo'
         endif
     else
-      sil !clear
-      !task undo
+        sil !clear
+        !task undo
     endif
     call taskwarrior#refresh()
 endfunction

@@ -66,45 +66,105 @@ let g:task_rc_override = 'defaultwidth=999'
 ==============================================================================
 3. MAPPING                                                         *tw-mappings*
 
-nnoremap <buffer> A       " add annotation
-nnoremap <buffer> x       " delete annotation.
-nnoremap <buffer> o       " open the annotation as a file
-nnoremap <buffer> a       " create new task.
-nnoremap <buffer> d       " set the task in current line done.
-nnoremap <buffer> D       " delete task
-nnoremap <buffer> <Del>   " delete field/annotation/task
-nnoremap <buffer> <Space> " select/remove current task to selected list
-nnoremap <buffer> m       " modify current field.
-nnoremap <buffer> M       " modify current task.
-nnoremap <buffer> f       " change filter
-nnoremap <buffer> r       " change report type
-nnoremap <buffer> c       " execute a command for selected tasks/current task
-nnoremap <buffer> R       " refresh the report/clear selected list
-nnoremap <buffer> q       " quit buffer.
-nnoremap <buffer> X       " clear all completed task.
-nnoremap <buffer> p       " duplicate selected tasks
-nnoremap <buffer> u       " undo last change.
-nnoremap <buffer> +       " start task
-nnoremap <buffer> -       " stop task
-nnoremap <buffer> S       " sync with taskd server.
-nnoremap <buffer> s       " sort by this column primarily.(if already of the highest priority then switch the polarity)
-nnoremap <buffer> <       " sort by this column increasingly.(if already increasingly then increase its priority)
-nnoremap <buffer> >       " sort by this column decreasingly.(if already decreasingly then decrease its priority)
-nnoremap <buffer> H       " cycle column format left
-nnoremap <buffer> L       " cycle column format right
-nnoremap <buffer> J       " next historical entry
-nnoremap <buffer> K       " previous historical entry
-nnoremap <buffer> B       " create a bookmark for current combination
-nnoremap <buffer> <F1>    " view the documents
-nnoremap <buffer> <CR>    " show task info.
-nnoremap <buffer> <TAB>   " jump to the next column
-nnoremap <buffer> <S-TAB> " jump to the previous column
-nnoremap <buffer> <right> " jump to the next non-empty column
-nnoremap <buffer> <left>  " jump to the previous non-empty column
-vnoremap <buffer> d       " set done to all visual selected tasks
-vnoremap <buffer> D       " delete all visual selected tasks
-vnoremap <buffer> <CR>    " show information about visual selected tasks
-vnoremap <buffer> <Space> " add visual selected tasks to selected list
+<Plug>(taskwarrior_quickref)         :quick reference
+<Plug>(taskwarrior_quit)             :quit the buffer
+<Plug>(taskwarrior_skip_left)        :move the cursor to the left field, skipping blanks
+<Plug>(taskwarrior_step_left)        :move the cursor to the left field without skipping
+<Plug>(taskwarrior_skip_right)       :... right ...
+<Plug>(taskwarrior_step_right)       :... ...
+<Plug>(taskwarrior_sort_increase)    :increase the priority of current field in sorting
+<Plug>(taskwarrior_sort_decrease)    :decrease ...
+<Plug>(taskwarrior_sort_inverse)     :invert the sorting method of the main field
+<Plug>(taskwarrior_show_info)        :show information
+<Plug>(taskwarrior_filter)           :apply a new filter to the tasks
+<Plug>(taskwarrior_next_format)      :change the format of current field to the next one
+<Plug>(taskwarrior_previous_format)  :... previous ...
+<Plug>(taskwarrior_next_history)     :next history of report
+<Plug>(taskwarrior_previous_history) :previous ...
+<Plug>(taskwarrior_new_bookmark)     :add a new bookmark for current setup
+<Plug>(taskwarrior_visual_show_info) :show informations about selected tasks
+<Plug>(taskwarrior_annotate)         :add a new annotation
+<Plug>(taskwarrior_denotate)         :delete the annotation
+<Plug>(taskwarrior_open_annotate)    :open the annotation as a file or url
+<Plug>(taskwarrior_remove)           :remove the task
+<Plug>(taskwarrior_delete)           :remove the task/annotation
+<Plug>(taskwarrior_new)              :new task
+<Plug>(taskwarrior_command)          :apply a command to selected tasks
+<Plug>(taskwarrior_done)             :set the selected tasks done
+<Plug>(taskwarrior_report)           :change report type
+<Plug>(taskwarrior_refresh)          :refresh the buffer
+<Plug>(taskwarrior_clear_completed)  :clear all completed tasks
+<Plug>(taskwarrior_undo)             :undo
+<Plug>(taskwarrior_sync)             :synchronise with the remote server
+<Plug>(taskwarrior_modify_field)     :modify current field of the task
+<Plug>(taskwarrior_modify_task)      :modify the fields specified in *g:task_default_prompt*
+<Plug>(taskwarrior_paste)            :duplicate the selected tasks
+<Plug>(taskwarrior_start_task)       :start a task
+<Plug>(taskwarrior_stop_task)        :stop a task
+<Plug>(taskwarrior_select)           :select a task
+<Plug>(taskwarrior_increase)         :increase a number/date
+<Plug>(taskwarrior_decrease)         :decrease ...
+<Plug>(taskwarrior_visual_done)      :set visual selected tasks done
+<Plug>(taskwarrior_visual_delete)    :delete visual selected tasks
+<Plug>(taskwarrior_visual_select)    :select visual selected tasks
+
+Default ones
+------------------------------------------------------------------------------
+
+<F1>    <Plug>(taskwarrior_quickref)
+q       <Plug>(taskwarrior_quit)
+<left>  <Plug>(taskwarrior_skip_left)
+<S-tab> <Plug>(taskwarrior_step_left)
+<right> <Plug>(taskwarrior_skip_right)
+<tab>   <Plug>(taskwarrior_step_right)
+<       <Plug>(taskwarrior_sort_increase)
+>       <Plug>(taskwarrior_sort_decrease)
+s       <Plug>(taskwarrior_sort_inverse)
+<CR>    <Plug>(taskwarrior_show_info)
+f       <Plug>(taskwarrior_filter)
+H       <Plug>(taskwarrior_next_format)
+L       <Plug>(taskwarrior_previous_format)
+J       <Plug>(taskwarrior_next_history)
+K       <Plug>(taskwarrior_previous_history)
+B       <Plug>(taskwarrior_new_bookmark)
+<CR>    <Plug>(taskwarrior_visual_show_info)
+
+A       <Plug>(taskwarrior_annotate)
+x       <Plug>(taskwarrior_denotate)
+o       <Plug>(taskwarrior_open_annotate)
+D       <Plug>(taskwarrior_remove)
+<Del>   <Plug>(taskwarrior_delete)
+a       <Plug>(taskwarrior_new)
+c       <Plug>(taskwarrior_command)
+d       <Plug>(taskwarrior_done)
+r       <Plug>(taskwarrior_report)
+R       <Plug>(taskwarrior_refresh)
+X       <Plug>(taskwarrior_clear_completed)
+u       <Plug>(taskwarrior_undo)
+S       <Plug>(taskwarrior_sync)
+m       <Plug>(taskwarrior_modify_field)
+M       <Plug>(taskwarrior_modify_task)
+p       <Plug>(taskwarrior_paste)
++       <Plug>(taskwarrior_start_task)
+-       <Plug>(taskwarrior_stop_task)
+<Space> <Plug>(taskwarrior_select)
+<C-A>   <Plug>(taskwarrior_increase)
+<C-X>   <Plug>(taskwarrior_decrease)
+d       <Plug>(taskwarrior_visual_done)
+D       <Plug>(taskwarrior_visual_delete)
+<Del>   <Plug>(taskwarrior_visual_delete)
+<Space> <Plug>(taskwarrior_visual_select)
+
+How to change
+------------------------------------------------------------------------------
+Add something like these to your configuration files
+
+        augroup TaskwarriorMapping
+            autocmd!
+            autocmd FileType taskreport nmap <buffer> {key}
+                \ <Plug>(taskwarrior_...)
+            autocmd FileType taskreport nunmap <buffer> {key}
+        augroup END
 
 ==============================================================================
 4. COMMAND                                                         *tw-commands*
@@ -121,7 +181,6 @@ list history records using |unite.vim|                                *:TWHistor
 clear history                                                  *:TWHistoryClear*
 list bookmarks using |unite.vim|                                     *:TWBookmark*
 clear bookmarks                                               *:TWBookmarkClear*
-
 4.2 Local Commands                                              *tw-lc-commands*
 ------------------------------------------------------------------------------
 
