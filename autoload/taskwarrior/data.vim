@@ -9,8 +9,7 @@ function! taskwarrior#data#get_args(...)
     if a:0 == 0
         return
     elseif a:0 == 1
-        call taskwarrior#data#get_args(a:1, g:task_default_prompt)
-        return
+        return taskwarrior#data#get_args(a:1, g:task_default_prompt)
     endif
     let arg = ' '
     let default = ''
