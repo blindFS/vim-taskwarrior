@@ -65,7 +65,8 @@ function! taskwarrior#action#annotate(op)
     elseif offset >= 0
         let taskobj = taskwarrior#data#get_query(uuid)
         if exists('taskobj.annotations[offset].description')
-            let file = substitute(taskobj.annotations[offset].description, ' ', '', 'g')
+            let file = substitute(taskobj.annotations[offset].description, '\s*\/\s*', '/', 'g')
+            let file = escape(file, ' ')
             let ft = 'text'
             if executable('file')
                 let ft = system('file '.file)[:-2]
@@ -74,9 +75,9 @@ function! taskwarrior#action#annotate(op)
                 execute 'e '.file
             elseif ft !~ '(No such file or directory)' || file =~ '[a-z]*:\/\/[^ >,;]*'
                 if executable('xdg-open')
-                    execute '!xdg-open '.file.'&'
+                    silent execute '!xdg-open '.file.'&'
                 elseif executable('open')
-                    execute '!open '.file.'&'
+                    silent execute '!open '.file.'&'
                 endif
             endif
         endif
