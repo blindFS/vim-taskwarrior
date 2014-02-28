@@ -97,7 +97,7 @@ let g:task_rc_override = 'defaultwidth=999'
 <Plug>(taskwarrior_undo)             :undo
 <Plug>(taskwarrior_sync)             :synchronise with the remote server
 <Plug>(taskwarrior_modify_field)     :modify current field of the task
-<Plug>(taskwarrior_modify_task)      :modify the fields specified in *g:task_default_prompt*
+<Plug>(taskwarrior_modify_task)      :modify the fields specified in |g:task_default_prompt|
 <Plug>(taskwarrior_paste)            :duplicate the selected tasks
 <Plug>(taskwarrior_start_task)       :start a task
 <Plug>(taskwarrior_stop_task)        :stop a task
