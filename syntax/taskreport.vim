@@ -1,3 +1,7 @@
+if exists("b:current_syntax")
+    finish
+endif
+
 if exists('b:task_report_labels')
     syntax match taskwarrior_tablehead /.*\%1l/
 endif
@@ -35,3 +39,5 @@ highlight default link taskwarrior_depends     Todo
 highlight default link taskwarrior_tags        Keyword
 highlight default link taskwarrior_uuid        VarId
 highlight default link taskwarrior_urgency     Todo
+
+let b:current_syntax = 'taskreport'
