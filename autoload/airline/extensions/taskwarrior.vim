@@ -1,7 +1,7 @@
 function! airline#extensions#taskwarrior#apply(...)
     if &ft == 'taskreport'
         call a:1.add_section('airline_a', ' Taskwarrior ')
-        call a:1.add_section('airline_b', ' %{b:command} %{&readonly ? g:airline_readonly_symbol : ""}')
+        call a:1.add_section('airline_b', ' %{b:command} %{&readonly ? g:airline_symbols.readonly : ""}')
         call a:1.add_section('airline_b', g:task_left_arrow.' %{b:hist > 1 ? g:task_right_arrow : ""}')
         call a:1.add_section('airline_c', ' %{b:filter} ')
         call a:1.add_section('airline_c', ' %{b:sstring} ')
@@ -23,7 +23,7 @@ function! airline#extensions#taskwarrior#apply(...)
         return 1
     elseif &ft == 'taskinfo'
         call a:1.add_section('airline_a', ' Taskinfo ')
-        call a:1.add_section('airline_b', ' %{b:command." ".g:airline_readonly_symbol }')
+        call a:1.add_section('airline_b', ' %{b:command." ".g:airline_symbols.readonly }')
         call a:1.add_section('airline_c', ' %{b:filter} ')
         call a:1.split()
         " call a:1.add_section('airline_x', '')
