@@ -16,7 +16,7 @@ QUICK-REFERENCE                                                    *tw-quickref*
 | f = add filter  | x = del annot   | <S-TAB>= prev col | p  = dupe select     |
 | H = cycle fmt l | + = start task  | <right>= r field  | R  = refresh         |
 | L = cycle fmt r | - = stop task   | <left> = l field  | X  = clear done      |
-| J = next entry  | H = prev entry  | B = new bookmark  | o  = open annotation |
+| J = next entry  | K = prev entry  | B = new bookmark  | o  = open annotation |
 
 ==============================================================================
 CONTENTS                                                           *tw-contents*
