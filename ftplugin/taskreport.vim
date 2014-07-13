@@ -5,6 +5,7 @@ setlocal nowrap
 
 nmap <silent> <buffer> <Plug>(taskwarrior_quickref)         :h tw-quickref<CR>
 nmap <silent> <buffer> <Plug>(taskwarrior_quit)             :call taskwarrior#quit()<CR>
+nmap <silent> <buffer> <Plug>(taskwarrior_quit_all)         :call taskwarrior#quit_all()<CR>
 nmap <silent> <buffer> <Plug>(taskwarrior_skip_left)        :call taskwarrior#action#move_cursor('left', 'skip')<CR>
 nmap <silent> <buffer> <Plug>(taskwarrior_step_left)        :call taskwarrior#action#move_cursor('left', 'step')<CR>
 nmap <silent> <buffer> <Plug>(taskwarrior_skip_right)       :call taskwarrior#action#move_cursor('right', 'skip')<CR>
@@ -47,6 +48,7 @@ vmap <silent> <buffer> <Plug>(taskwarrior_visual_delete)   :call taskwarrior#act
 vmap <silent> <buffer> <Plug>(taskwarrior_visual_select)   :call taskwarrior#action#visual('select')<CR>
 
 nmap <buffer> <F1>    <Plug>(taskwarrior_quickref)
+nmap <buffer> Q       <Plug>(taskwarrior_quit_all)
 nmap <buffer> q       <Plug>(taskwarrior_quit)
 nmap <buffer> <left>  <Plug>(taskwarrior_skip_left)
 nmap <buffer> <S-tab> <Plug>(taskwarrior_step_left)
@@ -109,6 +111,6 @@ else
 endif
 
 command! -buffer TWReportInfo        :call taskwarrior#action#show_info()
-command! -buffer TWToggleReadonly    :let g:task_readonly = (g:task_readonly ? 0 : 1) | call taskwarrior#init()
+command! -buffer TWToggleReadonly    :let g:task_readonly = (g:task_readonly ? 0 : 1) | call taskwarrior#refresh()
 command! -buffer TWToggleHLField     :let g:task_highlight_field = (g:task_highlight_field ? 0 : 1) | call taskwarrior#refresh()
 command! -buffer -nargs=? -complete=customlist,taskwarrior#complete#sort TWReportSort :call taskwarrior#action#sort_by_arg(<q-args>)
