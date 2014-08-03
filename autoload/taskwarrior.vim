@@ -17,7 +17,7 @@ function! taskwarrior#list(...) abort
     if b:type == 'special'
         setlocal buftype=nofile
         call append(0, split((system('task '.b:rc.' '.b:filter.' '.b:command)), '\n'))
-        execute 'setlocal filetype=task'.b:command
+        execute 'setlocal filetype=task_'.b:command
         nnoremap <buffer> q :call taskwarrior#Bclose(bufnr('%'))<CR>
         call setpos('.', pos)
         return
