@@ -74,31 +74,33 @@ endif
 
 if g:task_readonly
     setlocal readonly
-    nunmap <silent> <buffer> A
-    nunmap <silent> <buffer> x
-    nunmap <silent> <buffer> o
-    nunmap <silent> <buffer> D
-    nunmap <silent> <buffer> <Del>
-    nunmap <silent> <buffer> a
-    nunmap <silent> <buffer> c
-    nunmap <silent> <buffer> d
-    nunmap <silent> <buffer> r
-    nunmap <silent> <buffer> R
-    nunmap <silent> <buffer> X
-    nunmap <silent> <buffer> u
-    nunmap <silent> <buffer> S
-    nunmap <silent> <buffer> m
-    nunmap <silent> <buffer> M
-    nunmap <silent> <buffer> p
-    nunmap <silent> <buffer> +
-    nunmap <silent> <buffer> -
-    nunmap <silent> <buffer> <Space>
-    nunmap <silent> <buffer> <C-A>
-    nunmap <silent> <buffer> <C-X>
-    vunmap <silent> <buffer> d
-    vunmap <silent> <buffer> D
-    vunmap <silent> <buffer> <Del>
-    vunmap <silent> <buffer> <Space>
+    if hasmapto('<Plug>(taskwarrior_undo)')
+        nunmap <silent> <buffer> A
+        nunmap <silent> <buffer> x
+        nunmap <silent> <buffer> o
+        nunmap <silent> <buffer> D
+        nunmap <silent> <buffer> <Del>
+        nunmap <silent> <buffer> a
+        nunmap <silent> <buffer> c
+        nunmap <silent> <buffer> d
+        nunmap <silent> <buffer> r
+        nunmap <silent> <buffer> R
+        nunmap <silent> <buffer> X
+        nunmap <silent> <buffer> u
+        nunmap <silent> <buffer> S
+        nunmap <silent> <buffer> m
+        nunmap <silent> <buffer> M
+        nunmap <silent> <buffer> p
+        nunmap <silent> <buffer> +
+        nunmap <silent> <buffer> -
+        nunmap <silent> <buffer> <Space>
+        nunmap <silent> <buffer> <C-A>
+        nunmap <silent> <buffer> <C-X>
+        vunmap <silent> <buffer> d
+        vunmap <silent> <buffer> D
+        vunmap <silent> <buffer> <Del>
+        vunmap <silent> <buffer> <Space>
+    endif
 else
     nmap <silent> <buffer> A        <Plug>(taskwarrior_annotate)
     nmap <silent> <buffer> x        <Plug>(taskwarrior_denotate)
