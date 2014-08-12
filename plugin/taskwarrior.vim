@@ -1,3 +1,7 @@
+if exists('g:loaded_taskwarrior') && g:loaded_taskwarrior
+    finish
+endif
+
 if !executable('task')
     echoerr "This plugin depends on taskwarrior(http://taskwarrior.org)."
     finish
@@ -96,3 +100,5 @@ command! TWUndo :call taskwarrior#action#undo()
 "command! TWWikiGenProject
 "command! TWWikiGenTag
 "command! TWWikiIndex
+
+let g:loaded_taskwarrior = 1
