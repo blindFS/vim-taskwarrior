@@ -17,8 +17,8 @@ function! taskwarrior#list(...) abort
     if b:type == 'special'
         setlocal buftype=nofile
         call append(0, split((system('task '.b:rc.' '.b:filter.' '.b:command)), '\n'))
-        execute 'setlocal filetype=task'.b:command
-        nnoremap <buffer> q :call taskwarrior#quit()<CR>
+        execute 'setlocal filetype=task_'.b:command
+        nnoremap <buffer> q :call taskwarrior#Bclose(bufnr('%'))<CR>
         call setpos('.', pos)
         return
     endif
@@ -96,19 +96,15 @@ function! taskwarrior#init(...)
         endif
         return
     endif
-    if exists('g:task_view')
-        if a:0 == 0
-            execute g:task_view.'buffer'
-            let command = get(b:, 'command', g:task_report_name)
-            let filter  = get(b:, 'filter', '')
-            let type    = get(b:, 'type', 'report')
-            let rc      = get(b:, 'rc', g:task_rc_override)
-        endif
-        call taskwarrior#quit()
-    endif
 
     execute 'edit task\ '.command
-    let g:task_view = bufnr('%')
+
+    if exists('g:task_view')
+        let g:task_view += [bufnr('%')]
+    else
+        let g:task_view = [bufnr('%')]
+    endif
+
     setlocal noswapfile
     call taskwarrior#list(command, filter, type, rc)
 
@@ -116,12 +112,54 @@ endfunction
 
 function! taskwarrior#refresh()
     if exists('g:task_view')
-        execute g:task_view.'buffer'
-        call taskwarrior#list()
+        for bufn in g:task_view
+            execute bufn.'buffer'
+            call taskwarrior#list()
+        endfor
     else
         call taskwarrior#init()
     endif
 endfunction
+
+function! taskwarrior#Bclose(buffer)
+    if a:buffer =~ '^\d\+$'
+        let btarget = bufnr(str2nr(a:buffer))
+    else
+        let btarget = bufnr(a:buffer)
+    endif
+    if bufname(btarget) == ''
+        bdelete
+        return
+    endif
+    " Numbers of windows that view target buffer which we will delete.
+    let wnums = filter(range(1, winnr('$')), 'winbufnr(v:val) == btarget')
+    let wcurrent = winnr()
+    for w in wnums
+        execute w.'wincmd w'
+        let prevbuf = bufnr('#')
+        if prevbuf > 0 && buflisted(prevbuf) && prevbuf != w
+            buffer #
+        else
+            bprevious
+        endif
+        if btarget == bufnr('%')
+            " Numbers of listed buffers which are not the target to be deleted.
+            let blisted = filter(range(1, bufnr('$')), 'buflisted(v:val) && v:val != btarget')
+            " Listed, not target, and not displayed.
+            let bhidden = filter(copy(blisted), 'bufwinnr(v:val) < 0')
+            " Take the first buffer, if any (could be more intelligent).
+            let bjump = (bhidden + blisted + [-1])[0]
+            if bjump > 0
+                execute 'buffer '.bjump
+            else
+                enew
+            endif
+        endif
+    endfor
+    execute 'silent! bdelete '.btarget
+    execute wcurrent.'wincmd w'
+endfunction
+
 
 function! taskwarrior#hi_field()
     silent! syntax clear taskwarrior_field
@@ -130,8 +168,15 @@ function! taskwarrior#hi_field()
 endfunction
 
 function! taskwarrior#quit()
-    silent! execute g:task_view.'bd!'
-    unlet g:task_view
+    call taskwarrior#Bclose(bufnr('%'))
+    call remove(g:task_view, index(g:task_view, bufnr('%')))
+endfunction
+
+function! taskwarrior#quit_all()
+    for bufn in g:task_view
+        call taskwarrior#Bclose(bufn)
+    endfor
+    let g:task_view = []
 endfunction
 
 function! taskwarrior#system_call(filter, command, args, mode)

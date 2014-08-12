@@ -5,6 +5,7 @@ setlocal nowrap
 
 nmap <silent> <buffer> <Plug>(taskwarrior_quickref)         :h tw-quickref<CR>
 nmap <silent> <buffer> <Plug>(taskwarrior_quit)             :call taskwarrior#quit()<CR>
+nmap <silent> <buffer> <Plug>(taskwarrior_quit_all)         :call taskwarrior#quit_all()<CR>
 nmap <silent> <buffer> <Plug>(taskwarrior_skip_left)        :call taskwarrior#action#move_cursor('left', 'skip')<CR>
 nmap <silent> <buffer> <Plug>(taskwarrior_step_left)        :call taskwarrior#action#move_cursor('left', 'step')<CR>
 nmap <silent> <buffer> <Plug>(taskwarrior_skip_right)       :call taskwarrior#action#move_cursor('right', 'skip')<CR>
@@ -29,7 +30,7 @@ nmap <silent> <buffer> <Plug>(taskwarrior_delete)          :call taskwarrior#act
 nmap <silent> <buffer> <Plug>(taskwarrior_new)             :call taskwarrior#action#new()<CR>
 nmap <silent> <buffer> <Plug>(taskwarrior_command)         :call taskwarrior#action#command()<CR>
 nmap <silent> <buffer> <Plug>(taskwarrior_done)            :call taskwarrior#action#set_done()<CR>
-nmap <silent> <buffer> <Plug>(taskwarrior_report)           :call taskwarrior#action#report()<CR>
+nmap <silent> <buffer> <Plug>(taskwarrior_report)          :call taskwarrior#action#report()<CR>
 nmap <silent> <buffer> <Plug>(taskwarrior_refresh)         :call taskwarrior#list()<CR>
 nmap <silent> <buffer> <Plug>(taskwarrior_clear_completed) :call taskwarrior#action#clear_completed()<CR>
 nmap <silent> <buffer> <Plug>(taskwarrior_undo)            :call taskwarrior#action#undo()<CR>
@@ -47,6 +48,7 @@ vmap <silent> <buffer> <Plug>(taskwarrior_visual_delete)   :call taskwarrior#act
 vmap <silent> <buffer> <Plug>(taskwarrior_visual_select)   :call taskwarrior#action#visual('select')<CR>
 
 nmap <buffer> <F1>    <Plug>(taskwarrior_quickref)
+nmap <buffer> Q       <Plug>(taskwarrior_quit_all)
 nmap <buffer> q       <Plug>(taskwarrior_quit)
 nmap <buffer> <left>  <Plug>(taskwarrior_skip_left)
 nmap <buffer> <S-tab> <Plug>(taskwarrior_step_left)
@@ -72,6 +74,33 @@ endif
 
 if g:task_readonly
     setlocal readonly
+    if hasmapto('<Plug>(taskwarrior_undo)')
+        nunmap <silent> <buffer> A
+        nunmap <silent> <buffer> x
+        nunmap <silent> <buffer> o
+        nunmap <silent> <buffer> D
+        nunmap <silent> <buffer> <Del>
+        nunmap <silent> <buffer> a
+        nunmap <silent> <buffer> c
+        nunmap <silent> <buffer> d
+        nunmap <silent> <buffer> r
+        nunmap <silent> <buffer> R
+        nunmap <silent> <buffer> X
+        nunmap <silent> <buffer> u
+        nunmap <silent> <buffer> S
+        nunmap <silent> <buffer> m
+        nunmap <silent> <buffer> M
+        nunmap <silent> <buffer> p
+        nunmap <silent> <buffer> +
+        nunmap <silent> <buffer> -
+        nunmap <silent> <buffer> <Space>
+        nunmap <silent> <buffer> <C-A>
+        nunmap <silent> <buffer> <C-X>
+        vunmap <silent> <buffer> d
+        vunmap <silent> <buffer> D
+        vunmap <silent> <buffer> <Del>
+        vunmap <silent> <buffer> <Space>
+    endif
 else
     nmap <silent> <buffer> A        <Plug>(taskwarrior_annotate)
     nmap <silent> <buffer> x        <Plug>(taskwarrior_denotate)
@@ -109,6 +138,6 @@ else
 endif
 
 command! -buffer TWReportInfo        :call taskwarrior#action#show_info()
-command! -buffer TWToggleReadonly    :let g:task_readonly = (g:task_readonly ? 0 : 1) | call taskwarrior#init()
+command! -buffer TWToggleReadonly    :let g:task_readonly = (g:task_readonly ? 0 : 1) | call taskwarrior#refresh()
 command! -buffer TWToggleHLField     :let g:task_highlight_field = (g:task_highlight_field ? 0 : 1) | call taskwarrior#refresh()
 command! -buffer -nargs=? -complete=customlist,taskwarrior#complete#sort TWReportSort :call taskwarrior#action#sort_by_arg(<q-args>)
