@@ -36,9 +36,10 @@ function! taskwarrior#data#get_value_by_column(line, column, ...)
         let index = match(b:task_report_columns, '^'.a:column.'.*')
         return taskwarrior#data#get_value_by_index(a:line, index(b:task_report_columns, a:column))
     else
-        let ilist = split(system('task all '.taskwarrior#data#get_uuid().' rc.report.all.columns='.a:column.' rc.report.all.labels=cc'), '\n')
-        if len(ilist) > 2 && ilist[1] =~ '^[ -]\+$'
-            return substitute(ilist[2],  '\(\s*$\|^\s*\)', '',  'g')
+        let ilist = systemlist('task all '.taskwarrior#data#get_uuid().' rc.report.all.columns='.a:column.' rc.report.all.labels=cc')
+        let split_lineno = match(ilist, '^[ -]\+$')
+        if split_lineno != -1
+            return substitute(ilist[split_lineno+1],  '\(\s*$\|^\s*\)', '',  'g')
         endif
         return ''
     endif
@@ -66,10 +67,10 @@ endfunction
 function! taskwarrior#data#get_stats(method)
     let dict = {}
     if a:method != 'current'
-        let stat = split(system('task '.a:method.' stats'), '\n')
+        let stat = systemlist('task '.a:method.' stats')
     else
         let uuid = taskwarrior#data#get_uuid()
-        let stat = split(system('task '.taskwarrior#data#get_uuid().' stats'), '\n')
+        let stat = systemlist('task '.taskwarrior#data#get_uuid().' stats')
         if uuid == '' || len(stat) < 5
             return {}
         endif

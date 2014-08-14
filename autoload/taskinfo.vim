@@ -15,9 +15,8 @@ function! taskinfo#init(command, filter, info)
     setlocal noswapfile
     setlocal modifiable
     call append(0, a:info)
-    if len(a:info) > 1
-        2d
-    endif
+    silent global/^[\t ]*$/delete
+    silent global/^[ -]\+$/delete
     setlocal readonly
     setlocal nomodifiable
     setlocal buftype=nofile

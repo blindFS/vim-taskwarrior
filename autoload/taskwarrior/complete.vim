@@ -15,7 +15,7 @@ function! taskwarrior#complete#TW(A, L, P)
 endfunction
 
 function! taskwarrior#complete#sort(A, L, P)
-    let cols = map(split(system('task _columns'), '\n'), 'matchstr(v:val, "^\\w*")')
+    let cols = map(systemlist('task _columns'), 'matchstr(v:val, "^\\w*")')
     return filter(cols, 'match(v:val, a:A) != -1')
 endfunction
 

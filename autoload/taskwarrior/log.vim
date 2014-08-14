@@ -3,35 +3,39 @@ let s:bookmark_file = g:task_log_directory.'/.vim_tw.bookmark'
 
 function! taskwarrior#log#history(action)
     if findfile(s:history_file) == ''
-        call system('touch '.s:history_file)
+        call writefile([], s:history_file)
     endif
     if a:action == 'write' && filewritable(s:history_file) && b:hist == 1
-        let last = system('tail -n 1 '.s:history_file)
-        let numb = str2nr(system('wc -l '.s:history_file))
-        if last == b:command.'	'.b:filter.'	'.b:rc
+        let fl = readfile(s:history_file)
+        let numb = len(fl)
+        let last = numb ? substitute(fl[-1], '\v($|\n|\t|\s)', '', 'g') : ''
+        let current = join([b:command, b:filter, b:rc], '	')
+        if last == substitute(current, '[\t ]', '', 'g')
             return
         endif
-        if numb > g:task_log_max
-            call system('sed -i -e "1d" '.s:history_file)
+        call add(fl, current)
+        if numb >= g:task_log_max
+            call remove(fl, 0)
         endif
-        execute 'redir >> '.s:history_file
-        silent! echo b:command.'	'.b:filter.'	'.b:rc
-        redir END
+        call writefile(fl, s:history_file)
     elseif a:action == 'read' && filereadable(s:history_file)
-        call taskwarrior#init(join(split(system('tail -n 1 '.s:history_file), '	'), ' '))
+        call taskwarrior#init(join(split(readfile(s:history_file)[-1], '	'), ' '))
     elseif a:action == 'clear'
-        call system('> '.s:history_file)
-    elseif a:action == 'previous'
-        let hlist = split(substitute(system('tail -n '.(b:hist+1).' '.s:history_file.' | head -n 1'), '\v($|\n)', ' ', ''), '	')
-        if len(hlist) != 3
-            return
+        call writefile([], s:history_file)
+    elseif a:action != 'write'
+        let hists = readfile(s:history_file)
+        if a:action == 'previous'
+            if b:hist >= len(hists)
+                return
+            endif
+            let b:hist += 1
+        elseif a:action == 'next'
+            if b:hist == 1
+                return
+            endif
+            let b:hist -= 1
         endif
-        let b:hist    += 1
-        let [b:command, b:filter, b:rc] = hlist
-        call taskwarrior#list()
-    elseif a:action == 'next'
-        let b:hist     = b:hist > 1 ? b:hist-1 : 1
-        let hlist = split(substitute(system('tail -n '.b:hist.' '.s:history_file.' | head -n 1'), '\v($|\n)', ' ', ''), '	')
+        let hlist = split(substitute(hists[-b:hist], '\v($|\n)', ' ', ''), '	')
         if len(hlist) != 3
             return
         endif
@@ -42,11 +46,11 @@ endfunction
 
 function! taskwarrior#log#bookmark(action)
     if findfile(s:bookmark_file) == ''
-        call system('touch '.s:bookmark_file)
+        call writefile([], s:bookmark_file)
     endif
     if a:action == 'new' && filewritable(s:bookmark_file)
         let now = b:command.'	'.b:filter.'	'.b:rc
-        let ext = split(system('cat '.s:bookmark_file), '\n')
+        let ext = readfile(s:bookmark_file)
         if index(ext, now) == -1
             execute 'redir >> '.s:bookmark_file
             silent! echo now
@@ -56,6 +60,6 @@ function! taskwarrior#log#bookmark(action)
             echohl None
         endif
     elseif a:action == 'clear'
-        call system('> '.s:bookmark_file)
+        call writefile([], s:bookmark_file)
     endif
 endfunction

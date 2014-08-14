@@ -16,7 +16,8 @@ function! taskwarrior#list(...) abort
 
     if b:type == 'special'
         setlocal buftype=nofile
-        call append(0, split((system('task '.b:rc.' '.b:filter.' '.b:command)), '\n'))
+        call append(0, systemlist('task '.b:rc.' '.b:filter.' '.b:command))
+        silent global/^[\t ]*$/delete
         execute 'setlocal filetype=task_'.b:command
         nnoremap <buffer> q :call taskwarrior#Bclose(bufnr('%'))<CR>
         call setpos('.', pos)
@@ -34,14 +35,15 @@ function! taskwarrior#list(...) abort
     let b:task_report_labels  = rcl == '' ? split(matchstr(system("task show |grep report.".b:command.".labels")[0:-2], '\S*$'), ',') : split(rcl, ',')
     let line1                 = join(b:task_report_labels, ' ')
 
-    let context = split(system("task ".b:rc.' '.b:filter.' '.b:command), '\n')
-    if len(context) < 2 || context[1] !~ '^[ -]\+$'
+    let context = systemlist('task '.b:rc.' '.b:filter.' '.b:command)
+    let split_lineno = match(context, '^[ -]\+$')
+    if split_lineno == -1
         call append(0, line1)
     else
-        let index = match(context, '^$')
-        call append(0, context[0:index])
-        global/^\s*$/delete
-        2d
+        let end = match(context[split_lineno+0:], '^$')
+        call append(0, context[split_lineno-1:end+split_lineno-1])
+        silent global/^[\t ]*$/delete
+        silent global/^[ -]\+$/delete
     endif
 
     call filter(b:task_report_columns, "index(split(getline(1), ' '), b:task_report_labels[v:key]) != -1")
@@ -60,7 +62,7 @@ function! taskwarrior#list(...) abort
     let b:summary       = taskwarrior#data#global_stats()
     let b:sort          = taskwarrior#sort#order_list()[0]
     let b:now           = system('task active limit:1 rc.verbose:nothing rc.report.active.sort=start- rc.report.active.columns=start.active,start.age,id,description.desc rc.report.active.labels=A,Age,ID,Description')[0:-2]
-    let b:active        = split(system('task start.any: count'), '\n')[0]
+    let b:active        = systemlist('task start.any: count')[0]
     let b:selected      = []
     let b:sline         = []
     let b:sstring       = ''
@@ -97,7 +99,7 @@ function! taskwarrior#init(...)
         return
     endif
 
-    execute 'edit task\ '.command
+    execute 'edit task\ '.type
 
     if exists('g:task_view')
         let g:task_view += [bufnr('%')]
