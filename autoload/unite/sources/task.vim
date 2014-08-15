@@ -6,6 +6,7 @@ let s:template = {
             \ 'description' : 'vim-taskwarrior ',
             \ 'filters' : ['matcher_regexp'],
             \ 'action_table': {},
+            \ 'hooks' : {},
             \ }
 
 let s:bookmark = {
@@ -23,6 +24,13 @@ function! s:make_source(dict)
     let source.name .= a:dict.name
     let source.description .= a:dict.name
     let source.logfile = a:dict.logfile
+
+    function! source.hooks.on_syntax(args, context)
+        syntax match uniteSource__task_rc /rc.*/ contained containedin=ALL contains=uniteCandidateInputKeyword
+        syntax match uniteSource__task_report /\w\+\ze[ \t]\+/ contained containedin=ALL
+        highlight default link uniteSource__task_rc String
+        highlight default link uniteSource__task_report Keyword
+    endfunction
 
     function! source.gather_candidates(args, context)
         if findfile(self.logfile) == ''
