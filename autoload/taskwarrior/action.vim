@@ -75,9 +75,9 @@ function! taskwarrior#action#annotate(op)
                 execute 'e '.file
             elseif ft !~ '(No such file or directory)' || file =~ '[a-z]*:\/\/[^ >,;]*'
                 if executable('xdg-open')
-                    silent execute '!xdg-open '.file.'&'
+                    call system('xdg-open '.file.'&')
                 elseif executable('open')
-                    silent execute '!open '.file.'&'
+                    call system('open '.file.'&')
                 endif
             endif
         endif
