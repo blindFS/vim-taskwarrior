@@ -11,12 +11,12 @@ let s:template = {
 
 let s:bookmark = {
             \ 'name' : 'bookmark',
-            \ 'logfile' : g:task_log_directory.'/.vim_tw.bookmark'
+            \ 'logfile' : glob(g:task_log_directory.'/.vim_tw.bookmark')
             \ }
 
 let s:history = {
             \ 'name' : 'history',
-            \ 'logfile' : g:task_log_directory.'/.vim_tw.history'
+            \ 'logfile' : glob(g:task_log_directory.'/.vim_tw.history')
             \ }
 
 function! s:make_source(dict)
