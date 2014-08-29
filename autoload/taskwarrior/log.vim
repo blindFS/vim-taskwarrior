@@ -1,5 +1,8 @@
 if !isdirectory(g:task_log_directory)
-    call mkdir(expand(g:task_log_directory), 'p')
+    try
+    catch E739
+        call mkdir(expand(g:task_log_directory), 'p')
+    endtry
 endif
 let s:history_file  = expand(g:task_log_directory.'/.vim_tw.history')
 let s:bookmark_file = expand(g:task_log_directory.'/.vim_tw.bookmark')
