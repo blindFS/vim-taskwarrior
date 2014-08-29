@@ -1,4 +1,4 @@
-if !isdirectory(g:task_log_directory)
+if !isdirectory(expand(g:task_log_directory))
     call mkdir(expand(g:task_log_directory), 'p')
 endif
 let s:history_file  = expand(g:task_log_directory.'/.vim_tw.history')
