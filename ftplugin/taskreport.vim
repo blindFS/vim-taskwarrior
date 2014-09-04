@@ -1,6 +1,7 @@
 setlocal buftype=nofile
 setlocal nomodifiable
 setlocal cursorline
+setlocal startofline
 setlocal nowrap
 
 nmap <silent> <buffer> <Plug>(taskwarrior_quickref)         :h tw-quickref<CR>

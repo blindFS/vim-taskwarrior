@@ -93,32 +93,33 @@ endfunction
 
 function! taskwarrior#data#global_stats()
     let dict = taskwarrior#data#get_stats(b:filter)
-    if !exists('dict["Pending"]') || !exists('dict["Completed"]')
-        return ['0', '0', taskwarrior#data#get_stats('')['Pending']]
-    endif
-    return [dict['Pending'], dict['Completed'], taskwarrior#data#get_stats('')['Pending']]
+    return [
+                \ get(dict, 'Pending', 0),
+                \ get(dict, 'Completed', 0),
+                \ get(taskwarrior#data#get_stats(''), 'Pending', 0)
+                \ ]
 endfunction
 
 function! taskwarrior#data#category()
-    let dict              = {}
-    let dict['Pending']   = []
-    let dict['Waiting']   = []
-    let dict['Recurring'] = []
-    let dict['Completed'] = []
+    let dict           = {}
+    let dict.Pending   = []
+    let dict.Waiting   = []
+    let dict.Recurring = []
+    let dict.Completed = []
     for i in range(2, line('$'))
         let uuid = taskwarrior#data#get_uuid(i)
         if uuid == ''
             continue
         endif
         let subdict = taskwarrior#data#get_stats(uuid)
-        if subdict['Pending']       == '1'
-            let dict['Pending'] += [i]
-        elseif subdict['Waiting']   == '1'
-            let dict['Waiting'] += [i]
-        elseif subdict['Recurring'] == '1'
-            let dict['Recurring'] += [i]
-        elseif subdict['Completed'] == '1'
-            let dict['Completed'] += [i]
+        if subdict.Pending == '1'
+            let dict.Pending += [i]
+        elseif subdict.Waiting == '1'
+            let dict.Waiting += [i]
+        elseif subdict.Recurring == '1'
+            let dict.Recurring += [i]
+        elseif subdict.Completed == '1'
+            let dict.Completed += [i]
         endif
     endfor
     return dict
