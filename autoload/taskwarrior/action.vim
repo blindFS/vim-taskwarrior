@@ -160,11 +160,12 @@ function! taskwarrior#action#columns_format_change(direction)
         endif
     endif
     let newsub = index == 0 ? '' : '.'.clist[index]
-    if rcl != ''
-        let b:rc .= ' rc.report.'.b:command.'.columns:'.substitute(rcl, '[=:,]\zs'.ccol_ful, ccol.newsub, 'g')
-    else
-        let b:rc .= ' rc.report.'.b:command.'.columns:'.substitute(dfl, '[=:,]\zs'.ccol_ful, ccol.newsub, 'g')
-    endif
+    let b:rc .= ' rc.report.'.b:command.'.columns:'.
+                \ substitute(
+                \   rcl == '' ? dfl : rcl,
+                \   '[=:,]\zs'.ccol_ful.'\ze,',
+                \   ccol.newsub, ''
+                \ )
     let b:hist = 1
     call taskwarrior#list()
 endfunction

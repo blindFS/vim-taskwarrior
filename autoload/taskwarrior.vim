@@ -35,7 +35,11 @@ function! taskwarrior#list(...) abort
     let b:task_report_labels  = rcl == '' ? split(matchstr(system("task show |grep report.".b:command.".labels")[0:-2], '\S*$'), ',') : split(rcl, ',')
     let line1                 = join(b:task_report_labels, ' ')
 
-    let context = split(system('task '.b:rc.' '.b:filter.' '.b:command), '\n')
+    let context = split(substitute(
+                \   system('task '.b:rc.' '.b:filter.' '.b:command),
+                \   '\[[0-9;]\+m',
+                \   '', 'g'),
+                \ '\n')
     let split_lineno = match(context, '^[ -]\+$')
     if split_lineno == -1
         call append(0, line1)
