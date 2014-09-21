@@ -163,7 +163,7 @@ function! taskwarrior#action#columns_format_change(direction)
     let b:rc .= ' rc.report.'.b:command.'.columns:'.
                 \ substitute(
                 \   rcl == '' ? dfl : rcl,
-                \   '[=:,]\zs'.ccol_ful.'\ze,',
+                \   '[=:,]\zs'.ccol_ful.'\ze\(,\|$\)',
                 \   ccol.newsub, ''
                 \ )
     let b:hist = 1
