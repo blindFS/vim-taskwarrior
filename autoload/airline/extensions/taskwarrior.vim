@@ -1,5 +1,5 @@
 function! airline#extensions#taskwarrior#apply(...)
-    if &ft == 'taskreport'
+    if &ft == 'taskreport' && exists('b:command') && exists('b:filter')
         call a:1.add_section('airline_a', ' Taskwarrior ')
         call a:1.add_section('airline_b', ' %{b:command} %{&readonly ? g:airline_symbols.readonly : ""}')
         call a:1.add_section('airline_b', g:task_left_arrow.' %{b:hist > 1 ? g:task_right_arrow : ""}')
