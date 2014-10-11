@@ -1,5 +1,5 @@
 function! airline#extensions#taskwarrior#apply(...)
-    if &ft == 'taskreport' && exists('b:command') && exists('b:filter')
+    if &ft == 'taskreport' && bufname(bufnr('%')+1) != '__Tagbar__'
         call a:1.add_section('airline_a', ' Taskwarrior ')
         call a:1.add_section('airline_b', ' %{b:command} %{&readonly ? g:airline_symbols.readonly : ""}')
         call a:1.add_section('airline_b', g:task_left_arrow.' %{b:hist > 1 ? g:task_right_arrow : ""}')
@@ -19,17 +19,12 @@ function! airline#extensions#taskwarrior#apply(...)
         call airline#parts#define_accent('completed', 'green')
         call a:1.add_section('airline_z', airline#section#create(['completed']))
         call a:1.add_section('airline_z', ' %{b:summary[2]} ')
-        call airline#load_theme()
         return 1
     elseif &ft == 'taskinfo'
         call a:1.add_section('airline_a', ' Taskinfo ')
         call a:1.add_section('airline_b', ' %{b:command." ".g:airline_symbols.readonly }')
         call a:1.add_section('airline_c', ' %{b:filter} ')
         call a:1.split()
-        " call a:1.add_section('airline_x', '')
-        " call a:1.add_section('airline_y', '')
-        " call a:1.add_section('airline_z', '')
-        call airline#load_theme()
         return 1
     endif
 endfunction
