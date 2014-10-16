@@ -106,7 +106,7 @@ function! taskwarrior#init(...)
         return
     endif
 
-    execute 'edit task\ '.type
+    execute 'edit task\ '.command.'\ '.type
 
     if exists('g:task_view')
         let g:task_view += [bufnr('%')]
