@@ -1,5 +1,5 @@
 function! airline#extensions#taskwarrior#apply(...)
-    if &ft == 'taskreport' && bufname(bufnr('%')+1) != '__Tagbar__'
+    if &ft == 'taskreport'
         call a:1.add_section('airline_a', ' Taskwarrior ')
         call a:1.add_section('airline_b', ' %{b:command} %{&readonly ? g:airline_symbols.readonly : ""}')
         call a:1.add_section('airline_b', g:task_left_arrow.' %{b:hist > 1 ? g:task_right_arrow : ""}')

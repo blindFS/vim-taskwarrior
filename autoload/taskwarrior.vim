@@ -91,6 +91,9 @@ function! taskwarrior#buffer_var_init()
 endfunction
 
 function! taskwarrior#init(...)
+    if exists(':TagbarClose')
+        TagbarClose
+    endif
     let argstring = join(a:000, ' ')
     let [command, filter, type] = taskwarrior#command_type(argstring)
     let rc = g:task_rc_override
