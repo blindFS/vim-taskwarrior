@@ -19,7 +19,7 @@ function! taskwarrior#data#get_args(...)
         let temp = input(key.":", default)
         if key == 'description'
             let arg .= temp
-        elseif temp !~ '^[ \t]*$'
+        elseif temp !~ '^[ \t]*$' || a:1 == 'modify'
             let arg .= ' '.key.':'.temp
         endif
     endfor
