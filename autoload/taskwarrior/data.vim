@@ -12,19 +12,18 @@ function! taskwarrior#data#get_args(...)
         return taskwarrior#data#get_args(a:1, g:task_default_prompt)
     endif
     let arg = ' '
-    let default = ''
-    let command = 'let this_%s = input("%s:", "%s")'
     for key in a:2
-        if a:1 == 'modify'
-            let default = taskwarrior#data#get_value_by_column('.', key)
-        endif
-        execute printf(command, key, key, default)
+        let default = a:1 == 'modify' ?
+                    \ taskwarrior#data#get_value_by_column('.', key)
+                    \ : ''
+        let temp = input(key.":", default)
         if key == 'description'
-            execute "let arg = arg.' '.this_".key
-        else
-            execute "let arg = arg.' '.key.':'.this_".key
+            let arg .= temp
+        elseif temp !~ '^[ \t]*$'
+            let arg .= ' '.key.':'.temp
         endif
     endfor
+    echom arg
     return arg
 endfunction
 
