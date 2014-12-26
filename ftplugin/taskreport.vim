@@ -4,49 +4,49 @@ setlocal cursorline
 setlocal startofline
 setlocal nowrap
 
-nmap <silent> <buffer> <Plug>(taskwarrior_quickref)         :h tw-quickref<CR>
-nmap <silent> <buffer> <Plug>(taskwarrior_quit)             :call taskwarrior#quit()<CR>
-nmap <silent> <buffer> <Plug>(taskwarrior_quit_all)         :call taskwarrior#quit_all()<CR>
-nmap <silent> <buffer> <Plug>(taskwarrior_skip_left)        :call taskwarrior#action#move_cursor('left', 'skip')<CR>
-nmap <silent> <buffer> <Plug>(taskwarrior_step_left)        :call taskwarrior#action#move_cursor('left', 'step')<CR>
-nmap <silent> <buffer> <Plug>(taskwarrior_skip_right)       :call taskwarrior#action#move_cursor('right', 'skip')<CR>
-nmap <silent> <buffer> <Plug>(taskwarrior_step_right)       :call taskwarrior#action#move_cursor('right', 'step')<CR>
-nmap <silent> <buffer> <Plug>(taskwarrior_sort_increase)    :call taskwarrior#sort#by_column('+', '')<CR>
-nmap <silent> <buffer> <Plug>(taskwarrior_sort_decrease)    :call taskwarrior#sort#by_column('-', '')<CR>
-nmap <silent> <buffer> <Plug>(taskwarrior_sort_inverse)     :call taskwarrior#sort#by_column('m', '')<CR>
-nmap <silent> <buffer> <Plug>(taskwarrior_show_info)        :call taskwarrior#action#show_info()<CR>
-nmap <silent> <buffer> <Plug>(taskwarrior_filter)           :call taskwarrior#action#filter()<CR>
-nmap <silent> <buffer> <Plug>(taskwarrior_next_format)      :call taskwarrior#action#columns_format_change('left')<CR>
-nmap <silent> <buffer> <Plug>(taskwarrior_previous_format)  :call taskwarrior#action#columns_format_change('right')<CR>
-nmap <silent> <buffer> <Plug>(taskwarrior_next_history)     :call taskwarrior#log#history('next')<CR>
-nmap <silent> <buffer> <Plug>(taskwarrior_previous_history) :call taskwarrior#log#history('previous')<CR>
-nmap <silent> <buffer> <Plug>(taskwarrior_new_bookmark)     :call taskwarrior#log#bookmark('new')<CR>
-vmap <silent> <buffer> <Plug>(taskwarrior_visual_show_info) :call taskwarrior#action#visual('info')<CR>
+nnoremap <silent> <buffer> <Plug>(taskwarrior_quickref)         :h tw-quickref<CR>
+nnoremap <silent> <buffer> <Plug>(taskwarrior_quit)             :call taskwarrior#quit()<CR>
+nnoremap <silent> <buffer> <Plug>(taskwarrior_quit_all)         :call taskwarrior#quit_all()<CR>
+nnoremap <silent> <buffer> <Plug>(taskwarrior_skip_left)        :call taskwarrior#action#move_cursor('left', 'skip')<CR>
+nnoremap <silent> <buffer> <Plug>(taskwarrior_step_left)        :call taskwarrior#action#move_cursor('left', 'step')<CR>
+nnoremap <silent> <buffer> <Plug>(taskwarrior_skip_right)       :call taskwarrior#action#move_cursor('right', 'skip')<CR>
+nnoremap <silent> <buffer> <Plug>(taskwarrior_step_right)       :call taskwarrior#action#move_cursor('right', 'step')<CR>
+nnoremap <silent> <buffer> <Plug>(taskwarrior_sort_increase)    :call taskwarrior#sort#by_column('+', '')<CR>
+nnoremap <silent> <buffer> <Plug>(taskwarrior_sort_decrease)    :call taskwarrior#sort#by_column('-', '')<CR>
+nnoremap <silent> <buffer> <Plug>(taskwarrior_sort_inverse)     :call taskwarrior#sort#by_column('m', '')<CR>
+nnoremap <silent> <buffer> <Plug>(taskwarrior_show_info)        :call taskwarrior#action#show_info()<CR>
+nnoremap <silent> <buffer> <Plug>(taskwarrior_filter)           :call taskwarrior#action#filter()<CR>
+nnoremap <silent> <buffer> <Plug>(taskwarrior_next_format)      :call taskwarrior#action#columns_format_change('left')<CR>
+nnoremap <silent> <buffer> <Plug>(taskwarrior_previous_format)  :call taskwarrior#action#columns_format_change('right')<CR>
+nnoremap <silent> <buffer> <Plug>(taskwarrior_next_history)     :call taskwarrior#log#history('next')<CR>
+nnoremap <silent> <buffer> <Plug>(taskwarrior_previous_history) :call taskwarrior#log#history('previous')<CR>
+nnoremap <silent> <buffer> <Plug>(taskwarrior_new_bookmark)     :call taskwarrior#log#bookmark('new')<CR>
+vnoremap <silent> <buffer> <Plug>(taskwarrior_visual_show_info) :call taskwarrior#action#visual('info')<CR>
 
-nmap <silent> <buffer> <Plug>(taskwarrior_annotate)        :call taskwarrior#action#annotate('add')<CR>
-nmap <silent> <buffer> <Plug>(taskwarrior_denotate)        :call taskwarrior#action#annotate('del')<CR>
-nmap <silent> <buffer> <Plug>(taskwarrior_open_annotate)   :call taskwarrior#action#annotate('open')<CR>
-nmap <silent> <buffer> <Plug>(taskwarrior_remove)          :call taskwarrior#action#remove()<CR>
-nmap <silent> <buffer> <Plug>(taskwarrior_delete)          :call taskwarrior#action#delete()<CR>
-nmap <silent> <buffer> <Plug>(taskwarrior_new)             :call taskwarrior#action#new()<CR>
-nmap <silent> <buffer> <Plug>(taskwarrior_command)         :call taskwarrior#action#command()<CR>
-nmap <silent> <buffer> <Plug>(taskwarrior_done)            :call taskwarrior#action#set_done()<CR>
-nmap <silent> <buffer> <Plug>(taskwarrior_report)          :call taskwarrior#action#report()<CR>
-nmap <silent> <buffer> <Plug>(taskwarrior_refresh)         :call taskwarrior#list()<CR>
-nmap <silent> <buffer> <Plug>(taskwarrior_clear_completed) :call taskwarrior#action#clear_completed()<CR>
-nmap <silent> <buffer> <Plug>(taskwarrior_undo)            :call taskwarrior#action#undo()<CR>
-nmap <silent> <buffer> <Plug>(taskwarrior_sync)            :call taskwarrior#action#sync('sync')<CR>
-nmap <silent> <buffer> <Plug>(taskwarrior_modify_field)    :call taskwarrior#action#modify('current')<CR>
-nmap <silent> <buffer> <Plug>(taskwarrior_modify_task)     :call taskwarrior#action#modify('')<CR>
-nmap <silent> <buffer> <Plug>(taskwarrior_paste)           :call taskwarrior#action#paste()<CR>
-nmap <silent> <buffer> <Plug>(taskwarrior_start_task)      :call taskwarrior#system_call(taskwarrior#data#get_uuid(), 'start', '', 'silent')<CR>
-nmap <silent> <buffer> <Plug>(taskwarrior_stop_task)       :call taskwarrior#system_call(taskwarrior#data#get_uuid(), 'stop', '', 'silent')<CR>
-nmap <silent> <buffer> <Plug>(taskwarrior_select)          :call taskwarrior#action#select()<CR>
-nmap <silent> <buffer> <Plug>(taskwarrior_increase)        :<C-U>call taskwarrior#action#date(v:count1)<CR>
-nmap <silent> <buffer> <Plug>(taskwarrior_decrease)        :<C-U>call taskwarrior#action#date(-v:count1)<CR>
-vmap <silent> <buffer> <Plug>(taskwarrior_visual_done)     :call taskwarrior#action#visual('done')<CR>
-vmap <silent> <buffer> <Plug>(taskwarrior_visual_delete)   :call taskwarrior#action#visual('delete')<CR>
-vmap <silent> <buffer> <Plug>(taskwarrior_visual_select)   :call taskwarrior#action#visual('select')<CR>
+nnoremap <silent> <buffer> <Plug>(taskwarrior_annotate)        :call taskwarrior#action#annotate('add')<CR>
+nnoremap <silent> <buffer> <Plug>(taskwarrior_denotate)        :call taskwarrior#action#annotate('del')<CR>
+nnoremap <silent> <buffer> <Plug>(taskwarrior_open_annotate)   :call taskwarrior#action#annotate('open')<CR>
+nnoremap <silent> <buffer> <Plug>(taskwarrior_remove)          :call taskwarrior#action#remove()<CR>
+nnoremap <silent> <buffer> <Plug>(taskwarrior_delete)          :call taskwarrior#action#delete()<CR>
+nnoremap <silent> <buffer> <Plug>(taskwarrior_new)             :call taskwarrior#action#new()<CR>
+nnoremap <silent> <buffer> <Plug>(taskwarrior_command)         :call taskwarrior#action#command()<CR>
+nnoremap <silent> <buffer> <Plug>(taskwarrior_done)            :call taskwarrior#action#set_done()<CR>
+nnoremap <silent> <buffer> <Plug>(taskwarrior_report)          :call taskwarrior#action#report()<CR>
+nnoremap <silent> <buffer> <Plug>(taskwarrior_refresh)         :call taskwarrior#list()<CR>
+nnoremap <silent> <buffer> <Plug>(taskwarrior_clear_completed) :call taskwarrior#action#clear_completed()<CR>
+nnoremap <silent> <buffer> <Plug>(taskwarrior_undo)            :call taskwarrior#action#undo()<CR>
+nnoremap <silent> <buffer> <Plug>(taskwarrior_sync)            :call taskwarrior#action#sync('sync')<CR>
+nnoremap <silent> <buffer> <Plug>(taskwarrior_modify_field)    :call taskwarrior#action#modify('current')<CR>
+nnoremap <silent> <buffer> <Plug>(taskwarrior_modify_task)     :call taskwarrior#action#modify('')<CR>
+nnoremap <silent> <buffer> <Plug>(taskwarrior_paste)           :call taskwarrior#action#paste()<CR>
+nnoremap <silent> <buffer> <Plug>(taskwarrior_start_task)      :call taskwarrior#system_call(taskwarrior#data#get_uuid(), 'start', '', 'silent')<CR>
+nnoremap <silent> <buffer> <Plug>(taskwarrior_stop_task)       :call taskwarrior#system_call(taskwarrior#data#get_uuid(), 'stop', '', 'silent')<CR>
+nnoremap <silent> <buffer> <Plug>(taskwarrior_select)          :call taskwarrior#action#select()<CR>
+nnoremap <silent> <buffer> <Plug>(taskwarrior_increase)        :<C-U>call taskwarrior#action#date(v:count1)<CR>
+nnoremap <silent> <buffer> <Plug>(taskwarrior_decrease)        :<C-U>call taskwarrior#action#date(-v:count1)<CR>
+vnoremap <silent> <buffer> <Plug>(taskwarrior_visual_done)     :call taskwarrior#action#visual('done')<CR>
+vnoremap <silent> <buffer> <Plug>(taskwarrior_visual_delete)   :call taskwarrior#action#visual('delete')<CR>
+vnoremap <silent> <buffer> <Plug>(taskwarrior_visual_select)   :call taskwarrior#action#visual('select')<CR>
 
 nmap <buffer> <F1>    <Plug>(taskwarrior_quickref)
 nmap <buffer> Q       <Plug>(taskwarrior_quit_all)
