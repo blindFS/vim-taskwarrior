@@ -7,7 +7,9 @@ if !executable('task')
     finish
 endif
 
-let g:task_report_command           = ['active', 'all', 'blocked', 'blocking', 'completed', 'list', 'long', 'ls', 'minimal', 'newest', 'next', 'oldest', 'overdue', 'ready', 'recurring', 'unblocked', 'waiting']
+let g:task_report_command           = get(g:, 'task_report_command', [])
+let s:task_report_command           = ['active', 'all', 'blocked', 'blocking', 'completed', 'list', 'long', 'ls', 'minimal', 'newest', 'next', 'oldest', 'overdue', 'ready', 'recurring', 'unblocked', 'waiting']
+let g:task_report_command           = extend(s:task_report_command, g:task_report_command)
 let g:task_interactive_command      = ['annotate', 'denotate', 'execute', 'duplicate', 'append', 'prepend', 'stop', 'delete', 'done', 'undo', 'config', 'edit', 'start', 'sync', 'synchronize', 'add', 'modify', 'import', 'colors', 'color', 'logo']
 let g:task_filter                   = ['description:', 'proj:', 'pri:', 'status:', 'tag:', 'due.before:', 'due.after:', 'entry.before', 'entry.after', 'end.before', 'end.after', '+']
 let g:task_all_commands             = split(system('task _command'), '\n')
