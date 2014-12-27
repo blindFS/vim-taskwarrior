@@ -16,7 +16,7 @@ function! taskwarrior#data#get_args(...)
         let default = a:1 == 'modify' ?
                     \ taskwarrior#data#get_value_by_column('.', key)
                     \ : ''
-        let temp = input(key.":", default)
+        let temp = shellescape(input(key.":", default), 1)
         if key == 'description'
             let arg .= ' '.temp
         elseif temp !~ '^[ \t]*$' || a:1 == 'modify'
