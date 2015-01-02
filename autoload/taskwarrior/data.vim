@@ -87,7 +87,7 @@ function! taskwarrior#data#get_query(...)
     if uuid == ''
         return {}
     endif
-    return webapi#json#decode(system('task rc.verbose=off '.uuid.' _query'))
+    return webapi#json#decode(system('task rc.verbose=off '.uuid.' export'))
 endfunction
 
 function! taskwarrior#data#global_stats()
