@@ -282,25 +282,30 @@ function! taskwarrior#action#select()
     setlocal syntax=taskreport
 endfunction
 
-function! taskwarrior#action#show_info()
-    let ccol = taskwarrior#data#current_column()
-    let dict = { 'project': 'projects',
-                \ 'tags': 'tags',
-                \ 'id': 'stats',
-                \ 'depends': 'blocking',
-                \ 'recur': 'recurring',
-                \ 'due': 'overdue',
-                \ 'wait': 'waiting',
-                \ 'urgency': 'ready',
-                \ 'entry': 'history.monthly',
-                \ 'end': 'history.monthly'}
-    let command = get(dict, ccol, 'summary')
-    let uuid = taskwarrior#data#get_uuid()
-    if uuid !~ '^\s*$'
-        let command = substitute(command, '\v(summary|stats)', 'information', '')
-        let filter = taskwarrior#data#get_uuid()
+function! taskwarrior#action#show_info(...)
+    if a:0 > 0 && a:1 !~ '\s\+'
+        let command = 'info'
+        let filter = a:1
     else
-        let filter = b:filter
+        let ccol = taskwarrior#data#current_column()
+        let dict = { 'project': 'projects',
+                    \ 'tags': 'tags',
+                    \ 'id': 'stats',
+                    \ 'depends': 'blocking',
+                    \ 'recur': 'recurring',
+                    \ 'due': 'overdue',
+                    \ 'wait': 'waiting',
+                    \ 'urgency': 'ready',
+                    \ 'entry': 'history.monthly',
+                    \ 'end': 'history.monthly'}
+        let command = get(dict, ccol, 'summary')
+        let uuid = taskwarrior#data#get_uuid()
+        if uuid !~ '^\s*$'
+            let command = substitute(command, '\v(summary|stats)', 'information', '')
+            let filter = taskwarrior#data#get_uuid()
+        else
+            let filter = b:filter
+        endif
     endif
     call taskinfo#init(command, filter, split(system('task '.command.' '.filter), '\n'))
 endfunction

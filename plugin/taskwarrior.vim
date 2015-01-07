@@ -60,6 +60,7 @@ let g:task_columns_format           = {
 "commands;
 "
 command! -nargs=? -complete=customlist,taskwarrior#complete#TW TW :call taskwarrior#init(<q-args>)
+command! -nargs=? TWReportInfo :call taskwarrior#action#show_info(<q-args>)
 "command! TWConfigColor
 command! TWDeleteCompleted :call taskwarrior#action#clear_completed()
 "command! TWDeleteNote

@@ -3,7 +3,9 @@ function! taskinfo#init(command, filter, info)
         call taskinfo#quit()
     endif
 
-    if exists('g:task_info_arg') && g:task_info_arg == [a:command, a:filter]
+    if a:command != 'info'
+                \ && exists('g:task_info_arg')
+                \ && g:task_info_arg == [a:command, a:filter]
         unlet g:task_info_arg
         return
     endif

@@ -138,7 +138,6 @@ else
     command! -buffer TWSync              :call taskwarrior#action#sync('sync')
 endif
 
-command! -buffer TWReportInfo        :call taskwarrior#action#show_info()
 command! -buffer TWToggleReadonly    :let g:task_readonly = (g:task_readonly ? 0 : 1) | call taskwarrior#refresh()
 command! -buffer TWToggleHLField     :let g:task_highlight_field = (g:task_highlight_field ? 0 : 1) | call taskwarrior#refresh()
 command! -buffer -nargs=? -complete=customlist,taskwarrior#complete#sort TWReportSort :call taskwarrior#action#sort_by_arg(<q-args>)
