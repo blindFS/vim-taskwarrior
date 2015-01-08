@@ -283,7 +283,7 @@ function! taskwarrior#action#select()
 endfunction
 
 function! taskwarrior#action#show_info(...)
-    if a:0 > 0 && a:1 !~ '\s\+'
+    if a:0 > 0
         let command = 'info'
         let filter = a:1
     else

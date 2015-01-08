@@ -31,7 +31,9 @@ function! taskinfo#init(command, filter, info)
     nnoremap <silent> <buffer> q :call taskinfo#quit()<CR>
     nnoremap <silent> <buffer> <enter> :call taskinfo#quit()<CR>
 
-    wincmd W
+    if a:command != 'info'
+        wincmd W
+    endif
 endfunction
 
 function! taskinfo#quit()
