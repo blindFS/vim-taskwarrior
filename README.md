@@ -138,6 +138,8 @@ vnoremap <buffer> <Space> ... " add visual selected tasks to selected list
 ```vim
 " default task report type
 let g:task_report_name     = 'next'
+" custom reports have to be listed explicitly to make them available
+let g:task_report_command  = []
 " whether the field under the cursor is highlighted
 let g:task_highlight_field = 1
 " can not make change to task data when set to 1
