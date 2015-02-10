@@ -34,7 +34,7 @@ Suggested plugins
 If you experience line-wrapping issues, add the following line to your .vimrc
 
 ```
-let g:task_rc_override = 'defaultwidth=999'
+let g:task_rc_override = 'rc.defaultwidth=999'
 ```
 
 ----
