@@ -40,7 +40,7 @@ let g:task_rc_override = 'rc.defaultwidth=0'
 If you experience task truncation (vim-taskwarrior not showing enough tasks), add:
 
 ```
-let g:task_rc_override = 'rc.defaultwidth=0'
+let g:task_rc_override = 'rc.defaultheight=0'
 ```
 
 
