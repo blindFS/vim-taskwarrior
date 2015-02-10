@@ -34,8 +34,15 @@ Suggested plugins
 If you experience line-wrapping issues, add the following line to your .vimrc
 
 ```
-let g:task_rc_override = 'rc.defaultwidth=999'
+let g:task_rc_override = 'rc.defaultwidth=0'
 ```
+
+If you experience task truncation (vim-taskwarrior not showing enough tasks), add:
+
+```
+let g:task_rc_override = 'rc.defaultwidth=0'
+```
+
 
 ----
 
