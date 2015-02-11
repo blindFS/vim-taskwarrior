@@ -44,8 +44,8 @@ function! taskwarrior#list(...) abort
     if split_lineno == -1
         call append(0, line1)
     else
-        let end = match(context[split_lineno+0:], '^$')
-        call append(0, context[split_lineno-1:end+split_lineno-1])
+        let end = len(context)-match(reverse(copy(context)), '^$')
+        call append(0, context[split_lineno-1:end-1])
         silent global/^[\t ]*$/delete
         silent global/^[ -]\+$/delete
     endif
