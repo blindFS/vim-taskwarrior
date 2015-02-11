@@ -19,7 +19,8 @@ function! taskwarrior#action#urgency() abort
         let udas = []
     endif
     let isuda = 0
-    if index(['due', 'priority', 'project', 'tags', 'age'], cc) == -1
+    if index(['due', 'priority', 'project', 'tags', 'age', 'scheduled']
+                \ , cc) == -1
         if index(udas, cc) == -1
             return
         else
@@ -28,8 +29,9 @@ function! taskwarrior#action#urgency() abort
     endif
     " TODO value specific options
     let cv = taskwarrior#data#get_value_by_column(line('.'), cc)
-    let option = isuda ? 'urgency.uda'.cc.'.coefficient' : 'urgency.'.cc.'.coefficient'
-    let default = split(system('task _get rc.'.option), '\n')[0]
+    let option = isuda ? 'urgency.uda.'.cc.'.coefficient' : 'urgency.'.cc.'.coefficient'
+    let default_raw = split(system('task _get rc.'.option), '\n')
+    let default = len(default_raw) ? default_raw[0] : '0'
     let new = input(option.' : ', default)
     let rcfile = $HOME.'/.taskrc'
     if !filereadable(rcfile)
