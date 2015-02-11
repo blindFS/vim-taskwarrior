@@ -6,6 +6,55 @@ function! taskwarrior#action#set_done()
     call taskwarrior#system_call(taskwarrior#data#get_uuid(), ' done', '', 'silent')
 endfunction
 
+function! taskwarrior#action#urgency() abort
+    let cc = taskwarrior#data#current_column()
+    " TODO better method to get uda list?
+    let udas = split(system('task udas'), '\n')
+    let start = match(udas, '^[ -]\+$')
+    if start > 0
+        let end = match(udas[start+0:], '^$')
+        let udas = udas[start+1: end+start-1]
+        call map(udas, 'split(v:val, " ")[0]')
+    else
+        let udas = []
+    endif
+    let isuda = 0
+    if index(['due', 'priority', 'project', 'tags', 'age'], cc) == -1
+        if index(udas, cc) == -1
+            return
+        else
+            let isuda = 1
+        endif
+    endif
+    " TODO value specific options
+    let cv = taskwarrior#data#get_value_by_column(line('.'), cc)
+    let option = isuda ? 'urgency.uda'.cc.'.coefficient' : 'urgency.'.cc.'.coefficient'
+    let default = split(system('task _get rc.'.option), '\n')[0]
+    let new = input(option.' : ', default)
+    let rcfile = $HOME.'/.taskrc'
+    if !filereadable(rcfile)
+        return
+    endif
+    let lines = readfile(rcfile)
+    let index = match(lines, option)
+    if str2float(new) == str2float(default)
+        return
+    elseif str2float(new) == 0
+        call filter(lines, 'v:val !~ option')
+        normal :
+        echom option.' is removed from taskrc, :TWEditTaskrc to checkout.'
+    elseif index == -1
+        call add(lines, option.'='.new)
+        normal :
+        echom 'new '.option.' is added to taskrc, :TWEditTaskrc to checkout.'
+    else
+        let lines[index] = option.'='.new
+        normal :
+        echom option."'s value has changed, :TWEditTaskrc to checkout."
+    endif
+    call writefile(lines, rcfile)
+endfunction
+
 function! taskwarrior#action#modify(mode)
     let uuid = taskwarrior#data#get_uuid()
     if uuid == ''

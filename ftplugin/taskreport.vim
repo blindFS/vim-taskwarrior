@@ -35,6 +35,7 @@ nnoremap <silent> <buffer> <Plug>(taskwarrior_report)          :call taskwarrior
 nnoremap <silent> <buffer> <Plug>(taskwarrior_refresh)         :call taskwarrior#list()<CR>
 nnoremap <silent> <buffer> <Plug>(taskwarrior_clear_completed) :call taskwarrior#action#clear_completed()<CR>
 nnoremap <silent> <buffer> <Plug>(taskwarrior_undo)            :call taskwarrior#action#undo()<CR>
+nnoremap <silent> <buffer> <Plug>(taskwarrior_urgency)         :call taskwarrior#action#urgency()<CR>
 nnoremap <silent> <buffer> <Plug>(taskwarrior_sync)            :call taskwarrior#action#sync('sync')<CR>
 nnoremap <silent> <buffer> <Plug>(taskwarrior_modify_field)    :call taskwarrior#action#modify('current')<CR>
 nnoremap <silent> <buffer> <Plug>(taskwarrior_modify_task)     :call taskwarrior#action#modify('')<CR>
@@ -115,6 +116,7 @@ else
     nmap <silent> <buffer> R        <Plug>(taskwarrior_refresh)
     nmap <silent> <buffer> X        <Plug>(taskwarrior_clear_completed)
     nmap <silent> <buffer> u        <Plug>(taskwarrior_undo)
+    nmap <silent> <buffer> U        <Plug>(taskwarrior_urgency)
     nmap <silent> <buffer> S        <Plug>(taskwarrior_sync)
     nmap <silent> <buffer> m        <Plug>(taskwarrior_modify_field)
     nmap <silent> <buffer> M        <Plug>(taskwarrior_modify_task)
