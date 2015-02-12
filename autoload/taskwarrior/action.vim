@@ -7,54 +7,58 @@ function! taskwarrior#action#set_done()
 endfunction
 
 function! taskwarrior#action#urgency() abort
-    let cc = taskwarrior#data#current_column()
-    " TODO better method to get uda list?
-    let udas = split(system('task udas'), '\n')
-    let start = match(udas, '^[ -]\+$')
-    if start > 0
-        let end = match(udas[start+0:], '^$')
-        let udas = udas[start+1: end+start-1]
-        call map(udas, 'split(v:val, " ")[0]')
-    else
-        let udas = []
-    endif
+    let cc   = taskwarrior#data#current_column()
+    let udas = split(system('task _udas'), '\n')
+    let cmap = { 'start' : 'active',
+                \ 'entry' : 'age',
+                \ 'depends' : 'blocked',
+                \ 'parent' : 'blocking',
+                \ 'wait' : 'waiting'
+                \ }
     let isuda = 0
-    if index(['due', 'priority', 'project', 'tags', 'age', 'scheduled']
+    if has_key(cmap, cc)
+        let cc = cmap[cc]
+    elseif index(['due', 'priority', 'project', 'tags', 'scheduled']
                 \ , cc) == -1
         if index(udas, cc) == -1
+            call taskwarrior#sort#by_arg('urgency-')
             return
         else
             let isuda = 1
         endif
     endif
-    " TODO value specific options
-    let cv = taskwarrior#data#get_value_by_column(line('.'), cc)
-    let option = isuda ? 'urgency.uda.'.cc.'.coefficient' : 'urgency.'.cc.'.coefficient'
-    let default_raw = split(system('task _get rc.'.option), '\n')
-    let default = len(default_raw) ? default_raw[0] : '0'
-    let new = input(option.' : ', default)
     let rcfile = $HOME.'/.taskrc'
-    if !filereadable(rcfile)
-        return
+    if filereadable(rcfile)
+        let cv = taskwarrior#data#get_value_by_column(line('.'), cc)
+        let option = isuda ? 'urgency.uda.'.cc.'.coefficient' :
+                    \ 'urgency.'.cc.'.coefficient'
+        if cv != ''
+            let ctag = expand('<cword>')
+            if cc == 'tags' && index(split(cv), ctag) != -1
+                let option = 'urgency.user.tag.'.ctag.'.coefficient'
+            elseif cc == 'project' && cv =~ '^\w\+$'
+                let option = 'urgency.user.project.'.
+                            \ cv.'.coefficient'
+            elseif isuda && cv =~ '^\w\+$'
+                let option = 'urgency.uda.'.cc.'.'.cv.'.coefficient'
+            endif
+        endif
+        let default_raw = split(system('task _get rc.'.option), '\n')
+        let default     = len(default_raw) ? default_raw[0] : '0'
+        let new         = input(option.' : ', default)
+        let lines       = readfile(rcfile)
+        let index       = match(lines, option)
+        if str2float(new) == str2float(default)
+        elseif str2float(new) == 0
+            call filter(lines, 'v:val !~ option')
+        elseif index == -1
+            call add(lines, option.'='.new)
+        else
+            let lines[index] = option.'='.new
+        endif
+        call writefile(lines, rcfile)
     endif
-    let lines = readfile(rcfile)
-    let index = match(lines, option)
-    if str2float(new) == str2float(default)
-        return
-    elseif str2float(new) == 0
-        call filter(lines, 'v:val !~ option')
-        normal :
-        echom option.' is removed from taskrc, :TWEditTaskrc to checkout.'
-    elseif index == -1
-        call add(lines, option.'='.new)
-        normal :
-        echom 'new '.option.' is added to taskrc, :TWEditTaskrc to checkout.'
-    else
-        let lines[index] = option.'='.new
-        normal :
-        echom option."'s value has changed, :TWEditTaskrc to checkout."
-    endif
-    call writefile(lines, rcfile)
+    call taskwarrior#sort#by_arg('urgency-')
 endfunction
 
 function! taskwarrior#action#modify(mode)

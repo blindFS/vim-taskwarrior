@@ -16,7 +16,9 @@ function! taskwarrior#sort#by_column(polarity, column)
     " let default  = system('task _get -- rc.report.'.b:command.'.sort')[0:-2]
     let default  = matchstr(system('task show | grep report.'.b:command.'.sort')[0:-2], '\S*$')
     let colshort = map(copy(b:task_report_columns), 'matchstr(v:val, "^\\w*")')
-    let ccol     = index(colshort, a:column) == -1 ? taskwarrior#data#current_column() : a:column
+    let ccol     = index(colshort, a:column) == -1 ?
+                \ taskwarrior#data#current_column() :
+                \ a:column
     let list     = split(fromrc, ',')
     let ind      = index(split(fromrc, '[-+],\='), ccol)
     let dlist    = split(default, ',')
