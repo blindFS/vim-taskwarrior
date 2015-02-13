@@ -32,9 +32,9 @@ function! taskwarrior#action#urgency() abort
         let cv = taskwarrior#data#get_value_by_column(line('.'), cc)
         let option = isuda ? 'urgency.uda.'.cc.'.coefficient' :
                     \ 'urgency.'.cc.'.coefficient'
-        if cv != ''
+        if len(cv)
             let ctag = expand('<cword>')
-            if cc == 'tags' && index(split(cv), ctag) != -1
+            if cc == 'tags' && index(cv, ctag) != -1
                 let option = 'urgency.user.tag.'.ctag.'.coefficient'
             elseif cc == 'project' && cv =~ '^\w\+$'
                 let option = 'urgency.user.project.'.
