@@ -13,7 +13,8 @@ function! taskwarrior#action#urgency() abort
                 \ 'entry' : 'age',
                 \ 'depends' : 'blocked',
                 \ 'parent' : 'blocking',
-                \ 'wait' : 'waiting'
+                \ 'wait' : 'waiting',
+                \ 'description' : 'annotations'
                 \ }
     let isuda = 0
     if has_key(cmap, cc)
@@ -36,9 +37,11 @@ function! taskwarrior#action#urgency() abort
             let ctag = expand('<cword>')
             if cc == 'tags' && index(split(cv), ctag) != -1
                 let option = 'urgency.user.tag.'.ctag.'.coefficient'
-            elseif cc == 'project' && cv =~ '^\w\+$'
+            elseif cc == 'project' && cv =~ '^[^ \t%\\*]\+$'
+                let pl = split(cv, '\.')
+                let idx = index(pl, expand('<cword>'))
                 let option = 'urgency.user.project.'.
-                            \ cv.'.coefficient'
+                            \ join(pl[0:idx], '.').'.coefficient'
             elseif isuda && cv =~ '^\w\+$'
                 let option = 'urgency.uda.'.cc.'.'.cv.'.coefficient'
             endif
@@ -59,6 +62,7 @@ function! taskwarrior#action#urgency() abort
         call writefile(lines, rcfile)
     endif
     call taskwarrior#sort#by_arg('urgency-')
+    execute 'normal! :\<Esc>'
 endfunction
 
 function! taskwarrior#action#modify(mode)
