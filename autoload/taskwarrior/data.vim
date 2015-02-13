@@ -35,12 +35,8 @@ function! taskwarrior#data#get_value_by_column(line, column, ...)
         let index = match(b:task_report_columns, '^'.a:column.'.*')
         return taskwarrior#data#get_value_by_index(a:line, index(b:task_report_columns, a:column))
     else
-        let ilist = split(system('task all '.taskwarrior#data#get_uuid().' rc.report.all.columns='.a:column.' rc.report.all.labels=cc'), '\n')
-        let split_lineno = match(ilist, '^[ -]\+$')
-        if split_lineno != -1
-            return substitute(ilist[split_lineno+1],  '\(\s*$\|^\s*\)', '',  'g')
-        endif
-        return ''
+        let dict = taskwarrior#data#get_query()
+        return has_key(dict, a:column) ? dict[a:column] : ''
     endif
 endfunction
 
