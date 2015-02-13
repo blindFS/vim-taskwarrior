@@ -34,7 +34,7 @@ function! taskwarrior#action#urgency() abort
                     \ 'urgency.'.cc.'.coefficient'
         if len(cv)
             let ctag = expand('<cword>')
-            if cc == 'tags' && index(cv, ctag) != -1
+            if cc == 'tags' && index(split(cv), ctag) != -1
                 let option = 'urgency.user.tag.'.ctag.'.coefficient'
             elseif cc == 'project' && cv =~ '^\w\+$'
                 let option = 'urgency.user.project.'.

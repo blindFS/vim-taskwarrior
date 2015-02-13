@@ -1,7 +1,8 @@
 function! taskwarrior#data#get_uuid(...)
     let line = a:0 == 0 ? '.' : a:1
     let vol = taskwarrior#data#get_value_by_column(line, 'uuid')
-    let vol = vol =~ '[0-9a-f]\{8}\(-[0-9a-f]\{4}\)\{3}-[0-9a-f]\{12}' ? vol : taskwarrior#data#get_value_by_column(line, 'id')
+    let vol = vol =~ '[0-9a-f]\{8}\(-[0-9a-f]\{4}\)\{3}-[0-9a-f]\{12}' ?
+                \ vol : taskwarrior#data#get_value_by_column(line, 'id')
     return vol =~ '^\s*-*\s*$' ? '' : vol
 endfunction
 
@@ -36,7 +37,15 @@ function! taskwarrior#data#get_value_by_column(line, column, ...)
         return taskwarrior#data#get_value_by_index(a:line, index(b:task_report_columns, a:column))
     else
         let dict = taskwarrior#data#get_query()
-        return has_key(dict, a:column) ? dict[a:column] : ''
+        let val = has_key(dict, a:column) ?
+                    \ dict[a:column] : ''
+        if type(val) == type('')
+            return val
+        elseif type(val) == type([])
+            return join(val, ' ')
+        else
+            return string(val)
+        endif
     endif
 endfunction
 
