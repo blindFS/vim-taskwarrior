@@ -10,7 +10,8 @@ function! taskinfo#init(command, filter, info)
         return
     endif
 
-    execute g:task_info_position.' '.g:task_info_size.(g:task_info_vsplit ? 'v' : '').'split'
+    execute g:task_info_position.' '.g:task_info_size.
+                \ (g:task_info_vsplit ? 'v' : '').'split'
     edit taskinfo
     let g:task_info = bufnr('%')
     let g:task_info_arg = [a:command, a:filter]
@@ -24,6 +25,7 @@ function! taskinfo#init(command, filter, info)
     setlocal buftype=nofile
     setlocal nowrap
     setlocal filetype=taskinfo
+    1
 
     let b:command = a:command
     let b:filter = a:filter
