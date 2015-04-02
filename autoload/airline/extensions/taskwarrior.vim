@@ -2,6 +2,7 @@ function! airline#extensions#taskwarrior#apply(...)
     if &ft == 'taskreport'
         call a:1.add_section('airline_a', ' Taskwarrior ')
         call a:1.add_section('airline_b', ' %{b:command} %{&readonly ? g:airline_symbols.readonly : ""}')
+        call a:1.add_section('airline_b', ' @%{b:context} ')
         call a:1.add_section('airline_b', g:task_left_arrow.' %{b:hist > 1 ? g:task_right_arrow : ""}')
         call a:1.add_section('airline_c', ' %{b:filter} ')
         call a:1.add_section('airline_c', ' %{b:sstring} ')
@@ -27,6 +28,12 @@ function! airline#extensions#taskwarrior#apply(...)
         call a:1.split()
         return 1
     endif
+endfunction
+
+function s:context()
+    let con = split(system('task context show'), '\n')
+    let con = con =~ 'No context' ? 'none' : con
+    return con
 endfunction
 
 function! airline#extensions#taskwarrior#init(ext)

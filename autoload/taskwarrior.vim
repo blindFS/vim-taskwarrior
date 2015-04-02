@@ -70,6 +70,9 @@ function! taskwarrior#list(...) abort
     let b:selected      = []
     let b:sline         = []
     let b:sstring       = ''
+    let con             = split(system('task context show'), '\n')[0]
+    let b:context       = con =~ 'No context' ? 'none' :
+                \ matchstr(con, 'Context .\zs\S*\ze. ')
 
     setlocal filetype=taskreport
     if exists('b:ct')
