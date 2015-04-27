@@ -65,10 +65,11 @@ function! taskwarrior#list(...) abort
     let b:task_columns += [999]
     let b:summary       = taskwarrior#data#global_stats()
     let b:sort          = taskwarrior#sort#order_list()[0]
-    let b:now           = split(system('task active limit:1 rc.verbose:nothing
+    let a_tasks         = split(system('task active limit:1 rc.verbose:nothing
                 \ rc.report.active.sort=start-
                 \ rc.report.active.columns=start.active,start.age,id,description.desc
-                \ rc.report.active.labels=A,Age,ID,Description'), '\n')[-1]
+                \ rc.report.active.labels=A,Age,ID,Description'), '\n')
+    let b:now           = len(a_tasks) > 0 ? a_tasks[-1] : ''
     let b:active        = split(system('task start.any: count'), '\n')[0]
     let b:selected      = []
     let b:sline         = []
