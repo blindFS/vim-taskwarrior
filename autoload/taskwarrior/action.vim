@@ -366,5 +366,5 @@ function! taskwarrior#action#show_info(...)
             let filter = b:filter
         endif
     endif
-    call taskinfo#init(command, filter, split(system('task '.command.' '.filter), '\n'))
+    call taskinfo#init(command, filter, split(system('task rc.color=no '.command.' '.filter), '\n'))
 endfunction
