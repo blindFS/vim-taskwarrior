@@ -64,6 +64,9 @@ and extract in ~/.vim or use your favorite plugin manager.
 - [NeoBundle](https://github.com/Shougo/neobundle.vim)
     1. Add `NeoBundle 'farseer90718/vim-taskwarrior'` to .vimrc
     2. Run `:NeoBundleInstall`
+- [vim-plug](https://github.com/junegunn/vim-plug)
+    1. Add `Plug 'blindFS/vim-taskwarrior'` to .vimrc
+    2. Run `:PlugInstall`
 
 ----
 
