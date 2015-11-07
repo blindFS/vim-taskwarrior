@@ -7,7 +7,7 @@ function! taskwarrior#list(...) abort
     let b:command = get(a:, 1, b:command)
     let b:filter  = get(a:, 2, b:filter)
     let b:type    = get(a:, 3, b:type)
-    let b:rc      = get(a:, 4, b:rc)
+    let b:rc      = get(a:, 4, b:rc). ' rc.defaultheight=0'
 
     let b:rc     .= ' '.join(filter(split(b:filter, ' '), "v:val =~ '^rc\..*'"))
     let b:filter  = join(filter(split(b:filter, ' '), "v:val !~ '^rc\..*'"))
