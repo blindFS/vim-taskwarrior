@@ -36,7 +36,7 @@ function! taskwarrior#data#get_value_by_column(line, column, ...)
         let index = match(b:task_report_columns, '^'.a:column.'.*')
         return taskwarrior#data#get_value_by_index(a:line, index(b:task_report_columns, a:column))
     else
-        let dict = taskwarrior#data#get_query()[0]
+        let dict = taskwarrior#data#get_query()
         let val = get(dict, a:column, '')
         if type(val) == type('')
             return val
@@ -91,7 +91,10 @@ function! taskwarrior#data#get_query(...)
     if uuid == ''
         return {}
     endif
-    return webapi#json#decode(system('task '.uuid.' export'))
+    let obj = webapi#json#decode(substitute(system(
+                \ 'task rc.verbose=off '.uuid.' export'),
+                \ '\nConfiguration.*', '', ''))
+    return type(obj) == 3 ? obj[0] : obj
 endfunction
 
 function! taskwarrior#data#global_stats()
