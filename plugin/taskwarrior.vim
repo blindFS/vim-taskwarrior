@@ -3,7 +3,7 @@ if exists('g:loaded_taskwarrior') && g:loaded_taskwarrior
 endif
 
 if !executable('task')
-    echoerr "This plugin depends on taskwarrior(http://taskwarrior.org)."
+    echoerr "This plugin depends on taskwarrior(https://taskwarrior.org)."
     finish
 endif
 
