@@ -1,14 +1,14 @@
 vim-taskwarrior
 ===============
 
-_a vim interface for [taskwarrior](http://taskwarrior.org)_
+_a vim interface for [taskwarrior](https://taskwarrior.org)_
 
 Taskwarrior is a command-line todo list manager. It helps you manage task lists
 with projects, tags, dates, dependencies, annotations, recurrences and apply
 complex (or simple) queries with attribute modifiers, boolean, regex filters
 and produce any number of reports, built-in or customizable reports, attributes
 and color themes. Task keeps data in JSON text files and it's always improving.
-Find out more at http://taskwarrior.org and read man task and man taskrc.
+Find out more at https://taskwarrior.org and read man task and man taskrc.
 
 vim-taskwarrior is a vim plugin that extends taskwarrior with an interactive
 interface. It features a rich set of mappings and commands, is easy to customize,
@@ -22,7 +22,7 @@ Homepage: https://github.com/farseer90718/vim-taskwarrior, patches welcome!
 This plugin requires Taskwarrior 2.2.0 or higher, although >2.3.x is required
 for taskd sync functions, and recommended in general, and well worth the price;
 free :)
-see: http://taskwarrior.org/projects/taskwarrior/wiki/Download
+see: https://taskwarrior.org/download/
 
 Vim version 7.x is required.
 
