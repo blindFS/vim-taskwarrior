@@ -85,23 +85,34 @@ function! taskwarrior#action#modify(mode)
 endfunction
 
 function! taskwarrior#action#delete()
-    let uuid = taskwarrior#data#get_uuid()
-    if uuid == ''
-        call taskwarrior#action#annotate('del')
-    else
-        let ccol = taskwarrior#data#current_column()
-        if index(['project', 'tags', 'due', 'priority', 'start', 'depends'], ccol) != -1
-            call taskwarrior#system_call(uuid, 'modify', ccol.':', 'silent')
+        let uuid = taskwarrior#data#get_uuid()
+        if uuid == ''
+            call taskwarrior#action#annotate('del')
         else
-            execute '!task '.uuid.' delete'
+            let ccol = taskwarrior#data#current_column()
+            if index(['project', 'tags', 'due', 'priority', 'start', 'depends'], ccol) != -1
+                call taskwarrior#system_call(uuid, 'modify', ccol.':', 'silent')
+            else
+                if !has('nvim')
+                    execute '!task '.uuid.' delete'
+                else
+                    execute terminal 'task'.uuid.'delete'
+                endif
+            endif
+        endif
+        if !has('nvim')
+            call taskwarrior#refresh()
         endif
     endif
-    call taskwarrior#refresh()
 endfunction
 
 function! taskwarrior#action#remove()
-    execute '!task '.taskwarrior#data#get_uuid().' delete'
-    call taskwarrior#list()
+    if !has('nvim')
+        execute '!task '.taskwarrior#data#get_uuid().' delete'
+        call taskwarrior#list()
+    else
+        execute 'terminal task '.taskwarrior#data#get_uuid().' delete'
+    endif
 endfunction
 
 function! taskwarrior#action#annotate(op)
@@ -297,21 +308,27 @@ function! taskwarrior#action#move_cursor(direction, mode)
 endfunction
 
 function! taskwarrior#action#undo()
-    if has("gui_running")
-        if exists('g:task_gui_term') && g:task_gui_term == 1
-            !task rc.color=off undo
-        elseif executable('xterm')
-            silent !xterm -e 'task undo'
-        elseif executable('urxvt')
-            silent !urxvt -e task undo
-        elseif executable('gnome-terminal')
-            silent !gnome-terminal -e 'task undo'
-        endif
+    if has('nvim')
+        terminal task undo
     else
-        sil !clear
-        !task undo
+        if has("gui_running")
+            if exists('g:task_gui_term') && g:task_gui_term == 1
+                !task rc.color=off undo
+            elseif executable('xterm')
+                silent !xterm -e 'task undo'
+            elseif executable('urxvt')
+                silent !urxvt -e task undo
+            elseif executable('gnome-terminal')
+                silent !gnome-terminal -e 'task undo'
+            endif
+        else
+            sil !clear
+            !task undo
+        endif
+        if has('nvim')
+            call taskwarrior#refresh()
+        endif
     endif
-    call taskwarrior#refresh()
 endfunction
 
 function! taskwarrior#action#clear_completed()
@@ -320,7 +337,7 @@ function! taskwarrior#action#clear_completed()
 endfunction
 
 function! taskwarrior#action#sync(action)
-    execute '!task '.a:action.' '
+    terminal task '.a:action.' '
     call taskwarrior#refresh()
 endfunction
 

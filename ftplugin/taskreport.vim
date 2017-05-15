@@ -143,3 +143,10 @@ endif
 command! -buffer TWToggleReadonly    :let g:task_readonly = (g:task_readonly ? 0 : 1) | call taskwarrior#refresh()
 command! -buffer TWToggleHLField     :let g:task_highlight_field = (g:task_highlight_field ? 0 : 1) | call taskwarrior#refresh()
 command! -buffer -nargs=? -complete=customlist,taskwarrior#complete#sort TWReportSort :call taskwarrior#action#sort_by_arg(<q-args>)
+
+if has('nvim')
+    augroup taskwarrior#neovim
+        autocmd!
+        autocmd BufEnter task*report call taskwarrior#refresh()
+    augroup end
+endif
