@@ -337,8 +337,10 @@ function! taskwarrior#action#clear_completed()
 endfunction
 
 function! taskwarrior#action#sync(action)
-    terminal task '.a:action.' '
-    call taskwarrior#refresh()
+    execute '!task '.a:action.' '
+    if !has('nvim')
+        call taskwarrior#refresh()
+    endif
 endfunction
 
 function! taskwarrior#action#select()
