@@ -76,7 +76,7 @@ endif
 
 if g:task_readonly
     setlocal readonly
-    if hasmapto('<Plug>(taskwarrior_undo)')
+    if !g:task_disable_mappings && hasmapto('<Plug>(taskwarrior_undo)')
         nunmap <silent> <buffer> A
         nunmap <silent> <buffer> x
         nunmap <silent> <buffer> o
@@ -104,32 +104,34 @@ if g:task_readonly
         vunmap <silent> <buffer> <Space>
     endif
 else
-    nmap <silent> <buffer> A        <Plug>(taskwarrior_annotate)
-    nmap <silent> <buffer> x        <Plug>(taskwarrior_denotate)
-    nmap <silent> <buffer> o        <Plug>(taskwarrior_open_annotate)
-    nmap <silent> <buffer> D        <Plug>(taskwarrior_remove)
-    nmap <silent> <buffer> <Del>    <Plug>(taskwarrior_delete)
-    nmap <silent> <buffer> a        <Plug>(taskwarrior_new)
-    nmap <silent> <buffer> c        <Plug>(taskwarrior_command)
-    nmap <silent> <buffer> d        <Plug>(taskwarrior_done)
-    nmap <silent> <buffer> r        <Plug>(taskwarrior_report)
-    nmap <silent> <buffer> R        <Plug>(taskwarrior_refresh)
-    nmap <silent> <buffer> X        <Plug>(taskwarrior_clear_completed)
-    nmap <silent> <buffer> u        <Plug>(taskwarrior_undo)
-    nmap <silent> <buffer> U        <Plug>(taskwarrior_urgency)
-    nmap <silent> <buffer> S        <Plug>(taskwarrior_sync)
-    nmap <silent> <buffer> m        <Plug>(taskwarrior_modify_field)
-    nmap <silent> <buffer> M        <Plug>(taskwarrior_modify_task)
-    nmap <silent> <buffer> p        <Plug>(taskwarrior_paste)
-    nmap <silent> <buffer> +        <Plug>(taskwarrior_start_task)
-    nmap <silent> <buffer> -        <Plug>(taskwarrior_stop_task)
-    nmap <silent> <buffer> <Space>  <Plug>(taskwarrior_select)
-    nmap <silent> <buffer> <C-A>    <Plug>(taskwarrior_increase)
-    nmap <silent> <buffer> <C-X>    <Plug>(taskwarrior_decrease)
-    vmap <silent> <buffer> d        <Plug>(taskwarrior_visual_done)
-    vmap <silent> <buffer> D        <Plug>(taskwarrior_visual_delete)
-    vmap <silent> <buffer> <Del>    <Plug>(taskwarrior_visual_delete)
-    vmap <silent> <buffer> <Space>  <Plug>(taskwarrior_visual_select)
+    if !g:task_disable_mappings
+        nmap <silent> <buffer> A        <Plug>(taskwarrior_annotate)
+        nmap <silent> <buffer> x        <Plug>(taskwarrior_denotate)
+        nmap <silent> <buffer> o        <Plug>(taskwarrior_open_annotate)
+        nmap <silent> <buffer> D        <Plug>(taskwarrior_remove)
+        nmap <silent> <buffer> <Del>    <Plug>(taskwarrior_delete)
+        nmap <silent> <buffer> a        <Plug>(taskwarrior_new)
+        nmap <silent> <buffer> c        <Plug>(taskwarrior_command)
+        nmap <silent> <buffer> d        <Plug>(taskwarrior_done)
+        nmap <silent> <buffer> r        <Plug>(taskwarrior_report)
+        nmap <silent> <buffer> R        <Plug>(taskwarrior_refresh)
+        nmap <silent> <buffer> X        <Plug>(taskwarrior_clear_completed)
+        nmap <silent> <buffer> u        <Plug>(taskwarrior_undo)
+        nmap <silent> <buffer> U        <Plug>(taskwarrior_urgency)
+        nmap <silent> <buffer> S        <Plug>(taskwarrior_sync)
+        nmap <silent> <buffer> m        <Plug>(taskwarrior_modify_field)
+        nmap <silent> <buffer> M        <Plug>(taskwarrior_modify_task)
+        nmap <silent> <buffer> p        <Plug>(taskwarrior_paste)
+        nmap <silent> <buffer> +        <Plug>(taskwarrior_start_task)
+        nmap <silent> <buffer> -        <Plug>(taskwarrior_stop_task)
+        nmap <silent> <buffer> <Space>  <Plug>(taskwarrior_select)
+        nmap <silent> <buffer> <C-A>    <Plug>(taskwarrior_increase)
+        nmap <silent> <buffer> <C-X>    <Plug>(taskwarrior_decrease)
+        vmap <silent> <buffer> d        <Plug>(taskwarrior_visual_done)
+        vmap <silent> <buffer> D        <Plug>(taskwarrior_visual_delete)
+        vmap <silent> <buffer> <Del>    <Plug>(taskwarrior_visual_delete)
+        vmap <silent> <buffer> <Space>  <Plug>(taskwarrior_visual_select)
+    endif
 
     command! -buffer TWAdd               :call taskwarrior#action#new()
     command! -buffer TWAnnotate          :call taskwarrior#action#annotate('add')
