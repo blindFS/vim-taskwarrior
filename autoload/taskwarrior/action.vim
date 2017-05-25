@@ -85,33 +85,32 @@ function! taskwarrior#action#modify(mode)
 endfunction
 
 function! taskwarrior#action#delete()
-        let uuid = taskwarrior#data#get_uuid()
-        if uuid == ''
-            call taskwarrior#action#annotate('del')
-        else
-            let ccol = taskwarrior#data#current_column()
-            if index(['project', 'tags', 'due', 'priority', 'start', 'depends'], ccol) != -1
-                call taskwarrior#system_call(uuid, 'modify', ccol.':', 'silent')
-            else
-                if !has('nvim')
-                    execute '!task '.uuid.' delete'
-                else
-                    execute terminal 'task'.uuid.'delete'
-                endif
-            endif
-        endif
-        if !has('nvim')
+    let uuid = taskwarrior#data#get_uuid()
+    if uuid == ''
+        call taskwarrior#action#annotate('del')
+        call taskwarrior#refresh()
+    else
+        let ccol = taskwarrior#data#current_column()
+        if index(['project', 'tags', 'due', 'priority', 'start', 'depends'], ccol) != -1
+            call taskwarrior#system_call(uuid, 'modify', ccol.':', 'silent')
             call taskwarrior#refresh()
+        else
+            if has('nvim')
+                execute 'terminal task '.uuid.' delete'
+            else
+                execute '!task '.uuid.' delete'
+                call taskwarrior#refresh()
+            endif
         endif
     endif
 endfunction
 
 function! taskwarrior#action#remove()
-    if !has('nvim')
+    if has('nvim')
+        execute 'terminal task '.taskwarrior#data#get_uuid().' delete'
+    else
         execute '!task '.taskwarrior#data#get_uuid().' delete'
         call taskwarrior#list()
-    else
-        execute 'terminal task '.taskwarrior#data#get_uuid().' delete'
     endif
 endfunction
 
@@ -309,7 +308,7 @@ endfunction
 
 function! taskwarrior#action#undo()
     if has('nvim')
-        terminal task undo
+        execute 'terminal task undo'
     else
         if has("gui_running")
             if exists('g:task_gui_term') && g:task_gui_term == 1
@@ -325,9 +324,7 @@ function! taskwarrior#action#undo()
             sil !clear
             !task undo
         endif
-        if has('nvim')
-            call taskwarrior#refresh()
-        endif
+        call taskwarrior#refresh()
     endif
 endfunction
 
@@ -337,8 +334,10 @@ function! taskwarrior#action#clear_completed()
 endfunction
 
 function! taskwarrior#action#sync(action)
-    execute '!task '.a:action.' '
-    if !has('nvim')
+    if has('nvim')
+        execute 'terminal task '.a:action.' '
+    else
+        execute '!task '.a:action.' '
         call taskwarrior#refresh()
     endif
 endfunction
