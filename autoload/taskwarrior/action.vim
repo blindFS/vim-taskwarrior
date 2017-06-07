@@ -96,7 +96,7 @@ function! taskwarrior#action#delete()
             call taskwarrior#refresh()
         else
             if has('nvim')
-                execute 'terminal task '.uuid.' delete'
+                execute 'new | terminal task '.uuid.' delete'
             else
                 execute '!task '.uuid.' delete'
                 call taskwarrior#refresh()
@@ -107,7 +107,7 @@ endfunction
 
 function! taskwarrior#action#remove()
     if has('nvim')
-        execute 'terminal task '.taskwarrior#data#get_uuid().' delete'
+        execute 'new | terminal task '.taskwarrior#data#get_uuid().' delete'
     else
         execute '!task '.taskwarrior#data#get_uuid().' delete'
         call taskwarrior#list()
@@ -308,7 +308,7 @@ endfunction
 
 function! taskwarrior#action#undo()
     if has('nvim')
-        execute 'terminal task undo'
+        execute 'new | terminal task undo'
     else
         if has("gui_running")
             if exists('g:task_gui_term') && g:task_gui_term == 1
@@ -335,7 +335,7 @@ endfunction
 
 function! taskwarrior#action#sync(action)
     if has('nvim')
-        execute 'terminal task '.a:action.' '
+        execute 'new | terminal task '.a:action.' '
     else
         execute '!task '.a:action.' '
         call taskwarrior#refresh()
