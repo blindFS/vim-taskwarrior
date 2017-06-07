@@ -88,20 +88,30 @@ function! taskwarrior#action#delete()
     let uuid = taskwarrior#data#get_uuid()
     if uuid == ''
         call taskwarrior#action#annotate('del')
+        call taskwarrior#refresh()
     else
         let ccol = taskwarrior#data#current_column()
         if index(['project', 'tags', 'due', 'priority', 'start', 'depends'], ccol) != -1
             call taskwarrior#system_call(uuid, 'modify', ccol.':', 'silent')
+            call taskwarrior#refresh()
         else
-            execute '!task '.uuid.' delete'
+            if has('nvim')
+                execute 'new | terminal task '.uuid.' delete'
+            else
+                execute '!task '.uuid.' delete'
+                call taskwarrior#refresh()
+            endif
         endif
     endif
-    call taskwarrior#refresh()
 endfunction
 
 function! taskwarrior#action#remove()
-    execute '!task '.taskwarrior#data#get_uuid().' delete'
-    call taskwarrior#list()
+    if has('nvim')
+        execute 'new | terminal task '.taskwarrior#data#get_uuid().' delete'
+    else
+        execute '!task '.taskwarrior#data#get_uuid().' delete'
+        call taskwarrior#list()
+    endif
 endfunction
 
 function! taskwarrior#action#annotate(op)
@@ -297,21 +307,25 @@ function! taskwarrior#action#move_cursor(direction, mode)
 endfunction
 
 function! taskwarrior#action#undo()
-    if has("gui_running")
-        if exists('g:task_gui_term') && g:task_gui_term == 1
-            !task rc.color=off undo
-        elseif executable('xterm')
-            silent !xterm -e 'task undo'
-        elseif executable('urxvt')
-            silent !urxvt -e task undo
-        elseif executable('gnome-terminal')
-            silent !gnome-terminal -e 'task undo'
-        endif
+    if has('nvim')
+        execute 'new | terminal task undo'
     else
-        sil !clear
-        !task undo
+        if has("gui_running")
+            if exists('g:task_gui_term') && g:task_gui_term == 1
+                !task rc.color=off undo
+            elseif executable('xterm')
+                silent !xterm -e 'task undo'
+            elseif executable('urxvt')
+                silent !urxvt -e task undo
+            elseif executable('gnome-terminal')
+                silent !gnome-terminal -e 'task undo'
+            endif
+        else
+            sil !clear
+            !task undo
+        endif
+        call taskwarrior#refresh()
     endif
-    call taskwarrior#refresh()
 endfunction
 
 function! taskwarrior#action#clear_completed()
@@ -320,8 +334,12 @@ function! taskwarrior#action#clear_completed()
 endfunction
 
 function! taskwarrior#action#sync(action)
-    execute '!task '.a:action.' '
-    call taskwarrior#refresh()
+    if has('nvim')
+        execute 'new | terminal task '.a:action.' '
+    else
+        execute '!task '.a:action.' '
+        call taskwarrior#refresh()
+    endif
 endfunction
 
 function! taskwarrior#action#select()
