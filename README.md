@@ -1,11 +1,13 @@
 vim-taskwarrior
 ===============
 
-** This repo is forked from the original unmaintained [blindFS/vim-taskwarrior](https://github.com/blindFS/vim-taskwarrior).**
+## Acknowledgement
+
+**This repo is forked from the original unmaintained** [blindFS/vim-taskwarrior](https://github.com/blindFS/vim-taskwarrior).
 
 ## Things added since forked
 
-* Support for native Windows by calling TaskWarrior from WSL (TaskWarrior need to be installed inside WSL).
+* Support for native Windows 10 by calling *TaskWarrior* from *WSL* (*TaskWarrior* need to be installed inside *WSL*).
 
 
 ## Info from the original repo (modified accordingly)
