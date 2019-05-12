@@ -2,16 +2,14 @@ if exists('g:loaded_taskwarrior') && g:loaded_taskwarrior
     finish
 endif
 
-" WSL env in Windows OR native Linux env
-let g:tw_cmd = get(g:, 'taskwarrior_cmd', 'task')
-echo g:tw_cmd
-
+" FIRST -- WSL env in Windows OR native Linux env
+let g:tw_cmd                        = get(g:, 'taskwarrior_cmd', 'task')
 if !executable(g:tw_cmd)
-" if !(executable('task') || executable('wsl task'))
     echoerr "This plugin depends on taskwarrior(https://taskwarrior.org)."
     finish
 endif
 
+" other settings
 let g:task_report_command           = get(g:, 'task_report_command', [])
 let s:task_report_command           = ['active', 'all', 'blocked', 'blocking', 'completed', 'list', 'long', 'ls', 'minimal', 'newest', 'next', 'oldest', 'overdue', 'ready', 'recurring', 'unblocked', 'waiting']
 let g:task_report_command           = extend(s:task_report_command, g:task_report_command)
