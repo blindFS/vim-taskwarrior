@@ -16,7 +16,7 @@ function! taskwarrior#list(...) abort
 
     if b:type == 'special'
         setlocal buftype=nofile
-        call append(0, split(system('task '.b:rc.' '.b:filter.' '.b:command), '\n'))
+        call append(0, split(system(g:tw_cmd.' '.b:rc.' '.b:filter.' '.b:command), '\n'))
         silent global/^[\t ]*$/delete
         execute 'setlocal filetype=task_'.b:command
         nnoremap <buffer> q :call taskwarrior#Bclose(bufnr('%'))<CR>
@@ -31,12 +31,12 @@ function! taskwarrior#list(...) abort
     let rcl                   = matchstr(b:rc, 'rc\.report\.'.b:command.'\.labels.\zs\S*')
     " let b:task_report_columns = rcc == '' ? split(system("task _get -- rc.report.".b:command.".columns")[0:-2], ',') : split(rcc, ',')
     " let b:task_report_labels  = rcl == '' ? split(system("task _get -- rc.report.".b:command.".labels")[0:-2], ',') : split(rcl, ',')
-    let b:task_report_columns = rcc == '' ? split(matchstr(system("task show |grep report.".b:command.".columns")[0:-2], '\S*$'), ',') : split(rcc, ',')
-    let b:task_report_labels  = rcl == '' ? split(matchstr(system("task show |grep report.".b:command.".labels")[0:-2], '\S*$'), ',') : split(rcl, ',')
+    let b:task_report_columns = rcc == '' ? split(matchstr(system(g:tw_cmd." show |grep report.".b:command.".columns")[0:-2], '\S*$'), ',') : split(rcc, ',')
+    let b:task_report_labels  = rcl == '' ? split(matchstr(system(g:tw_cmd." show |grep report.".b:command.".labels")[0:-2], '\S*$'), ',') : split(rcl, ',')
     let line1                 = join(b:task_report_labels, ' ')
 
     let context = split(substitute(
-                \   system('task '.b:rc.' '.b:filter.' '.b:command),
+                \   system(g:tw_cmd.' '.b:rc.' '.b:filter.' '.b:command),
                 \   '\[[0-9;]\+m',
                 \   '', 'g'),
                 \ '\n')
@@ -65,16 +65,16 @@ function! taskwarrior#list(...) abort
     let b:task_columns += [999]
     let b:summary       = taskwarrior#data#global_stats()
     let b:sort          = taskwarrior#sort#order_list()[0]
-    let a_tasks         = split(system('task active limit:1 rc.verbose:nothing
+    let a_tasks         = split(system(g:tw_cmd.' active limit:1 rc.verbose:nothing
                 \ rc.report.active.sort=start-
                 \ rc.report.active.columns=start.active,start.age,id,description.desc
                 \ rc.report.active.labels=A,Age,ID,Description'), '\n')
     let b:now           = len(a_tasks) > 0 ? a_tasks[-1] : ''
-    let b:active        = split(system('task start.any: count'), '\n')[0]
+    let b:active        = split(system(g:tw_cmd.' start.any: count'), '\n')[0]
     let b:selected      = []
     let b:sline         = []
     let b:sstring       = ''
-    let con             = split(system('task context show'), '\n')[0]
+    let con             = split(system(g:tw_cmd.' context show'), '\n')[0]
     let b:context       = con =~ 'No context' ? 'none' :
                 \ matchstr(con, 'Context .\zs\S*\ze. ')
 
@@ -107,7 +107,7 @@ function! taskwarrior#init(...)
 
     if type == 'interactive'
         if !g:task_readonly
-            execute '!task '.argstring
+            execute '!'g:tw_cmd.' '.argstring
             call taskwarrior#refresh()
         endif
         return
@@ -197,12 +197,12 @@ endfunction
 
 function! taskwarrior#system_call(filter, command, args, mode)
     if a:mode == 'silent'
-        call system('task '.a:filter.' '.a:command.' '.a:args)
+        call system(g:tw_cmd.' '.a:filter.' '.a:command.' '.a:args)
     elseif a:mode == 'echo'
         echo "\n----------------\n"
-        echo system('task '.a:filter.' '.a:command.' '.a:args)
+        echo system(g:tw_cmd.' '.a:filter.' '.a:command.' '.a:args)
     else
-        execute '!task '.a:filter.' '.a:command.' '.a:args
+        execute '!'.g:tw_cmd.' '.a:filter.' '.a:command.' '.a:args
     endif
     call taskwarrior#refresh()
 endfunction

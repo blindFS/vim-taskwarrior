@@ -2,7 +2,7 @@ function! taskwarrior#complete#TW(A, L, P)
     let command     = copy(g:task_all_commands)
     let filter      = copy(g:task_filter)
     let config      = copy(g:task_all_configurations)
-    let contexts    = split(system('task _context'), '\n')
+    let contexts    = split(system(g:tw_cmd.' _context'), '\n')
     let context_cmd = ['define', 'show', 'list', 'delete']
     let words = split(a:L, ' ')
     if len(words) > 1 && words[1] == 'context'
@@ -29,7 +29,7 @@ function! taskwarrior#complete#TW(A, L, P)
 endfunction
 
 function! taskwarrior#complete#sort(A, L, P)
-    let cols = map(split(system('task _columns'), '\n'),
+    let cols = map(split(system(g:tw_cmd.' _columns'), '\n'),
                 \ 'matchstr(v:val, "^\\w*")')
     return filter(cols, 'match(v:val, a:A) != -1')
 endfunction

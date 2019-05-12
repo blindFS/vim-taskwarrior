@@ -309,7 +309,7 @@ function! taskwarrior#action#undo()
         endif
     else
         sil !clear
-        !task undo
+        !g:tw_cmd undo
     endif
     call taskwarrior#refresh()
 endfunction
