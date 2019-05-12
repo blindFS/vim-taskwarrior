@@ -70,10 +70,10 @@ endfunction
 function! taskwarrior#data#get_stats(method)
     let dict = {}
     if a:method != 'current'
-        let stat = split(system('task '.a:method.' stats'), '\n')
+        let stat = split(system(g:tw_cmd.' '.a:method.' stats'), '\n')
     else
         let uuid = taskwarrior#data#get_uuid()
-        let stat = split(system('task '.taskwarrior#data#get_uuid().' stats'), '\n')
+        let stat = split(system(g:tw_cmd.' '.taskwarrior#data#get_uuid().' stats'), '\n')
         if uuid == '' || len(stat) < 5
             return {}
         endif
@@ -92,7 +92,7 @@ function! taskwarrior#data#get_query(...)
         return {}
     endif
     let obj = webapi#json#decode(substitute(system(
-                \ 'task rc.verbose=off '.uuid.' export'),
+                \ g:tw_cmd.' rc.verbose=off '.uuid.' export'),
                 \ '\nConfiguration.*', '', ''))
     return type(obj) == 3 ? obj[0] : obj
 endfunction
