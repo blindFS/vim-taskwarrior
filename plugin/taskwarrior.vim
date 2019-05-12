@@ -6,6 +6,7 @@ endif
 let s:is_win                        = has('win32') || has('win64')
 if s:is_win
   let g:tw_cmd = 'wsl task'
+  let g:tw_grep = 'findstr'
 endif
 
 " override from vimrc
@@ -36,7 +37,7 @@ let g:task_info_vsplit              = get(g:, 'task_info_vsplit', 0)
 let g:task_info_size                = get(g:, 'task_info_size', g:task_info_vsplit? 50 : 15)
 let g:task_info_position            = get(g:, 'task_info_position', 'belowright')
 " let g:task_log_directory = get(g:, 'task_log_file', system(g:tw_cmd ' _get -- rc.data.location')[0:-2])
-let g:task_log_directory            = get(g:, 'task_log_file', matchstr(system(g:tw_cmd.' show | grep data.location')[0:-2], '\S*$'))
+let g:task_log_directory            = get(g:, 'task_log_file', matchstr(system(g:tw_cmd.' show | '.g:tw_grep.' data.location')[0:-2], '\S*$'))
 let g:task_log_max                  = get(g:, 'task_log_max', 10)
 let g:task_left_arrow               = get(g:, 'task_left_arrow', ' <<')
 let g:task_right_arrow              = get(g:, 'task_right_arrow', '>> ')

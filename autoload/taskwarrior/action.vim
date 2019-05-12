@@ -207,7 +207,7 @@ function! taskwarrior#action#columns_format_change(direction)
     let ccol_sub = matchstr(ccol_ful, '\.\zs.*')
     let rcl      = matchstr(b:rc, 'rc\.report\.'.b:command.'\.columns.\zs\S*')
     " let dfl      = system('task _get -- rc.report.'.b:command.'.columns')[0:-2]
-    let dfl      = matchstr(system(g:tw_cmd.' show | grep report.'.b:command.'.columns')[0:-2], '\S*$')
+    let dfl      = matchstr(system(g:tw_cmd.' show | '.g:tw_grep.' report.'.b:command.'.columns')[0:-2], '\S*$')
     let index    = index(clist, ccol_sub)
     let index    = index == -1 ? 0 : index
     if a:direction == 'left'

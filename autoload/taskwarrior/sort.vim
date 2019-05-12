@@ -14,7 +14,7 @@ endfunction
 function! taskwarrior#sort#by_column(polarity, column)
     let fromrc   = matchstr(b:rc, 'rc\.report\.'.b:command.'\.sort.\zs\S*')
     " let default  = system('task _get -- rc.report.'.b:command.'.sort')[0:-2]
-    let default  = matchstr(system(tw:cmd.' show | grep report.'.b:command.'.sort')[0:-2], '\S*$')
+    let default  = matchstr(system(tw:cmd.' show |'.g:tw_grep.' report.'.b:command.'.sort')[0:-2], '\S*$')
     let colshort = map(copy(b:task_report_columns), 'matchstr(v:val, "^\\w*")')
     let ccol     = index(colshort, a:column) == -1 ?
                 \ taskwarrior#data#current_column() :
@@ -74,7 +74,7 @@ function! taskwarrior#sort#order_list()
     let fromrc = matchstr(b:rc, 'rc\.report\.'.b:command.'\.sort.\zs\S*')
     if fromrc == ''
         " let list = split(system('task _get -- rc.report.'.b:command.'.sort')[0:-2], ',')
-        let list = split(matchstr(system(g:tw_cmd.' show | grep report.'.b:command.'.sort')[0:-2], '\S*$'), ',')
+        let list = split(matchstr(system(g:tw_cmd.' show | '.g:tw_grep.' report.'.b:command.'.sort')[0:-2], '\S*$'), ',')
     else
         let list = split(fromrc, ',')
     endif
