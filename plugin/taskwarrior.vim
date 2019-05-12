@@ -5,7 +5,7 @@ endif
 " FIRST -- WSL env in Windows OR native Linux env
 let s:is_win                        = has('win32') || has('win64')
 if s:is_win
-  g:tw_cmd = 'wsl task'
+  let g:tw_cmd = 'wsl task'
 endif
 
 " override from vimrc
