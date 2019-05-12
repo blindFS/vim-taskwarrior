@@ -69,7 +69,7 @@ and extract in ~/.vim or use your favorite plugin manager.
 - [Pathogen](https://github.com/tpope/vim-pathogen)
     - `git clone https://github.com/xarthurx/vim-taskwarrior ~/.vim/bundle/vim-taskwarrior`
 - [Vundle](https://github.com/gmarik/vundle)
-    1. Add `Bundle 'xarthurx/vim-taskwarrior'` to .vimrc
+    1. Add `Plugin 'xarthurx/vim-taskwarrior'` to .vimrc
     2. Run `:BundleInstall`
 - [NeoBundle](https://github.com/Shougo/neobundle.vim)
     1. Add `NeoBundle 'xarthurx/vim-taskwarrior'` to .vimrc
