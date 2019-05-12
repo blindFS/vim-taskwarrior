@@ -2,7 +2,12 @@ if exists('g:loaded_taskwarrior') && g:loaded_taskwarrior
     finish
 endif
 
-if !executable('task')
+" WSL env in Windows OR native Linux env
+let g:tw_cmd = get(g:, 'taskwarrior_cmd', 'task')
+echo g:tw_cmd
+
+if !executable(g:tw_cmd)
+" if !(executable('task') || executable('wsl task'))
     echoerr "This plugin depends on taskwarrior(https://taskwarrior.org)."
     finish
 endif
