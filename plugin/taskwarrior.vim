@@ -3,11 +3,13 @@ if exists('g:loaded_taskwarrior') && g:loaded_taskwarrior
 endif
 
 " FIRST -- WSL env in Windows OR native Linux env
+" let s:is_win                        = has('win32') || has('win64')
+
 let g:tw_cmd                        = get(g:, 'taskwarrior_cmd', 'task')
-if !executable(g:tw_cmd)
-    echoerr "This plugin depends on taskwarrior(https://taskwarrior.org)."
-    finish
-endif
+" if !executable(g:tw_cmd)
+    " echoerr "This plugin depends on taskwarrior(https://taskwarrior.org)."
+    " finish
+" endif
 
 " other settings
 let g:task_report_command           = get(g:, 'task_report_command', [])
