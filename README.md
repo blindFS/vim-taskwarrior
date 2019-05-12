@@ -3,7 +3,7 @@ vim-taskwarrior
 
 ## Acknowledgement
 
-**This repo is forked from the original unmaintained** [blindFS/vim-taskwarrior](https://github.com/blindFS/vim-taskwarrior).
+**This repo is forked from the original unmaintained repo:** [blindFS/vim-taskwarrior](https://github.com/blindFS/vim-taskwarrior).
 
 ## Things added since forked
 
@@ -12,7 +12,7 @@ vim-taskwarrior
 
 ## Info from the original repo (modified accordingly)
 
-_a vim interface for [taskwarrior](https://taskwarrior.org)_
+_a vim interface for [Taskwarrior](https://taskwarrior.org)_
 
 Taskwarrior is a command-line todo list manager. It helps you manage task lists
 with projects, tags, dates, dependencies, annotations, recurrences and apply
@@ -21,10 +21,11 @@ and produce any number of reports, built-in or customizable reports, attributes
 and color themes. Task keeps data in JSON text files and it's always improving.
 Find out more at https://taskwarrior.org and read man task and man taskrc.
 
-vim-taskwarrior is a vim plugin that extends taskwarrior with an interactive
+vim-taskwarrior is a vim plugin that extends Taskwarrior with an interactive
 interface. It features a rich set of mappings and commands, is easy to customize,
 and makes adding, modifying, sorting, reporting and marking done, fast, easy and fun!
-Homepage: https://github.com/farseer90718/vim-taskwarrior, patches welcome!
+
+Homepage: https://github.com/xarthurx/vim-taskwarrior, patches welcome!
 
 ----
 
@@ -184,7 +185,11 @@ let g:task_left_arrow      = ' <<'
 " backward arrow ...
 let g:task_left_arrow      = '>> '
 
-```
+
+" for native windows, the following two commands are used
+let g:taskwarrior_cmd      = 'wsl task'
+let g:task_grep            = 'findstr' " default
+
 ----
 
 ### Syntax highlightling:
