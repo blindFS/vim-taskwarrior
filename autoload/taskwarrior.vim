@@ -1,9 +1,3 @@
-" let b:task_report_columns = rcc == '' ? split(matchstr(system(g:tw_cmd." show |grep report.".b:command.".columns")[0:-2], '\S*$'), ',') : split(rcc, ',')
-" let b:command = 'next'
-" let test =  system(g:tw_cmd." show |findstr report.".b:command.".columns")[0:-2]
-" let test =  split(matchstr(system(g:tw_cmd." show |grep report.".b:command.".columns")[0:-2], '\S*$'), ',') : split(rcc, ',')
-
-echo test
 function! taskwarrior#list(...) abort
     setlocal noreadonly
     setlocal modifiable
