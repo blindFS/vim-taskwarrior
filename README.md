@@ -1,6 +1,15 @@
 vim-taskwarrior
 ===============
 
+** This repo is forked from the original unmaintained [blindFS/vim-taskwarrior](https://github.com/blindFS/vim-taskwarrior).**
+
+## Things added since forked
+
+* Support for native Windows by calling TaskWarrior from WSL (TaskWarrior need to be installed inside WSL).
+
+
+## Info from the original repo (modified accordingly)
+
 _a vim interface for [taskwarrior](https://taskwarrior.org)_
 
 Taskwarrior is a command-line todo list manager. It helps you manage task lists
@@ -43,13 +52,11 @@ If you experience task truncation (vim-taskwarrior not showing enough tasks), ad
 let g:task_rc_override = 'rc.defaultheight=0'
 ```
 
-
 ----
 
 ### Screenshot:
 
 ![screenshot](https://raw.github.com/farseer90718/vim-taskwarrior/master/screenshot.png)
-![vim-taskwarrior animated gif](http://taskextras.org/attachments/download/655/20131110_002753.gif)
 
 ### Installing:
 
@@ -57,15 +64,15 @@ Either [download zip file](https://github.com/farseer90718/vim-taskwarrior/archi
 and extract in ~/.vim or use your favorite plugin manager.
 
 - [Pathogen](https://github.com/tpope/vim-pathogen)
-    - `git clone https://github.com/farseer90718/vim-taskwarrior ~/.vim/bundle/vim-taskwarrior`
+    - `git clone https://github.com/xarthurx/vim-taskwarrior ~/.vim/bundle/vim-taskwarrior`
 - [Vundle](https://github.com/gmarik/vundle)
-    1. Add `Bundle 'farseer90718/vim-taskwarrior'` to .vimrc
+    1. Add `Bundle 'xarthurx/vim-taskwarrior'` to .vimrc
     2. Run `:BundleInstall`
 - [NeoBundle](https://github.com/Shougo/neobundle.vim)
-    1. Add `NeoBundle 'farseer90718/vim-taskwarrior'` to .vimrc
+    1. Add `NeoBundle 'xarthurx/vim-taskwarrior'` to .vimrc
     2. Run `:NeoBundleInstall`
 - [vim-plug](https://github.com/junegunn/vim-plug)
-    1. Add `Plug 'blindFS/vim-taskwarrior'` to .vimrc
+    1. Add `Plug 'xarthurx/vim-taskwarrior'` to .vimrc
     2. Run `:PlugInstall`
 
 ----
@@ -216,8 +223,5 @@ in your vimrc.
 
 ### License:
 
-[MIT](https://raw.github.com/farseer90718/vim-taskwarrior/master/LICENSE.txt)
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/farseer90718/vim-taskwarrior/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+[MIT](https://raw.github.com/xarthurx/vim-taskwarrior/master/LICENSE.txt)
 
