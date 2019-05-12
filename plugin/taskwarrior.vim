@@ -10,10 +10,11 @@ endif
 
 " override from vimrc
 let g:tw_cmd                        = get(g:, 'taskwarrior_cmd', 'task')
-if !executable(system(g:tw_cmd))
-    echoerr "This plugin depends on taskwarrior(https://taskwarrior.org)."
-    finish
-endif
+
+" if !executable(system(g:tw_cmd))
+    " echoerr "This plugin depends on taskwarrior(https://taskwarrior.org)."
+    " finish
+" endif
 
 " other settings
 let g:task_report_command           = get(g:, 'task_report_command', [])
