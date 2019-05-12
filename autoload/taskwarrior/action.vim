@@ -8,7 +8,7 @@ endfunction
 
 function! taskwarrior#action#urgency() abort
     let cc   = taskwarrior#data#current_column()
-    let udas = split(system('task _udas'), '\n')
+    let udas = split(system(g:tw_cmd.' _udas'), '\n')
     let cmap = { 'start' : 'active',
                 \ 'entry' : 'age',
                 \ 'depends' : 'blocked',
@@ -46,7 +46,7 @@ function! taskwarrior#action#urgency() abort
                 let option = 'urgency.uda.'.cc.'.'.cv.'.coefficient'
             endif
         endif
-        let default_raw = split(system('task _get rc.'.option), '\n')
+        let default_raw = split(system(g:tw_cmd.' _get rc.'.option), '\n')
         let default     = len(default_raw) ? default_raw[0] : '0'
         let new         = input(option.' : ', default)
         let lines       = readfile(rcfile)
@@ -93,14 +93,14 @@ function! taskwarrior#action#delete()
         if index(['project', 'tags', 'due', 'priority', 'start', 'depends'], ccol) != -1
             call taskwarrior#system_call(uuid, 'modify', ccol.':', 'silent')
         else
-            execute '!task '.uuid.' delete'
+            execute g:tw_cmd.' '.uuid.' delete'
         endif
     endif
     call taskwarrior#refresh()
 endfunction
 
 function! taskwarrior#action#remove()
-    execute '!task '.taskwarrior#data#get_uuid().' delete'
+    execute '!'.g:tw_cmd.' '.taskwarrior#data#get_uuid().' delete'
     call taskwarrior#list()
 endfunction
 
@@ -168,7 +168,7 @@ function! taskwarrior#action#command()
     else
         let filter = join(b:selected, ',')
     endif
-    let command = input('task '.filter.':', '', 'customlist,taskwarrior#complete#command')
+    let command = input(g:tw_cmd.' '.filter.':', '', 'customlist,taskwarrior#complete#command')
     if index(g:task_all_commands, b:command) == -1
         return
     endif
@@ -207,7 +207,7 @@ function! taskwarrior#action#columns_format_change(direction)
     let ccol_sub = matchstr(ccol_ful, '\.\zs.*')
     let rcl      = matchstr(b:rc, 'rc\.report\.'.b:command.'\.columns.\zs\S*')
     " let dfl      = system('task _get -- rc.report.'.b:command.'.columns')[0:-2]
-    let dfl      = matchstr(system('task show | grep report.'.b:command.'.columns')[0:-2], '\S*$')
+    let dfl      = matchstr(system(g:tw_cmd.' show | '.g:tw_grep.' report.'.b:command.'.columns')[0:-2], '\S*$')
     let index    = index(clist, ccol_sub)
     let index    = index == -1 ? 0 : index
     if a:direction == 'left'
@@ -264,7 +264,7 @@ function! taskwarrior#action#visual(action) range
     elseif a:action == 'delete'
         call taskwarrior#system_call(filter, 'delete', '', 'interactive')
     elseif a:action == 'info'
-        call taskinfo#init('information', filter, split(system('task rc.color=no information '.filter), '\n'))
+        call taskinfo#init('information', filter, split(system(g:tw_cmd.' rc.color=no information '.filter), '\n'))
     elseif a:action == 'select'
         for var in fil
             let index = index(b:selected, var)
@@ -299,7 +299,7 @@ endfunction
 function! taskwarrior#action#undo()
     if has("gui_running")
         if exists('g:task_gui_term') && g:task_gui_term == 1
-            !task rc.color=off undo
+            !g:tw_cmd rc.color=off undo
         elseif executable('xterm')
             silent !xterm -e 'task undo'
         elseif executable('urxvt')
@@ -309,18 +309,18 @@ function! taskwarrior#action#undo()
         endif
     else
         sil !clear
-        !task undo
+        !g:tw_cmd undo
     endif
     call taskwarrior#refresh()
 endfunction
 
 function! taskwarrior#action#clear_completed()
-    !task status:completed delete
+    !g:tw_cmd status:completed delete
     call taskwarrior#refresh()
 endfunction
 
 function! taskwarrior#action#sync(action)
-    execute '!task '.a:action.' '
+    execute '!'.g:tw_cmd.' '.a:action.' '
     call taskwarrior#refresh()
 endfunction
 
@@ -366,5 +366,5 @@ function! taskwarrior#action#show_info(...)
             let filter = b:filter
         endif
     endif
-    call taskinfo#init(command, filter, split(system('task rc.color=no '.command.' '.filter), '\n'))
+    call taskinfo#init(command, filter, split(system(g:tw_cmd.' rc.color=no '.command.' '.filter), '\n'))
 endfunction
