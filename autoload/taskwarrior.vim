@@ -198,15 +198,18 @@ function! taskwarrior#quit_all()
 endfunction
 
 function! taskwarrior#system_call(filter, command, args, mode)
-    if a:mode == 'silent'
-        call system(g:tw_cmd.' '.a:filter.' '.a:command.' '.a:args)
-    elseif a:mode == 'echo'
-        echo "\n----------------\n"
-        echo system(g:tw_cmd.' '.a:filter.' '.a:command.' '.a:args)
-    else
-        execute '!'.g:tw_cmd.' '.a:filter.' '.a:command.' '.a:args
-    endif
-    call taskwarrior#refresh()
+  " todo: add condition when `args` are special charactor returned by pressing escape
+
+  if a:mode == 'silent'
+    call system(g:tw_cmd.' '.a:filter.' '.a:command.' '.a:args)
+  elseif a:mode == 'echo'
+    echo "\n----------------\n"
+    echo system(g:tw_cmd.' '.a:filter.' '.a:command.' '.a:args)
+  else
+    execute '!'.g:tw_cmd.' '.a:filter.' '.a:command.' '.a:args
+  endif
+
+  call taskwarrior#refresh()
 endfunction
 
 function! taskwarrior#command_type(string)
