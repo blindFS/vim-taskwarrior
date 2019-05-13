@@ -29,11 +29,13 @@ function! taskwarrior#list(...) abort
 
     let rcc                   = matchstr(b:rc, 'rc\.report\.'.b:command.'\.columns.\zs\S*')
     let rcl                   = matchstr(b:rc, 'rc\.report\.'.b:command.'\.labels.\zs\S*')
-    " let b:task_report_columns = rcc == '' ? split(system("task _get -- rc.report.".b:command.".columns")[0:-2], ',') : split(rcc, ',')
-    " let b:task_report_labels  = rcl == '' ? split(system("task _get -- rc.report.".b:command.".labels")[0:-2], ',') : split(rcl, ',')
     let b:task_report_columns = rcc == '' ? split(matchstr(system(g:tw_cmd." show |".g:tw_grep." report.".b:command.".columns")[0:-2], '\S*$'), ',') : split(rcc, ',')
     let b:task_report_labels  = rcl == '' ? split(matchstr(system(g:tw_cmd." show |".g:tw_grep." report.".b:command.".labels")[0:-2], '\S*$'), ',') : split(rcl, ',')
     let line1                 = join(b:task_report_labels, ' ')
+
+    if len(b:task_report_columns) == 0
+      echo "Sorry, report type not supported now..."
+    endif
 
     let context = split(substitute(
                 \   system(g:tw_cmd.' '.b:rc.' '.b:filter.' '.b:command),
