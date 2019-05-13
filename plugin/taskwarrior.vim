@@ -71,6 +71,7 @@ let g:task_columns_format           = {
             \ 'wait':        ['formatted', 'julian', 'epoch', 'iso', 'age', 'countdown'] }
 "
 command! -nargs=? -complete=customlist,taskwarrior#complete#TW TW :call taskwarrior#init(<q-args>)
+command! -buffer TWAdd               :call taskwarrior#action#new()
 command! -nargs=? TWReportInfo :call taskwarrior#action#show_info(<q-args>)
 "command! TWConfigColor
 command! TWDeleteCompleted :call taskwarrior#action#clear_completed()
