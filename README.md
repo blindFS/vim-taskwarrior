@@ -1,8 +1,6 @@
 vim-taskwarrior
 ===============
 
-## Acknowledgement
-
 **This repo is forked from the original repo:** [blindFS/vim-taskwarrior](https://github.com/blindFS/vim-taskwarrior) for maintenance and development.
 
 ## Things added since forked
