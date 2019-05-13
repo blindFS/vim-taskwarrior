@@ -91,19 +91,16 @@ function! taskwarrior#action#delete()
   else
     let ccol = taskwarrior#data#current_column()
     if index(['project', 'tags', 'due', 'priority', 'start', 'depends'], ccol) != -1
-      call taskwarrior#system_call(uuid, 'modify', ccol.':', 'silent')
+      " call taskwarrior#system_call(uuid, 'modify', ccol.':', 'external')
+      if confirm("Delete task ".uuid."?", "&Yes\n&No", 1) == 1
+        call system(g:tw_cmd.' '.uuid.' del rc.confirmation=no')
     else
       if confirm("Delete task ".uuid."?", "&Yes\n&No", 1) == 1
-        call system(g:tw_cmd.' '.uuid.' del'.' rc.confirmation=no')
+        call system(g:tw_cmd.' '.uuid.' del rc.confirmation=no')
       endif
     endif
   endif
   call taskwarrior#refresh()
-endfunction
-
-function! taskwarrior#action#remove()
-  execute '!'.g:tw_cmd.' '.taskwarrior#data#get_uuid().' delete'
-  call taskwarrior#list()
 endfunction
 
 function! taskwarrior#action#annotate(op)
