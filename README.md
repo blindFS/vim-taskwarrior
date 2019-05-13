@@ -14,18 +14,9 @@ vim-taskwarrior
 
 _a vim interface for [Taskwarrior](https://taskwarrior.org)_
 
-Taskwarrior is a command-line todo list manager. It helps you manage task lists
-with projects, tags, dates, dependencies, annotations, recurrences and apply
-complex (or simple) queries with attribute modifiers, boolean, regex filters
-and produce any number of reports, built-in or customizable reports, attributes
-and color themes. Task keeps data in JSON text files and it's always improving.
-Find out more at https://taskwarrior.org and read man task and man taskrc.
-
 vim-taskwarrior is a vim plugin that extends Taskwarrior with an interactive
 interface. It features a rich set of mappings and commands, is easy to customize,
 and makes adding, modifying, sorting, reporting and marking done, fast, easy and fun!
-
-Homepage: https://github.com/xarthurx/vim-taskwarrior, patches welcome!
 
 ----
 
@@ -42,18 +33,6 @@ Suggested plugins
 
 * [vim-airline](https://github.com/bling/vim-airline) for [better statusline information](https://github.com/farseer90718/vim-taskwarrior#screenshot).
 * [unite.vim](https://github.com/Shougo/unite.vim) for easier bookmark/history operations.
-
-If you experience line-wrapping issues, add the following line to your .vimrc
-
-```
-let g:task_rc_override = 'rc.defaultwidth=0'
-```
-
-If you experience task truncation (vim-taskwarrior not showing enough tasks), add:
-
-```
-let g:task_rc_override = 'rc.defaultheight=0'
-```
 
 ----
 
@@ -88,8 +67,7 @@ nnoremap <buffer> x       ... " delete annotation.
 nnoremap <buffer> o       ... " open the annotation as a file.
 nnoremap <buffer> a       ... " create new task.
 nnoremap <buffer> d       ... " set the task in current line done.
-nnoremap <buffer> D       ... " delete task
-nnoremap <buffer> <Del>   ... " delete field/annotation/task
+nnoremap <buffer> D       ... " delete field/annotation/task
 nnoremap <buffer> <Space> ... " select/remove current task to selected list
 nnoremap <buffer> m       ... " modify current field.
 nnoremap <buffer> M       ... " modify current task.
@@ -189,6 +167,19 @@ let g:task_left_arrow      = '>> '
 " for native windows, the following two commands are used
 let g:taskwarrior_cmd      = 'wsl task'
 let g:task_grep            = 'findstr' " default
+
+
+If you experience line-wrapping issues, add the following line to your .vimrc
+
+```
+let g:task_rc_override = 'rc.defaultwidth=0'
+```
+
+If you experience task truncation (vim-taskwarrior not showing enough tasks), add:
+
+```
+let g:task_rc_override = 'rc.defaultheight=0'
+```
 
 ----
 
