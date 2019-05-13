@@ -7,25 +7,26 @@ function! taskwarrior#data#get_uuid(...)
 endfunction
 
 function! taskwarrior#data#get_args(...)
-    if a:0 == 0
-        return
-    elseif a:0 == 1
-        return taskwarrior#data#get_args(a:1, g:task_default_prompt)
+  if a:0 == 0
+    return
+  elseif a:0 == 1
+    return taskwarrior#data#get_args(a:1, g:task_default_prompt)
+  endif
+
+  let arg = ' '
+
+  for key in a:2
+    let default = a:1 == 'modify' ? taskwarrior#data#get_value_by_column('.', key) : ''
+    let temp = shellescape(input(key.":", default), 1)
+    if key == 'description'
+      let arg .= ' '.temp
+    elseif temp !~ '^[ \t]*$' || a:1 == 'modify'
+      let arg .= ' '.key.':'.temp
     endif
-    let arg = ' '
-    for key in a:2
-        let default = a:1 == 'modify' ?
-                    \ taskwarrior#data#get_value_by_column('.', key)
-                    \ : ''
-        let temp = shellescape(input(key.":", default), 1)
-        if key == 'description'
-            let arg .= ' '.temp
-        elseif temp !~ '^[ \t]*$' || a:1 == 'modify'
-            let arg .= ' '.key.':'.temp
-        endif
-    endfor
-    echom arg
-    return arg
+  endfor
+
+  echom arg
+  return arg
 endfunction
 
 function! taskwarrior#data#get_value_by_column(line, column, ...)
@@ -91,9 +92,8 @@ function! taskwarrior#data#get_query(...)
     if uuid == ''
         return {}
     endif
-    let obj = webapi#json#decode(substitute(system(
-                \ g:tw_cmd.' rc.verbose=off '.uuid.' export'),
-                \ '\nConfiguration.*', '', ''))
+    let objCode = substitute(system(g:tw_cmd.' rc.verbose=off '.uuid.' export'), 'Configuration.*', '', '')
+    let obj = webapi#json#decode(objCode)
     return type(obj) == 3 ? obj[0] : obj
 endfunction
 
