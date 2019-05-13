@@ -9,6 +9,7 @@ vim-taskwarrior
 
 * Support for native Windows 10 by calling *TaskWarrior* from *WSL* (*TaskWarrior* need to be installed inside *WSL*).
 * Fix `del` and `undo` bug by ignoring confirmation from shell.
+* Various small bugs has been fixed by browsing the issue list from the original repo.
 
 ## Info from the original repo (modified accordingly)
 
