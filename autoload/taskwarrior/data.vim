@@ -28,7 +28,6 @@ function! taskwarrior#data#get_args(...)
     endif
   endfor
 
-  echom arg
   return arg
 endfunction
 
