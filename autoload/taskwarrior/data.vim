@@ -45,17 +45,19 @@ function! taskwarrior#data#get_args(...)
     let expr = ""
 
     while 1
-
     let c = s:active_getchar()
 
+    " if <ESC> is pressed, return it; if <cr> is pressed, break the loop
     if c == "\<ESC>"
-      echon "ESC pressed"
+      redraw
+      echo "\<cr>"."modification cancelled."
+      return c
+    elseif c ==  "\<CR>"
+      redraw
       break
 
-    elseif c ==  "\<CR>"
-      return expr
-
-    elseif c == "\<BS>" " backspace
+    " <backspace> case
+    elseif c == "\<BS>"
       if len(expr) > 0
         let expr = expr[0:-2]
         " clear the current line
@@ -68,19 +70,20 @@ function! taskwarrior#data#get_args(...)
       "do sth
     elseif c == "\<Right>"
       "do sth
-    else
+
+    else " all other case
       let expr .=  c
       echon "\<cr>".prompt.expr
     endif
 
     endwhile
 
-    let temp = expr
     if key == 'description'
-      let arg .= ' '.temp
-    elseif temp !~ '^[ \t]*$' || a:1 == 'modify'
-      let arg .= ' '.key.':'.temp
+      let arg .= ' '.expr
+    elseif expr !~ '^[ \t]*$' || a:1 == 'modify'
+      let arg .= ' '.key.':'.expr
     endif
+
   endfor
 
   return arg
@@ -158,8 +161,11 @@ function! taskwarrior#data#get_query(...)
   if uuid == ''
     return {}
   endif
-  let objCode = substitute(system(g:tw_cmd.' rc.verbose=off '.uuid.' export'), 'Configuration.*', '', '')
-  let obj = webapi#json#decode(objCode)
+
+  let s:objCode = system(g:tw_cmd.' rc.verbose=no '.uuid.' export')
+  let s:objCode = substitute(s:objCode, 'Configuration.*:no', '', '')
+  let s:objCode = substitute(s:objCode, '\n', '', 'g')
+  let obj = webapi#json#decode(s:objCode)
   return type(obj) == 3 ? obj[0] : obj
 endfunction
 

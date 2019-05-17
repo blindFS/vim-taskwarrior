@@ -85,8 +85,11 @@ function! taskwarrior#action#modify(mode)
     endif
 
   else " modify the whole item
-    finish
-    " call taskwarrior#system_call(uuid, 'modify', taskwarrior#data#get_args('modify'), 'external')
+    let l:args = taskwarrior#data#get_args('modify')
+    echo l:args
+    if l:args != "\<ESC>"
+      call taskwarrior#system_call(uuid, 'modify', taskwarrior#data#get_args('modify'), 'external')
+    endif
   endif
 
 endfunction
