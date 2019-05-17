@@ -6,6 +6,24 @@ function! taskwarrior#data#get_uuid(...)
   return vol =~ '^\s*-*\s*$' ? '' : vol
 endfunction
 
+" Overcome inconsistent getchar() behaviour...
+function! s:active_getchar ()
+    " Get a character, ignoring annoying timeouts...
+    let char = 0
+    while !char
+        let char = getchar(1)
+    endwhile
+    call getchar(0)
+
+    " Translate <DELETE>'s...
+    if char == 128
+        return "\<BS>"
+
+    " Translate everything else...
+    else
+        return nr2char(char)
+    endif
+endfunction
 
 function! taskwarrior#data#get_args(...)
   if a:0 == 0
@@ -16,11 +34,48 @@ function! taskwarrior#data#get_args(...)
 
   let arg = ' '
 
+    " todo: for 'tag' key, need to re-parse the comma
   for key in a:2 " a:2 is a list containing all keys to be modified
     let default = a:1 == 'modify' ? taskwarrior#data#get_value_by_column('.', key) : ''
 
-    " todo: for 'tag' key, need to re-parse the comma
-    let temp = shellescape(input(key.":", default), 1) " show what is already there
+    " getting inputs
+    "draw inspiration from: https://github.com/junegunn/vim-easy-align/blob/0cb6b98fc155717b0a56c110551ac57d1d951ddb/autoload/easy_align.vim#L623-L820
+    let prompt = key . ":"
+    echon "\<CR>".prompt
+    let expr = ""
+
+    while 1
+
+    let c = s:active_getchar()
+
+    if c == "\<ESC>"
+      echon "ESC pressed"
+      break
+
+    elseif c ==  "\<CR>"
+      return expr
+
+    elseif c == "\<BS>" " backspace
+      if len(expr) > 0
+        let expr = expr[0:-2]
+        " clear the current line
+        echon "\<CR>".substitute(expr, ".", " ", "g")
+        " show the new info with last char deleted
+        echon "\<CR>".prompt.expr
+      endif
+
+    elseif c == "\<Left>"
+      "do sth
+    elseif c == "\<Right>"
+      "do sth
+    else
+      let expr .=  c
+      echon "\<cr>".prompt.expr
+    endif
+
+    endwhile
+
+    let temp = expr
     if key == 'description'
       let arg .= ' '.temp
     elseif temp !~ '^[ \t]*$' || a:1 == 'modify'

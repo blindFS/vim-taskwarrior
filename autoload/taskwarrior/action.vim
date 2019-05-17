@@ -68,22 +68,27 @@ endfunction
 " modify items under cursor or the whole item
 function! taskwarrior#action#modify(mode)
   let uuid = taskwarrior#data#get_uuid()
+
   if uuid == ''
     return
   endif
-  if a:mode == 'current' " modify current item under cursor
 
+  if a:mode == 'current' " modify current item under cursor
     let field = taskwarrior#data#current_column()
-    " these items should not be modified
-    if index(['id', 'uuid', 'status', 'urgency', 'entry'], field) != -1
+    if index(['id', 'uuid', 'status', 'urgency', 'entry'], field) != -1 " these items should not be modified
       return
     else
-      call taskwarrior#system_call(uuid, 'modify', taskwarrior#data#get_args('modify', [field]), 'silent')
+      let l:args = taskwarrior#data#get_args('modify', [field])
+      if l:args != "\<ESC>"
+        call taskwarrior#system_call(uuid, 'modify', l:args, 'silent')
+      endif
     endif
 
   else " modify the whole item
-    call taskwarrior#system_call(uuid, 'modify', taskwarrior#data#get_args('modify'), 'external')
+    finish
+    " call taskwarrior#system_call(uuid, 'modify', taskwarrior#data#get_args('modify'), 'external')
   endif
+
 endfunction
 
 function! taskwarrior#action#delete()

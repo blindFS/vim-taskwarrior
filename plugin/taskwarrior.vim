@@ -4,13 +4,18 @@ endif
 
 " FIRST -- WSL env in Windows OR native Linux env
 let s:is_win                        = has('win32') || has('win64')
+
 if s:is_win
   let g:tw_cmd = 'wsl task'
   let g:tw_grep = 'findstr'
+else
+  let g:tw_cmd = 'task'
+  let g:tw_grep = 'grep'
 endif
 
 " override from vimrc
 let g:tw_cmd                        = get(g:, 'taskwarrior_cmd', 'task')
+let g:tw_grep                       = get(g:, 'taskwarrior_grep_cmd', 'grep')
 
 " if !executable(system(g:tw_cmd))
     " echoerr "This plugin depends on taskwarrior(https://taskwarrior.org)."
