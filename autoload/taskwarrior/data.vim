@@ -36,14 +36,17 @@ function! taskwarrior#data#get_args(...)
 
     " todo: for 'tag' key, need to re-parse the comma
   for key in a:2 " a:2 is a list containing all keys to be modified
-    let default = a:1 == 'modify' ? taskwarrior#data#get_value_by_column('.', key) : ''
+    let expr = a:1 == 'modify' ? taskwarrior#data#get_value_by_column('.', key) : ''
+
+    if key == 'tags'
+      let expr = substitute(expr, '\s', ",", 'g')
+      echon expr
+    endif
+
+    let prompt = key . ":"
+    echon "\<CR>".prompt.expr
 
     " getting inputs
-    "draw inspiration from: https://github.com/junegunn/vim-easy-align/blob/0cb6b98fc155717b0a56c110551ac57d1d951ddb/autoload/easy_align.vim#L623-L820
-    let prompt = key . ":"
-    echon "\<CR>".prompt
-    let expr = ""
-
     while 1
     let c = s:active_getchar()
 
