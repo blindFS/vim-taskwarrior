@@ -1,4 +1,4 @@
-vim-taskwarrior
+taskwarrior.vim
 ===============
 
 **This repo is forked from the original repo:** [blindFS/vim-taskwarrior](https://github.com/blindFS/vim-taskwarrior) for maintenance and development.
@@ -18,7 +18,7 @@ Since TaskWarrior does not provide a [native Windows version](https://github.com
 
 _a vim interface for [Taskwarrior](https://taskwarrior.org)_
 
-vim-taskwarrior is a vim plugin that extends Taskwarrior with an interactive
+[taskwarrior.vim](https://github.com/xarthurx/taskwarrior.vim) is a vim plugin that extends Taskwarrior with an interactive
 interface. It features a rich set of mappings and commands, is easy to customize,
 and makes adding, modifying, sorting, reporting and marking done, fast, easy and fun!
 
@@ -50,15 +50,15 @@ Either [download zip file](https://github.com/farseer90718/vim-taskwarrior/archi
 and extract in ~/.vim or use your favorite plugin manager.
 
 - [Pathogen](https://github.com/tpope/vim-pathogen)
-    - `git clone https://github.com/xarthurx/vim-taskwarrior ~/.vim/bundle/vim-taskwarrior`
+    - `git clone https://github.com/xarthurx/taskwarrior.vim ~/.vim/bundle/taskwarrior.vim`
 - [Vundle](https://github.com/gmarik/vundle)
-    1. Add `Plugin 'xarthurx/vim-taskwarrior'` to .vimrc
+    1. Add `Plugin 'xarthurx/taskwarrior.vim'` to .vimrc
     2. Run `:BundleInstall`
 - [NeoBundle](https://github.com/Shougo/neobundle.vim)
-    1. Add `NeoBundle 'xarthurx/vim-taskwarrior'` to .vimrc
+    1. Add `NeoBundle 'xarthurx/taskwarrior.vim'` to .vimrc
     2. Run `:NeoBundleInstall`
 - [vim-plug](https://github.com/junegunn/vim-plug)
-    1. Add `Plug 'xarthurx/vim-taskwarrior'` to .vimrc
+    1. Add `Plug 'xarthurx/taskwarrior.vim'` to .vimrc
     2. Run `:PlugInstall`
 
 ----
@@ -179,7 +179,7 @@ If you experience line-wrapping issues, add the following line to your .vimrc
 let g:task_rc_override = 'rc.defaultwidth=0'
 ```
 
-If you experience task truncation (vim-taskwarrior not showing enough tasks), add:
+If you experience task truncation (taskwarrior.vim not showing enough tasks), add:
 
 ```
 let g:task_rc_override = 'rc.defaultheight=0'
@@ -225,5 +225,5 @@ in your vimrc.
 
 ### License:
 
-[MIT](https://raw.github.com/xarthurx/vim-taskwarrior/master/LICENSE.txt)
+[MIT](https://raw.github.com/xarthurx/taskwarrior.vim/master/LICENSE.txt)
 
