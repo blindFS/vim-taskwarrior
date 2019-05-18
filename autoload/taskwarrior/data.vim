@@ -34,7 +34,6 @@ function! taskwarrior#data#get_args(...)
 
   let arg = ' '
 
-    " todo: for 'tag' key, need to re-parse the comma
   for key in a:2 " a:2 is a list containing all keys to be modified
     let expr = a:1 == 'modify' ? taskwarrior#data#get_value_by_column('.', key) : ''
 
@@ -81,9 +80,7 @@ function! taskwarrior#data#get_args(...)
 
     endwhile
 
-    if key == 'description'
-      let arg .= ' '.expr
-    elseif expr !~ '^[ \t]*$' || a:1 == 'modify'
+    if expr !~ '^[ \t]*$' || a:1 == 'modify'
       let arg .= ' '.key.':'.expr
     endif
 
