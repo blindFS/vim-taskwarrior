@@ -1,12 +1,12 @@
 taskwarrior.vim
 ===============
 _a vim interface for [Taskwarrior](https://taskwarrior.org)_
-----
 
 ![screenshot](https://raw.github.com/farseer90718/vim-taskwarrior/master/screenshot.png)
 
 **This repo is forked from [blindFS/vim-taskwarrior](https://github.com/blindFS/vim-taskwarrior) for maintenance and development.**
 
+----
 [taskwarrior.vim](https://github.com/xarthurx/taskwarrior.vim) is a vim plugin that extends Taskwarrior with an interactive
 interface. It features a rich set of mappings and commands, is easy to customize,
 and makes adding, modifying, sorting, reporting and marking done, fast, easy and fun!
@@ -55,7 +55,6 @@ and extract in ~/.vim or use your favorite plugin manager.
 
 Since TaskWarrior does not provide a [native Windows version](https://github.com/GothenburgBitFactory/taskwarrior/issues/2159), native Windows VIM users need to install it inside *WSL* environment. The plugin will take care of the rest.
 
-----
 ## Options
 
 ### Default map:
@@ -160,21 +159,20 @@ let g:task_left_arrow      = '>> '
 
 
 " for native windows, the following two commands are used
+
+```vim
 let g:taskwarrior_cmd      = 'wsl task'
 let g:task_grep            = 'findstr'
-
+```
 
 If you experience line-wrapping issues, add the following line to your .vimrc
-
 ```
 let g:task_rc_override = 'rc.defaultwidth=0'
 ```
-
 If you experience task truncation (taskwarrior.vim not showing enough tasks) add the following line to your .vimrc
-
 ```
 let g:task_rc_override = 'rc.defaultheight=0'
-```
+
 
 ### Syntax highlightling:
 
