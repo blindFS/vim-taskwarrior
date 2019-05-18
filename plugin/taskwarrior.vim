@@ -1,5 +1,6 @@
 if exists('g:loaded_taskwarrior') && g:loaded_taskwarrior
-    finish
+  echo "taskwarrior loaded"
+  finish
 endif
 
 " FIRST -- WSL env in Windows OR native Linux env
@@ -15,7 +16,7 @@ endif
 
 " override from vimrc
 let g:tw_cmd                        = get(g:, 'taskwarrior_cmd', 'task')
-let g:tw_grep                       = get(g:, 'taskwarrior_grep_cmd', 'grep')
+" let g:tw_grep                       = get(g:, 'taskwarrior_grep_cmd', 'grep')
 
 " if !executable(system(g:tw_cmd))
     " echoerr "This plugin depends on taskwarrior(https://taskwarrior.org)."
