@@ -170,8 +170,9 @@ If you experience line-wrapping issues, add the following line to your .vimrc
 let g:task_rc_override = 'rc.defaultwidth=0'
 ```
 If you experience task truncation (taskwarrior.vim not showing enough tasks) add the following line to your .vimrc
-```
+```vim
 let g:task_rc_override = 'rc.defaultheight=0'
+```
 
 
 ### Syntax highlightling:
