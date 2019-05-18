@@ -8,6 +8,8 @@ vim-taskwarrior
 * Support for native Windows 10 by calling *TaskWarrior* from *WSL* (*TaskWarrior* need to be installed inside *WSL*).
 * Fix `del` and `undo` bug by ignoring confirmation from shell.
 * Various small bugs has been fixed by browsing the issue list from the original repo.
+* Fix an issue that treat multiple tags connected with `<space>` as a single tag.
+* Fix an issue that not be able to cancel modification process.
 
 ## Info from the original repo (modified accordingly)
 

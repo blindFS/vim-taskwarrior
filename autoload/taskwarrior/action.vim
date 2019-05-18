@@ -1,5 +1,8 @@
 function! taskwarrior#action#new()
-  call taskwarrior#system_call('', 'add', taskwarrior#data#get_args('add'), 'echo')
+  let l:add_args = taskwarrior#data#get_args('add')
+  if l:add_args != "\<ESC>"
+    call taskwarrior#system_call('', 'add', l:add_args, 'echo')
+  endif
 endfunction
 
 function! taskwarrior#action#set_done()
@@ -85,8 +88,10 @@ function! taskwarrior#action#modify(mode)
     endif
 
   else " modify the whole item
-    finish
-    " call taskwarrior#system_call(uuid, 'modify', taskwarrior#data#get_args('modify'), 'external')
+    let l:args = taskwarrior#data#get_args('modify')
+    if l:args != "\<ESC>"
+      call taskwarrior#system_call(uuid, 'modify', l:args, 'echo')
+    endif
   endif
 
 endfunction
