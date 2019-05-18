@@ -3,6 +3,8 @@ vim-taskwarrior
 
 **This repo is forked from the original repo:** [blindFS/vim-taskwarrior](https://github.com/blindFS/vim-taskwarrior) for maintenance and development.
 
+** Since TaskWarrior does not provide a [native Windows version](https://github.com/GothenburgBitFactory/taskwarrior/issues/2159), native Windows VIM users need to install it inside *WSL* environment. The plugin should be able to take care of the rest.**
+
 ## Things added since forked
 
 * Support for native Windows 10 by calling *TaskWarrior* from *WSL* (*TaskWarrior* need to be installed inside *WSL*).
@@ -10,6 +12,7 @@ vim-taskwarrior
 * Various small bugs has been fixed by browsing the issue list from the original repo.
 * Fix an issue that treat multiple tags connected with `<space>` as a single tag.
 * Fix an issue that not be able to cancel modification process.
+* Merge multiple calls of shell cmd to improve performance in *WSL* environment.
 
 ## Info from the original repo (modified accordingly)
 

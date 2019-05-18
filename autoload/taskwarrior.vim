@@ -14,9 +14,16 @@ function! taskwarrior#list(...) abort
     let rcs       = split(b:rc, ' ')
     let b:rc      = join(filter(copy(rcs), "match(rcs, matchstr(v:val, '^[^=:]*'), v:key+1) == -1"), ' ')
 
+    " todo: bottleneck - too many calls of “task" command. try to call once
+    " and matchstr later
+    "
+    let b:task_show_info        = system(g:tw_cmd." show")
+    let b:current_task_info     = system(g:tw_cmd.' '.b:rc.' '.b:filter.' '.b:command)
+
     if b:type == 'special'
         setlocal buftype=nofile
-        call append(0, split(system(g:tw_cmd.' '.b:rc.' '.b:filter.' '.b:command), '\n'))
+        call append(0, split(b:current_task_info, '\n'))
+        " call append(0, split(system(g:tw_cmd.' '.b:rc.' '.b:filter.' '.b:command), '\n'))
         silent global/^[\t ]*$/delete
         execute 'setlocal filetype=task_'.b:command
         nnoremap <buffer> q :call taskwarrior#Bclose(bufnr('%'))<CR>
@@ -29,19 +36,20 @@ function! taskwarrior#list(...) abort
 
     let rcc                   = matchstr(b:rc, 'rc\.report\.'.b:command.'\.columns.\zs\S*')
     let rcl                   = matchstr(b:rc, 'rc\.report\.'.b:command.'\.labels.\zs\S*')
-    let b:task_report_columns = rcc == '' ? split(matchstr(system(g:tw_cmd." show |".g:tw_grep." report.".b:command.".columns")[0:-2], '\S*$'), ',') : split(rcc, ',')
-    let b:task_report_labels  = rcl == '' ? split(matchstr(system(g:tw_cmd." show |".g:tw_grep." report.".b:command.".labels")[0:-2], '\S*$'), ',') : split(rcl, ',')
+
+    let b:columns_info        = matchstr(b:task_show_info , '\vreport.'.b:command.'.columns\s+\w+(\,\w+|\.\w+)+')
+    let b:task_report_columns = rcc == '' ? split(matchstr(b:columns_info, '\S*$'), ',') : split(rcc, ',')
+
+    let b:labels_info         = matchstr(b:task_show_info, '\vreport.'.b:command.'.labels\s+\w+(\,\w+|\.\w+)+')
+    let b:task_report_labels  = rcl == '' ? split(matchstr(b:labels_info, '\S*$'), ',') : split(rcl, ',')
+
     let line1                 = join(b:task_report_labels, ' ')
 
     if len(b:task_report_columns) == 0
       echo "Sorry, report type not supported now..."
     endif
 
-    let context = split(substitute(
-                \   system(g:tw_cmd.' '.b:rc.' '.b:filter.' '.b:command),
-                \   '\[[0-9;]\+m',
-                \   '', 'g'),
-                \ '\n')
+    let context = split(substitute(b:current_task_info, '\[[0-9;]\+m', '', 'g'), '\n')
     let split_lineno = match(context, '^[ -]\+$')
     if split_lineno == -1
         call append(0, line1)
@@ -131,8 +139,8 @@ endfunction
 function! taskwarrior#refresh()
     if exists('g:task_view')
         for bufn in g:task_view
-            execute bufn.'buffer'
-            call taskwarrior#list()
+          execute bufn.'buffer'
+          call taskwarrior#list()
         endfor
     else
         call taskwarrior#init()
