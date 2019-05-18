@@ -1,9 +1,15 @@
 taskwarrior.vim
 ===============
+_a vim interface for [Taskwarrior](https://taskwarrior.org)_
+----
 
-**This repo is forked from the original repo:** [blindFS/vim-taskwarrior](https://github.com/blindFS/vim-taskwarrior) for maintenance and development.
+![screenshot](https://raw.github.com/farseer90718/vim-taskwarrior/master/screenshot.png)
 
-Since TaskWarrior does not provide a [native Windows version](https://github.com/GothenburgBitFactory/taskwarrior/issues/2159), native Windows VIM users need to install it inside *WSL* environment. The plugin should be able to take care of the rest.
+**This repo is forked from [blindFS/vim-taskwarrior](https://github.com/blindFS/vim-taskwarrior) for maintenance and development.**
+
+[taskwarrior.vim](https://github.com/xarthurx/taskwarrior.vim) is a vim plugin that extends Taskwarrior with an interactive
+interface. It features a rich set of mappings and commands, is easy to customize,
+and makes adding, modifying, sorting, reporting and marking done, fast, easy and fun!
 
 ## Things added since forked
 
@@ -14,37 +20,20 @@ Since TaskWarrior does not provide a [native Windows version](https://github.com
 * Fix an issue that not be able to cancel modification process.
 * Merge multiple calls of shell cmd to improve performance in *WSL* environment.
 
-## Info from the original repo (modified accordingly)
 
-_a vim interface for [Taskwarrior](https://taskwarrior.org)_
+## Prerequisites:
 
-[taskwarrior.vim](https://github.com/xarthurx/taskwarrior.vim) is a vim plugin that extends Taskwarrior with an interactive
-interface. It features a rich set of mappings and commands, is easy to customize,
-and makes adding, modifying, sorting, reporting and marking done, fast, easy and fun!
+This plugin requires Taskwarrior 2.3.0 or higher. see: https://taskwarrior.org/download/
 
-----
-
-### Prerequisites:
-
-This plugin requires Taskwarrior 2.2.0 or higher, although >2.3.x is required
-for taskd sync functions, and recommended in general, and well worth the price;
-free :)
-see: https://taskwarrior.org/download/
-
-Vim version 7.x is required.
+Vim version 8.x is suggested. (7.x might still be fine, but will not be supported.)
 
 Suggested plugins
 
 * [vim-airline](https://github.com/bling/vim-airline) for [better statusline information](https://github.com/farseer90718/vim-taskwarrior#screenshot).
 * [unite.vim](https://github.com/Shougo/unite.vim) for easier bookmark/history operations.
 
-----
 
-### Screenshot:
-
-![screenshot](https://raw.github.com/farseer90718/vim-taskwarrior/master/screenshot.png)
-
-### Installing:
+## Installation:
 
 Either [download zip file](https://github.com/farseer90718/vim-taskwarrior/archive/master.zip)
 and extract in ~/.vim or use your favorite plugin manager.
@@ -61,7 +50,13 @@ and extract in ~/.vim or use your favorite plugin manager.
     1. Add `Plug 'xarthurx/taskwarrior.vim'` to .vimrc
     2. Run `:PlugInstall`
 
+
+### Native Windows Support with WSL
+
+Since TaskWarrior does not provide a [native Windows version](https://github.com/GothenburgBitFactory/taskwarrior/issues/2159), native Windows VIM users need to install it inside *WSL* environment. The plugin will take care of the rest.
+
 ----
+## Options
 
 ### Default map:
 
@@ -106,8 +101,6 @@ vnoremap <buffer> <CR>    ... " show information about visual selected tasks
 vnoremap <buffer> <Space> ... " add visual selected tasks to selected list
 
 ```
-----
-
 ### Commands:
 
 ```vim
@@ -133,9 +126,7 @@ vnoremap <buffer> <Space> ... " add visual selected tasks to selected list
 :TWBookmarkClear      " clear bookmarks
 
 ```
-----
-
-### Options:
+### User options:
 
 ```vim
 " default task report type
@@ -170,7 +161,7 @@ let g:task_left_arrow      = '>> '
 
 " for native windows, the following two commands are used
 let g:taskwarrior_cmd      = 'wsl task'
-let g:task_grep            = 'findstr' " default
+let g:task_grep            = 'findstr'
 
 
 If you experience line-wrapping issues, add the following line to your .vimrc
@@ -179,13 +170,11 @@ If you experience line-wrapping issues, add the following line to your .vimrc
 let g:task_rc_override = 'rc.defaultwidth=0'
 ```
 
-If you experience task truncation (taskwarrior.vim not showing enough tasks), add:
+If you experience task truncation (taskwarrior.vim not showing enough tasks) add the following line to your .vimrc
 
 ```
 let g:task_rc_override = 'rc.defaultheight=0'
 ```
-
-----
 
 ### Syntax highlightling:
 
@@ -209,21 +198,20 @@ highlight default link taskwarrior_uuid        VarId
 highlight default link taskwarrior_urgency     Todo
 ```
 
-Feel free to change any of above by something like:
+Feel free to change any of above by something like below in your `vimrc`.
 
 ```vim
 hi taskwarrior_xxx  guibg = xxx guifg = xxx ctermbg = xxx ctermfg = xxx
 ```
 
-in your vimrc.
 
-### Acknowledgement:
+## Acknowledgement:
 
 * [vim-airline](https://github.com/bling/vim-airline) by bling
 * [unite.vim](https://github.com/Shougo/unite.vim)   by Shougo
 * [webapi-vim](https://github.com/mattn/webapi-vim)  by mattn
 
-### License:
+## License:
 
 [MIT](https://raw.github.com/xarthurx/taskwarrior.vim/master/LICENSE.txt)
 
