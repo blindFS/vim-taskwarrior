@@ -79,7 +79,6 @@ let g:task_columns_format           = {
 command! -nargs=? -complete=customlist,taskwarrior#complete#TW TW :call taskwarrior#init(<q-args>)
 command! -buffer TWAdd               :call taskwarrior#action#new()
 command! -nargs=? TWReportInfo :call taskwarrior#action#show_info(<q-args>)
-"command! TWConfigColor
 command! TWDeleteCompleted :call taskwarrior#action#clear_completed()
 "command! TWEdit
 "command! TWEditAnnotation
@@ -95,23 +94,9 @@ command! TWBookmark :Unite task/bookmark
 command! TWBookmarkClear :call taskwarrior#log#bookmark('clear')
 "command! TWInsert
 "command! TWImport
-"command! TWNote
-"command! TWOpen
-"command! TWOpenInline
-"command! TWReport
-"command! TWReportAgenda
-"command! TWReportBreak
-"command! TWReportCalendar
-"command! TWReportDesc
-"command! TWReportEdit
-"command! TWReportGantt
-"command! TWReportProjects
-"command! TWReportTags
 "command! TWSyncFiles
 "command! TWSyncStatus
 "command! TWTheme
-"command! TWThemeEdit
-"command! TWThemeShow
 command! TWUndo :call taskwarrior#action#undo()
 
 let g:loaded_taskwarrior = 1
