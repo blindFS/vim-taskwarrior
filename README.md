@@ -2,7 +2,7 @@ taskwarrior.vim
 ===============
 _a vim interface for [Taskwarrior](https://taskwarrior.org)_
 
-![screenshot](https://raw.github.com/farseer90718/vim-taskwarrior/master/screenshot.png)
+![screenshot](https://raw.githubusercontent.com/xarthurx/taskwarrior.vim/master/screenshot.png)
 
 **This repo is forked from [blindFS/vim-taskwarrior](https://github.com/blindFS/vim-taskwarrior) for maintenance and development.**
 
