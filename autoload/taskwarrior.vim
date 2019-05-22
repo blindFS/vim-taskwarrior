@@ -206,7 +206,6 @@ function! taskwarrior#quit_all()
 endfunction
 
 function! taskwarrior#system_call(filter, command, args, mode)
-
   if a:mode == 'silent'
     call system(g:tw_cmd.' '.a:filter.' '.a:command.' '.a:args)
   else " echo the output

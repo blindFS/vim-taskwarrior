@@ -81,7 +81,7 @@ function! taskwarrior#data#get_args(...)
     endwhile
 
     if expr !~ '^[ \t]*$' || a:1 == 'modify'
-      let arg .= ' '.key.': '.expr
+      let arg .= ' '.key.'="' . expr . '"'
     endif
 
   endfor
